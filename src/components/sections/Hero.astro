@@ -1,10 +1,11 @@
 ---
 import Container from "../Container.astro";
+import GridLines from "../GridLines.astro";
 import Heading from "../Heading.astro";
 import Button from "../Button.astro";
 ---
 
-<section id="top" class="relative flex min-h-screen items-end overflow-hidden">
+<section id="top" class="relative flex min-h-screen items-end overflow-hidden text-paper">
   <img
     src="/img/omni-753e3760-83e9-4.jpg"
     alt=""
@@ -12,8 +13,9 @@ import Button from "../Button.astro";
     class="absolute inset-0 h-full w-full object-cover"
   />
   <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/45 to-charcoal/40"></div>
+  <GridLines />
 
-  <Container class="relative pb-[14vh]">
+  <Container class="relative z-10 pb-[14vh]">
     <Heading as="h1" size="hero" class="max-w-4xl text-paper">
       Остекление крупных объектов по России
     </Heading>

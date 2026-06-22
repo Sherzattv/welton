@@ -1,11 +1,13 @@
 ---
 import Container from "../Container.astro";
+import GridLines from "../GridLines.astro";
 import Heading from "../Heading.astro";
 import { faq } from "../../data/home";
 ---
 
-<section class="bg-paper text-charcoal">
-  <Container class="py-16 sm:py-24 lg:py-32">
+<section class="relative bg-paper text-charcoal">
+  <GridLines />
+  <Container class="relative z-10 py-16 sm:py-24 lg:py-32">
     <Heading as="h2" size="lg" class="text-charcoal">Часто задаваемые вопросы</Heading>
 
     <div class="mt-12">
