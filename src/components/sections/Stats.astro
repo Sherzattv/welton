@@ -8,37 +8,40 @@ import { stats } from "../../data/home";
 <section id="about" class="relative bg-paper text-charcoal">
   <GridLines />
   <Container class="relative z-10 py-16 sm:py-24 lg:py-32">
-    <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
-      <Heading as="h2" size="lg" class="max-w-xl text-charcoal">
+    <div class="grid gap-12 lg:grid-cols-2 lg:gap-16">
+      <!-- Левая колонка: заголовок -->
+      <Heading as="h2" size="lg" class="max-w-[460px] text-charcoal">
         Профессионально реализуем проекты в сфере остекления зданий
       </Heading>
-      <p class="max-w-md text-grey-500 lg:pt-2">
-        Работаем с объектами разного назначения, включая нестандартные и сложные
-        по конструкции. Обеспечиваем полный цикл работ и чёткую организацию
-        процессов вне зависимости от региона.
-      </p>
-    </div>
 
-    <div class="mt-16 grid grid-cols-1 border-t border-grey-200 sm:grid-cols-2">
-      {
-        stats.map((s, i) => (
-          <div
-            class:list={[
-              "border-grey-200 py-10 sm:py-14",
-              i % 2 === 1 && "sm:border-l sm:pl-10 lg:pl-14",
-              i >= 2 && "border-t",
-            ]}
-          >
-            <p class="text-grey-500">{s.label}</p>
-            <p class="mt-6 flex items-baseline gap-3">
-              <span class="display text-6xl text-charcoal sm:text-7xl lg:text-8xl">
-                {s.value}
-              </span>
-              <span class="display text-sm text-charcoal sm:text-base">{s.unit}</span>
-            </p>
-          </div>
-        ))
-      }
+      <!-- Правая колонка: подзаголовок + сетка цифр -->
+      <div>
+        <p class="text-body max-w-[480px] text-grey-500">
+          Работаем с объектами разного назначения, включая нестандартные и
+          сложные по конструкции. Обеспечиваем полный цикл работ и чёткую
+          организацию процессов вне зависимости от региона.
+        </p>
+
+        <div class="mt-20 grid grid-cols-2 border-t border-grey-300/70">
+          {
+            stats.map((s, i) => (
+              <div
+                class:list={[
+                  "py-9",
+                  i % 2 === 1 && "border-l border-grey-300/70 pl-6 sm:pl-10",
+                  i >= 2 && "border-t border-grey-300/70",
+                ]}
+              >
+                <p class="text-body text-grey-500">{s.label}</p>
+                <p class="mt-7 flex items-baseline gap-2">
+                  <span class="display text-stat text-charcoal">{s.value}</span>
+                  <span class="display text-unit text-charcoal">{s.unit}</span>
+                </p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
     </div>
   </Container>
 </section>

@@ -24,6 +24,7 @@
     window.addEventListener("scroll", updateBar, { passive: true });
   } else {
     const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+    (window as any).__lenis = lenis;
 
     const raf = (time: number) => {
       lenis.raf(time);

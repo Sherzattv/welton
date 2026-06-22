@@ -33,6 +33,40 @@
   --font-display: "Adderley", "Arial Narrow", Arial, sans-serif;
   --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
 
+  /* --- Плавающая типошкала (откалибрована под дизайн-ширину 1200px,
+         как в оригинале Tilda: размеры растут с шириной окна) --- */
+  --text-hero: clamp(2.5rem, 6vw, 6rem); /* 72px@1200 */
+  --text-hero--line-height: 0.9;
+  --text-hero--letter-spacing: -0.01em;
+
+  --text-h1: clamp(2rem, 4.6vw, 4rem); /* ~56px@1200 */
+  --text-h1--line-height: 1;
+  --text-h1--letter-spacing: -0.012em;
+
+  --text-h2: clamp(1.75rem, 4vw, 3.4rem); /* 48px@1200 */
+  --text-h2--line-height: 1;
+  --text-h2--letter-spacing: -0.012em;
+
+  --text-h3: clamp(1.35rem, 2.5vw, 2.1rem); /* ~30px@1200 */
+  --text-h3--line-height: 1.02;
+  --text-h3--letter-spacing: -0.012em;
+
+  --text-h4: clamp(1.2rem, 1.85vw, 1.55rem); /* ~22px@1200 */
+  --text-h4--line-height: 1.05;
+  --text-h4--letter-spacing: -0.012em;
+
+  --text-stat: clamp(3.25rem, 8vw, 7rem); /* 96px@1200 */
+  --text-stat--line-height: 1;
+  --text-stat--letter-spacing: -0.016em;
+
+  --text-unit: clamp(1rem, 1.66vw, 1.4rem); /* 20px@1200 */
+  --text-unit--line-height: 1;
+  --text-unit--letter-spacing: -0.015em;
+
+  --text-body: clamp(0.85rem, 1.17vw, 1.05rem); /* 14px@1200 */
+  --text-body--line-height: 1.3;
+  --text-body--letter-spacing: -0.02em;
+
   /* --- Радиусы (язык дизайна — острые углы, 0 по умолчанию) --- */
   --radius-sm: 3px; /* редкое мягкое скругление мелких UI */
 
@@ -104,7 +138,5 @@
 @utility display {
   font-family: var(--font-display);
   font-weight: 700;
-  line-height: 0.95;
-  letter-spacing: -0.01em;
   text-transform: uppercase;
 }
