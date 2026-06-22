@@ -1,19 +1,15 @@
 ---
 // Декоративная вертикальная сетка-направляющая (как в оригинале Tilda):
-// тонкие линии по левому краю, центру и правому краю контейнера.
-// Цвет берётся из currentColor секции → адаптируется к тёмному/светлому фону.
-interface Props {
-  center?: boolean;
-}
-const { center = true } = Astro.props;
+// тонкие линии на 25% / 50% / 75% контейнера, прозрачность 0.06.
+// Цвет из currentColor секции → адаптируется к тёмному/светлому фону.
 ---
 
 <div aria-hidden="true" class="pointer-events-none absolute inset-0 z-0 overflow-hidden">
   <div class="mx-auto h-full w-full max-w-[1460px] px-5 sm:px-6 lg:px-8">
     <div class="relative h-full">
-      <span class="absolute inset-y-0 left-0 w-px bg-current opacity-[0.12]"></span>
-      {center && <span class="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-current opacity-[0.12]" />}
-      <span class="absolute inset-y-0 right-0 w-px bg-current opacity-[0.12]"></span>
+      <span class="absolute inset-y-0 left-1/4 w-px bg-current opacity-[0.06]"></span>
+      <span class="absolute inset-y-0 left-1/2 w-px bg-current opacity-[0.06]"></span>
+      <span class="absolute inset-y-0 left-3/4 w-px bg-current opacity-[0.06]"></span>
     </div>
   </div>
 </div>

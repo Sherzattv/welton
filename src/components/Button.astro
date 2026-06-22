@@ -16,7 +16,7 @@ const {
 const Tag = href ? "a" : "button";
 
 const base =
-  "group inline-flex items-stretch overflow-hidden text-[14px] leading-none font-medium tracking-[-0.6px] transition-colors duration-300 ease-out";
+  "group inline-flex items-stretch overflow-hidden rounded-[3px] text-[14px] font-medium tracking-[-0.6px] transition-colors duration-300 ease-out";
 const variants = {
   light: "bg-paper text-charcoal hover:bg-accent hover:text-paper",
   accent: "bg-accent text-paper hover:bg-accent-hover",
@@ -30,9 +30,9 @@ const variants = {
   type={href ? undefined : type}
   class={`${base} ${variants[variant]} ${className}`}
 >
-  <span class="px-7 py-[19px]"><slot /></span>
+  <span class="py-[13px] pr-5 pl-7 leading-[22px]"><slot /></span>
   <span
-    class="flex items-center border-l border-current/20 px-5 transition-colors duration-300"
+    class="flex items-center border-l border-current/15 px-4 transition-colors duration-300"
   >
     <svg
       width="18"

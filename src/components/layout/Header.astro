@@ -19,17 +19,19 @@ import { nav, contact } from "../../data/home";
       />
     </a>
 
-    <!-- Десктоп-меню: пункты распределены по ширине -->
-    {
-      nav.map((item) => (
-        <a
-          href={item.href}
-          class="hidden text-xs font-medium tracking-[-0.3px] text-paper/90 transition-colors duration-200 hover:text-accent lg:block"
-        >
-          {item.label}
-        </a>
-      ))
-    }
+    <!-- Десктоп-меню: пункты сгруппированы по центру -->
+    <nav class="hidden items-center gap-9 lg:flex">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            class="text-xs font-medium tracking-[-0.3px] text-paper/90 transition-colors duration-200 hover:text-accent"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
     <a
       href={contact.phoneHref}
       class="hidden text-xs font-medium tracking-[-0.3px] text-paper transition-colors duration-200 hover:text-accent lg:block"
