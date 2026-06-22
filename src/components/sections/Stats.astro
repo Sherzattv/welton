@@ -1,0 +1,42 @@
+---
+import Container from "../Container.astro";
+import Heading from "../Heading.astro";
+import { stats } from "../../data/home";
+---
+
+<section id="about" class="bg-paper text-charcoal">
+  <Container class="py-16 sm:py-24 lg:py-32">
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <Heading as="h2" size="lg" class="max-w-xl text-charcoal">
+        Профессионально реализуем проекты в сфере остекления зданий
+      </Heading>
+      <p class="max-w-md text-grey-500 lg:pt-2">
+        Работаем с объектами разного назначения, включая нестандартные и сложные
+        по конструкции. Обеспечиваем полный цикл работ и чёткую организацию
+        процессов вне зависимости от региона.
+      </p>
+    </div>
+
+    <div class="mt-16 grid grid-cols-1 border-t border-grey-200 sm:grid-cols-2">
+      {
+        stats.map((s, i) => (
+          <div
+            class:list={[
+              "border-grey-200 py-10 sm:py-14",
+              i % 2 === 1 && "sm:border-l sm:pl-10 lg:pl-14",
+              i >= 2 && "border-t",
+            ]}
+          >
+            <p class="text-grey-500">{s.label}</p>
+            <p class="mt-6 flex items-baseline gap-3">
+              <span class="display text-6xl text-charcoal sm:text-7xl lg:text-8xl">
+                {s.value}
+              </span>
+              <span class="display text-sm text-charcoal sm:text-base">{s.unit}</span>
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </Container>
+</section>

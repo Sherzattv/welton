@@ -1,0 +1,47 @@
+---
+import Container from "../Container.astro";
+import Heading from "../Heading.astro";
+import { partners } from "../../data/home";
+
+const loop = [...partners, ...partners];
+---
+
+<section id="partners" class="overflow-hidden bg-paper text-charcoal">
+  <Container class="py-16 sm:py-24 lg:py-32">
+    <Heading as="h2" size="lg" class="max-w-2xl text-charcoal">
+      Используем проверенные профильные системы и комплектующие
+    </Heading>
+  </Container>
+
+  <div class="group relative overflow-hidden pb-16 sm:pb-24">
+    <div class="marquee flex w-max gap-5">
+      {
+        loop.map((p) => (
+          <div class="flex h-44 w-60 shrink-0 flex-col items-center justify-center gap-5 bg-white">
+            <img src={p.logo} alt={p.name} loading="lazy" class="max-h-12 w-auto max-w-[60%] object-contain" />
+            <span class="text-sm text-grey-500">{p.name}</span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .marquee {
+    animation: marquee 36s linear infinite;
+  }
+  .group:hover .marquee {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(calc(-50% - 0.625rem));
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      animation: none;
+    }
+  }
+</style>

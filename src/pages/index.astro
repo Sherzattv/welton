@@ -1,23 +1,30 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Section from "../components/Section.astro";
-import Heading from "../components/Heading.astro";
-import Button from "../components/Button.astro";
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+import Hero from "../components/sections/Hero.astro";
+import Stats from "../components/sections/Stats.astro";
+import Services from "../components/sections/Services.astro";
+import Advantages from "../components/sections/Advantages.astro";
+import Objects from "../components/sections/Objects.astro";
+import Partners from "../components/sections/Partners.astro";
+import Stages from "../components/sections/Stages.astro";
+import CtaCalc from "../components/sections/CtaCalc.astro";
+import Faq from "../components/sections/Faq.astro";
 ---
 
 <Layout>
-  <Section tone="charcoal" class="flex min-h-screen items-center">
-    <p class="text-sm tracking-widest text-accent uppercase">Велес Групп</p>
-    <Heading as="h1" size="hero" class="mt-4 max-w-4xl">
-      Остекление крупных объектов по России
-    </Heading>
-    <p class="mt-6 max-w-xl text-lg text-grey-400">
-      Проектируем, производим и монтируем оконные, фасадные и противопожарные
-      конструкции. Идёт пересборка сайта на новом стеке.
-    </p>
-    <div class="mt-10 flex flex-wrap gap-5">
-      <Button variant="light" href="#">Обсудить проект</Button>
-      <Button variant="outline" href="/styleguide">Дизайн-система</Button>
-    </div>
-  </Section>
+  <Header />
+  <main>
+    <Hero />
+    <Stats />
+    <Services />
+    <Advantages />
+    <Objects />
+    <Partners />
+    <Stages />
+    <CtaCalc />
+    <Faq />
+  </main>
+  <Footer />
 </Layout>

@@ -1,0 +1,111 @@
+---
+import Container from "../Container.astro";
+import { nav, contact } from "../../data/home";
+---
+
+<header
+  id="site-header"
+  class="fixed inset-x-0 top-0 z-50 transition-colors duration-300"
+  data-header
+>
+  <Container class="flex items-center justify-between py-5">
+    <a href="/" aria-label="Велес Групп — на главную" class="shrink-0">
+      <img
+        src="/img/Vector.svg"
+        alt="Велес Групп"
+        width="78"
+        height="35"
+        class="h-8 w-auto"
+      />
+    </a>
+
+    <button
+      type="button"
+      data-menu-open
+      aria-label="Открыть меню"
+      aria-expanded="false"
+      class="flex h-10 w-12 cursor-pointer flex-col items-end justify-center gap-2"
+    >
+      <span class="block h-px w-11 bg-paper"></span>
+      <span class="block h-px w-11 bg-paper"></span>
+    </button>
+  </Container>
+</header>
+
+<!-- Меню-шторка -->
+<div
+  data-menu
+  class="invisible fixed inset-0 z-60 flex flex-col bg-menu text-paper opacity-0 transition-opacity duration-400 ease-out"
+>
+  <Container class="flex items-center justify-between py-5">
+    <a href="/" aria-label="Велес Групп" class="shrink-0">
+      <img src="/img/Vector.svg" alt="Велес Групп" width="78" height="35" class="h-8 w-auto" />
+    </a>
+    <button
+      type="button"
+      data-menu-close
+      aria-label="Закрыть меню"
+      class="flex h-10 w-12 cursor-pointer items-center justify-end"
+    >
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+        <path d="M3 3l20 20M23 3L3 23" stroke="currentColor" stroke-width="1.4"></path>
+      </svg>
+    </button>
+  </Container>
+
+  <Container class="flex flex-1 flex-col justify-center gap-8 py-10">
+    <nav class="flex flex-col gap-4">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            data-menu-link
+            class="display w-fit text-4xl text-paper/90 transition-colors duration-200 hover:text-accent sm:text-5xl"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+    <div class="flex flex-col gap-1 text-grey-400">
+      <a href={contact.phoneHref} class="text-xl text-paper transition-colors hover:text-accent">
+        {contact.phone}
+      </a>
+      <a href={contact.emailHref} class="transition-colors hover:text-accent">{contact.email}</a>
+    </div>
+  </Container>
+</div>
+
+<script>
+  const menu = document.querySelector<HTMLElement>("[data-menu]");
+  const openBtn = document.querySelector<HTMLButtonElement>("[data-menu-open]");
+  const closeBtn = document.querySelector<HTMLButtonElement>("[data-menu-close]");
+  const links = document.querySelectorAll<HTMLAnchorElement>("[data-menu-link]");
+  const header = document.querySelector<HTMLElement>("[data-header]");
+
+  const open = () => {
+    menu?.classList.remove("invisible", "opacity-0");
+    openBtn?.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
+  };
+  const close = () => {
+    menu?.classList.add("invisible", "opacity-0");
+    openBtn?.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  };
+
+  openBtn?.addEventListener("click", open);
+  closeBtn?.addEventListener("click", close);
+  links.forEach((l) => l.addEventListener("click", close));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") close();
+  });
+
+  // Тёмный фон шапки после прокрутки от hero
+  const onScroll = () => {
+    if (window.scrollY > 80) header?.classList.add("bg-charcoal/90", "backdrop-blur-sm");
+    else header?.classList.remove("bg-charcoal/90", "backdrop-blur-sm");
+  };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+</script>

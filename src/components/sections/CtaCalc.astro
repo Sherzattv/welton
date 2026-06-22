@@ -1,0 +1,35 @@
+---
+import Container from "../Container.astro";
+import Heading from "../Heading.astro";
+import Button from "../Button.astro";
+import { contact } from "../../data/home";
+---
+
+<section id="invoice" class="relative flex min-h-screen flex-col justify-between overflow-hidden py-16 sm:py-20">
+  <img
+    src="/img/high-rise-buildings-.jpg"
+    alt=""
+    loading="lazy"
+    class="absolute inset-0 h-full w-full object-cover"
+  />
+  <div class="absolute inset-0 bg-charcoal/55"></div>
+
+  <Container class="relative">
+    <Heading as="h2" size="lg" class="max-w-2xl text-paper">
+      Предварительный расчёт остекления под ваш объект
+    </Heading>
+    <div class="mt-8">
+      <Button variant="light" href="#contacts">Оставить заявку</Button>
+    </div>
+  </Container>
+
+  <Container class="relative">
+    <p class="text-paper/80">Не хотите ждать звонка?<br />Позвоните нам по этому номеру:</p>
+    <a
+      href={contact.phoneHref}
+      class="display mt-4 block text-4xl text-paper transition-colors hover:text-accent sm:text-6xl"
+    >
+      {contact.phone}
+    </a>
+  </Container>
+</section>

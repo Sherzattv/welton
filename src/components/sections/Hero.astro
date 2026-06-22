@@ -1,0 +1,28 @@
+---
+import Container from "../Container.astro";
+import Heading from "../Heading.astro";
+import Button from "../Button.astro";
+---
+
+<section id="top" class="relative flex min-h-screen items-end overflow-hidden">
+  <img
+    src="/img/omni-753e3760-83e9-4.jpg"
+    alt=""
+    fetchpriority="high"
+    class="absolute inset-0 h-full w-full object-cover"
+  />
+  <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/45 to-charcoal/40"></div>
+
+  <Container class="relative pb-[14vh]">
+    <Heading as="h1" size="hero" class="max-w-4xl text-paper">
+      Остекление крупных объектов по России
+    </Heading>
+    <p class="mt-6 max-w-xl text-lg text-paper/80">
+      Проектируем, производим и монтируем оконные, фасадные и противопожарные
+      конструкции для жилых, общественных и инфраструктурных объектов.
+    </p>
+    <div class="mt-10">
+      <Button variant="light" href="#invoice">Обсудить проект</Button>
+    </div>
+  </Container>
+</section>
