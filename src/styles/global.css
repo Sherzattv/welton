@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Фирменный дисплейный шрифт (из оригинала Велес Групп)
+   ============================================================ */
+@font-face {
+  font-family: "Adderley";
+  src: url("/fonts/adderley-bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================================
+   Дизайн-токены — извлечены из оригинального сайта.
+   Палитра: монохром-уголь + один зелёный акцент. Острые углы.
+   ============================================================ */
+@theme {
+  /* --- Цвета --- */
+  --color-charcoal: #1b1b1b; /* основной фон + текст-чернила */
+  --color-ink: #0e100f; /* самый тёмный фон/тень */
+  --color-paper: #eeeeee; /* «бумага»: светлый фон + текст на тёмном */
+  --color-white: #ffffff;
+  --color-grey-200: #dddddd; /* волосяные линии, разделители */
+  --color-grey-300: #c3c3c3; /* слабый вторичный текст */
+  --color-grey-400: #9a9a9a; /* основной приглушённый текст */
+  --color-grey-500: #767676; /* вторичный текст с большим контрастом */
+  --color-accent: #22866b; /* ЕДИНСТВЕННЫЙ акцент — глубокий зелёный */
+  --color-accent-hover: #1e785f;
+  --color-menu: #111111; /* фон меню/бургера */
+
+  /* --- Шрифты --- */
+  --font-display: "Adderley", "Arial Narrow", Arial, sans-serif;
+  --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
+
+  /* --- Радиусы (язык дизайна — острые углы, 0 по умолчанию) --- */
+  --radius-sm: 3px; /* редкое мягкое скругление мелких UI */
+
+  /* --- Брейкпоинты (нагруженные точки из оригинала) --- */
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 960px;
+  --breakpoint-lg: 1200px;
+  --breakpoint-xl: 1440px;
+}
+
+/* ============================================================
+   Базовые стили документа
+   ============================================================ */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-charcoal);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    font-weight: 300; /* Inter Light — воздушный текст, как в оригинале */
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-paper);
+  }
+
+  /* Доступность: уважаем prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ============================================================
+   Утилита: дисплейный заголовок с плотным негативным трекингом
+   ============================================================ */
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}

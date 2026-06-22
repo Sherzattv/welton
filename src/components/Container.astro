@@ -1,0 +1,13 @@
+---
+// Центрирующий контейнер с боковыми отступами.
+interface Props {
+  class?: string;
+  as?: keyof HTMLElementTagNameMap;
+}
+const { class: className = "", as = "div" } = Astro.props;
+const Tag = as;
+---
+
+<Tag class={`mx-auto w-full max-w-[1400px] px-5 sm:px-8 lg:px-12 ${className}`}>
+  <slot />
+</Tag>

@@ -1,0 +1,22 @@
+---
+// Дисплейный заголовок (Adderley, плотный негативный трекинг, капс).
+interface Props {
+  as?: "h1" | "h2" | "h3" | "h4";
+  size?: "hero" | "xl" | "lg" | "md" | "sm";
+  class?: string;
+}
+const { as = "h2", size = "lg", class: className = "" } = Astro.props;
+const Tag = as;
+
+const sizeClass = {
+  hero: "text-[2.75rem] sm:text-[4.5rem] lg:text-[6rem] xl:text-[6.75rem]",
+  xl: "text-4xl sm:text-5xl lg:text-6xl",
+  lg: "text-3xl sm:text-4xl lg:text-5xl",
+  md: "text-2xl sm:text-3xl",
+  sm: "text-xl sm:text-2xl",
+}[size];
+---
+
+<Tag class={`display ${sizeClass} ${className}`}>
+  <slot />
+</Tag>

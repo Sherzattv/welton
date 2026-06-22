@@ -1,0 +1,36 @@
+---
+// Секция с вертикальным ритмом и опциональным тоном фона.
+import Container from "./Container.astro";
+
+interface Props {
+  tone?: "charcoal" | "paper" | "ink" | "transparent";
+  class?: string;
+  contained?: boolean;
+  id?: string;
+}
+const {
+  tone = "charcoal",
+  class: className = "",
+  contained = true,
+  id,
+} = Astro.props;
+
+const toneClass = {
+  charcoal: "bg-charcoal text-paper",
+  paper: "bg-paper text-charcoal",
+  ink: "bg-ink text-paper",
+  transparent: "",
+}[tone];
+---
+
+<section id={id} class={`py-16 sm:py-24 lg:py-32 ${toneClass} ${className}`}>
+  {
+    contained ? (
+      <Container>
+        <slot />
+      </Container>
+    ) : (
+      <slot />
+    )
+  }
+</section>

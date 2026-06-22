@@ -1,0 +1,53 @@
+---
+// Фирменная кнопка: подпись + вертикальный разделитель + стрелка.
+// Острые углы, ховер уводит в зелёный акцент, стрелка едет вправо.
+interface Props {
+  href?: string;
+  variant?: "light" | "accent" | "outline";
+  class?: string;
+  type?: "button" | "submit";
+}
+const {
+  href,
+  variant = "light",
+  class: className = "",
+  type = "button",
+} = Astro.props;
+const Tag = href ? "a" : "button";
+
+const base =
+  "group inline-flex items-stretch overflow-hidden text-[15px] leading-none font-medium transition-colors duration-300 ease-out";
+const variants = {
+  light: "bg-paper text-charcoal hover:bg-accent hover:text-paper",
+  accent: "bg-accent text-paper hover:bg-accent-hover",
+  outline:
+    "border border-paper/30 text-paper hover:border-accent hover:bg-accent hover:text-paper",
+};
+---
+
+<Tag
+  href={href}
+  type={href ? undefined : type}
+  class={`${base} ${variants[variant]} ${className}`}
+>
+  <span class="px-7 py-4.5 sm:px-8 sm:py-5"><slot /></span>
+  <span
+    class="flex items-center border-l border-current/20 px-5 transition-colors duration-300"
+  >
+    <svg
+      width="18"
+      height="14"
+      viewBox="0 0 18 14"
+      fill="none"
+      aria-hidden="true"
+      class="transition-transform duration-300 ease-out group-hover:translate-x-1"
+    >
+      <path
+        d="M11 1l6 6-6 6M17 7H1"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="square"
+      ></path>
+    </svg>
+  </span>
+</Tag>

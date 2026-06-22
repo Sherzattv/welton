@@ -1,72 +1,43 @@
-# Велес Групп — локальная копия сайта
+# Astro Starter Kit: Minimal
 
-Точная офлайн-копия сайта **okna-veles-group.ru** (сделан на Tilda), снятая 1-в-1:
-вёрстка, сетка, плавный скролл (Lenis) и анимации (GSAP) — как в оригинале.
-Все ассеты (картинки, видео, шрифты, CSS, JS) скачаны локально, ссылки переписаны
-на локальные пути. Сайт не зависит от Tilda и работает офлайн.
-
-## Как запустить локально
-
-Нужен локальный веб-сервер (просто открыть `index.html` через `file://` **не получится**
-— пути к ассетам корне-относительные `/assets/...`, как для настоящего хостинга).
-
-```bash
-cd /Users/sherzat/welton
-python3 -m http.server 8765
-# открыть http://127.0.0.1:8765/
+```sh
+npm create astro@latest -- --template minimal
 ```
 
-## Структура
+> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
 
-```
-index.html            ← главная страница
-agreement.html        ← «Пользовательское соглашение»
-policy.html           ← «Политика конфиденциальности»
-assets/
-  static.tildacdn.com/   ← картинки, видео, CSS/JS ядра Tilda, шрифты
-    tild*/...            ← изображения (имя папки = id из оригинала)
-    js/  css/            ← движок Tilda
-    ws/project21317866/  ← CSS/JS конкретно этого проекта (стили блоков)
-  cdnjs.cloudflare.com/  ← GSAP (анимации)
-  unpkg.com/             ← Lenis (плавный скролл)
-  cdn.postnikovmd.com/   ← доп. моды Tilda + слайдер
-  assets.codepen.io/     ← SplitText (анимация текста)
-mirror_site.py        ← скрипт, которым снималась копия (можно удалить)
-.claude/launch.json   ← конфиг локального сервера для превью
+## 🚀 Project Structure
+
+Inside of your Astro project, you'll see the following folders and files:
+
+```text
+/
+├── public/
+├── src/
+│   └── pages/
+│       └── index.astro
+└── package.json
 ```
 
-## Как менять контент
+Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
 
-### Текст
-Тексты лежат прямо в HTML. Найди нужную фразу поиском в `index.html` и замени.
-Пример: чтобы поменять заголовок «Остекление крупных объектов по России» — ищи эту
-строку в `index.html` и правь.
+There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
 
-### Картинки
-Два способа:
-1. **Заменить файл** — положи свою картинку вместо файла в `assets/static.tildacdn.com/tild.../`
-   под тем же именем (удобно, если размер похожий).
-2. **Заменить путь** — в HTML/CSS найди ссылку на старую картинку
-   (`/assets/static.tildacdn.com/tild.../имя.jpg`) и укажи путь к своей.
-   Фото обычно подключены через атрибут `data-original` (ленивая загрузка) или
-   `background-image` в CSS-переменных `--icon-default` / `--icon-hover`.
+Any static assets, like images, can be placed in the `public/` directory.
 
-### Телефон, email, адрес, реквизиты
-Тоже обычный текст в `index.html` (футер) — ищи `+7 903 021 12 88`,
-`ZAKAZ.VELESGROUP@MAIL.RU`, ИНН/КПП и т.д.
+## 🧞 Commands
 
-## Важные технические заметки
+All commands are run from the root of the project, from a terminal:
 
-- **Оптимизация картинок Tilda отключена** через атрибут
-  `data-tilda-imgoptimoff="yes"` на `#allrecords`. Tilda берёт локальные оригиналы и
-  не дёргает `optim.tildacdn.com` за webp-вариантами (иначе были бы 404 и шум в консоли).
-- **SEO-метатеги** (`<link rel="canonical">`, `og:url`) всё ещё указывают на
-  `okna-veles-group.ru` — поменяй на свой домен перед публикацией.
-- **Шрифты** грузятся с Google Fonts по сети; остальное — локальное.
-- **Формы** (заявки) на оригинале отправлялись на серверы Tilda. Здесь бэкенда нет —
-  чтобы заявки приходили, форму нужно подключить к своему обработчику (почта/Telegram/CRM).
+| Command                   | Action                                           |
+| :------------------------ | :----------------------------------------------- |
+| `npm install`             | Installs dependencies                            |
+| `npm run dev`             | Starts local dev server at `localhost:4321`      |
+| `npm run build`           | Build your production site to `./dist/`          |
+| `npm run preview`         | Preview your build locally, before deploying     |
+| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
+| `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## Деплой
+## 👀 Want to learn more?
 
-Любой статический хостинг (Vercel, Netlify, GitHub Pages, обычный nginx). Залей корень
-проекта — сайт обслуживается от `/`. Пути `/assets/...` будут работать сразу.
+Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
