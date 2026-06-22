@@ -19,12 +19,31 @@ import { nav, contact } from "../../data/home";
       />
     </a>
 
+    <!-- Десктоп-меню: пункты распределены по ширине -->
+    {
+      nav.map((item) => (
+        <a
+          href={item.href}
+          class="hidden text-xs font-medium tracking-[-0.3px] text-paper/90 transition-colors duration-200 hover:text-accent lg:block"
+        >
+          {item.label}
+        </a>
+      ))
+    }
+    <a
+      href={contact.phoneHref}
+      class="hidden text-xs font-medium tracking-[-0.3px] text-paper transition-colors duration-200 hover:text-accent lg:block"
+    >
+      {contact.phone}
+    </a>
+
+    <!-- Бургер (мобила/планшет) -->
     <button
       type="button"
       data-menu-open
       aria-label="Открыть меню"
       aria-expanded="false"
-      class="flex h-10 w-12 cursor-pointer flex-col items-end justify-center gap-2"
+      class="flex h-10 w-12 cursor-pointer flex-col items-end justify-center gap-2 lg:hidden"
     >
       <span class="block h-px w-11 bg-paper"></span>
       <span class="block h-px w-11 bg-paper"></span>
@@ -32,10 +51,10 @@ import { nav, contact } from "../../data/home";
   </Container>
 </header>
 
-<!-- Меню-шторка -->
+<!-- Меню-шторка (мобила/планшет) -->
 <div
   data-menu
-  class="invisible fixed inset-0 z-60 flex flex-col bg-menu text-paper opacity-0 transition-opacity duration-400 ease-out"
+  class="invisible fixed inset-0 z-60 flex flex-col bg-menu text-paper opacity-0 transition-opacity duration-400 ease-out lg:hidden"
 >
   <Container class="flex items-center justify-between py-5">
     <a href="/" aria-label="Велес Групп" class="shrink-0">
@@ -101,7 +120,6 @@ import { nav, contact } from "../../data/home";
     if (e.key === "Escape") close();
   });
 
-  // Тёмный фон шапки после прокрутки от hero
   const onScroll = () => {
     if (window.scrollY > 80) header?.classList.add("bg-charcoal/90", "backdrop-blur-sm");
     else header?.classList.remove("bg-charcoal/90", "backdrop-blur-sm");
