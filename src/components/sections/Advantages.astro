@@ -8,14 +8,14 @@ import { advantages } from "../../data/home";
 <section class="relative bg-charcoal text-paper">
   <GridLines />
   <Container class="relative z-10 py-16 sm:py-24 lg:py-32">
-    <Heading as="h2" size="lg" class="max-w-2xl">
+    <Heading as="h2" size="lg" class="max-w-2xl" data-split>
       Ответственный подход к каждому объекту
     </Heading>
 
     <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
       {
         advantages.map((a) => (
-          <article class="flex min-h-[20rem] flex-col justify-between bg-paper p-8 text-charcoal sm:min-h-[24rem]">
+          <article data-reveal class="flex min-h-[20rem] flex-col justify-between bg-paper p-8 text-charcoal sm:min-h-[24rem]">
             <span class="block h-2.5 w-2.5 self-end rounded-full bg-accent"></span>
             <div>
               <Heading as="h3" size="sm" class="text-charcoal">{a.title}</Heading>

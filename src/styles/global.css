@@ -140,3 +140,23 @@
   font-weight: 700;
   text-transform: uppercase;
 }
+
+/* ============================================================
+   Моушн: до старта анимаций прячем reveal-блоки и сплит-заголовки,
+   чтобы не было вспышки видимого контента. Класс html.motion ставится
+   inline-скриптом в <head> только если НЕ reduced-motion и есть JS —
+   значит при reduced-motion / без JS всё остаётся видимым.
+   ============================================================ */
+@layer base {
+  html.motion [data-reveal],
+  html.motion [data-split] {
+    opacity: 0;
+  }
+  [data-reveal] {
+    will-change: transform, opacity;
+  }
+  /* Маска SplitText: строки «выезжают» из-под обрезанного блока */
+  .split-line {
+    will-change: transform;
+  }
+}

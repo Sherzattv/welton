@@ -1,0 +1,13 @@
+---
+// Точка входа моушн-слоя: тонкий зелёный прогресс-бар сверху + запуск
+// всей логики движения (Lenis / GSAP / SplitText) из ../scripts/motion.ts.
+---
+
+<div aria-hidden="true" class="pointer-events-none fixed inset-x-0 top-0 z-[70] h-[3px]">
+  <div data-scroll-progress class="h-full origin-left scale-x-0 bg-accent"></div>
+</div>
+
+<script>
+  import { initMotion } from "../scripts/motion";
+  initMotion();
+</script>

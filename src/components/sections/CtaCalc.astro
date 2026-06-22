@@ -17,17 +17,18 @@ import { contact } from "../../data/home";
   <GridLines />
 
   <Container class="relative z-10">
-    <Heading as="h2" size="lg" class="max-w-2xl text-paper">
+    <Heading as="h2" size="lg" class="max-w-2xl text-paper" data-split>
       Предварительный расчёт остекления под ваш объект
     </Heading>
-    <div class="mt-8">
+    <div class="mt-8" data-reveal>
       <Button variant="light" href="#contacts">Оставить заявку</Button>
     </div>
   </Container>
 
   <Container class="relative z-10">
-    <p class="text-paper/80">Не хотите ждать звонка?<br />Позвоните нам по этому номеру:</p>
+    <p data-reveal class="text-paper/80">Не хотите ждать звонка?<br />Позвоните нам по этому номеру:</p>
     <a
+      data-reveal
       href={contact.phoneHref}
       class="display mt-4 block text-4xl text-paper transition-colors hover:text-accent sm:text-6xl"
     >

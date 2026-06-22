@@ -9,7 +9,7 @@ import { objects } from "../../data/home";
   <GridLines />
   <Container class="relative z-10 py-16 sm:py-24 lg:py-32">
     <div class="flex items-end justify-between gap-6">
-      <Heading as="h2" size="lg" class="max-w-2xl">
+      <Heading as="h2" size="lg" class="max-w-2xl" data-split>
         Объекты, с которыми мы работаем
       </Heading>
       <div class="hidden gap-3 sm:flex">
@@ -40,14 +40,14 @@ import { objects } from "../../data/home";
     >
       {
         objects.map((o) => (
-          <article class="w-[280px] shrink-0 snap-start sm:w-[360px]">
+          <article data-reveal class="group w-[280px] shrink-0 snap-start sm:w-[360px]">
             <div class="relative aspect-[3/4] overflow-hidden bg-ink">
               <img
                 src={o.img}
                 alt={o.title}
                 loading="lazy"
                 decoding="async"
-                class="h-full w-full object-cover"
+                class="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
               />
               <span class="display absolute top-4 right-5 text-4xl text-paper drop-shadow">
                 {o.num}

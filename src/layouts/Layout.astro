@@ -22,6 +22,14 @@ const {
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
+    <!-- Включаем моушн-режим до первой отрисовки: так reveal-блоки скрыты
+         заранее (без мигания), а при reduced-motion класс не ставится и
+         весь контент остаётся видимым даже без JS. -->
+    <script is:inline>
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.classList.add("motion");
+      }
+    </script>
   </head>
   <body class="min-h-screen bg-charcoal text-paper antialiased">
     <slot />

@@ -6,12 +6,14 @@ interface Props {
   variant?: "light" | "accent" | "outline";
   class?: string;
   type?: "button" | "submit";
+  [key: `data-${string}`]: string | boolean | undefined;
 }
 const {
   href,
   variant = "light",
   class: className = "",
   type = "button",
+  ...rest
 } = Astro.props;
 const Tag = href ? "a" : "button";
 
@@ -29,6 +31,7 @@ const variants = {
   href={href}
   type={href ? undefined : type}
   class={`${base} ${variants[variant]} ${className}`}
+  {...rest}
 >
   <span class="py-[13px] pr-5 pl-7 leading-[22px]"><slot /></span>
   <span

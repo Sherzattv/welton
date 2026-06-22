@@ -8,12 +8,12 @@ import { faq } from "../../data/home";
 <section class="relative bg-paper text-charcoal">
   <GridLines />
   <Container class="relative z-10 py-16 sm:py-24 lg:py-32">
-    <Heading as="h2" size="lg" class="text-charcoal">Часто задаваемые вопросы</Heading>
+    <Heading as="h2" size="lg" class="text-charcoal" data-split>Часто задаваемые вопросы</Heading>
 
     <div class="mt-12">
       {
         faq.map((item) => (
-          <details class="group border-t border-grey-200">
+          <details data-reveal class="group border-t border-grey-200">
             <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 [&::-webkit-details-marker]:hidden">
               <Heading as="h3" size="sm" class="text-charcoal">{item.q}</Heading>
               <svg

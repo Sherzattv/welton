@@ -10,13 +10,13 @@ import { stats } from "../../data/home";
   <Container class="relative z-10 py-16 sm:py-24 lg:py-32">
     <div class="grid gap-12 lg:grid-cols-2 lg:gap-16">
       <!-- Левая колонка: заголовок -->
-      <Heading as="h2" size="lg" class="max-w-[460px] text-charcoal">
+      <Heading as="h2" size="lg" class="max-w-[460px] text-charcoal" data-split>
         Профессионально реализуем проекты в сфере остекления зданий
       </Heading>
 
       <!-- Правая колонка: подзаголовок + сетка цифр -->
       <div>
-        <p class="text-body max-w-[480px] text-grey-500">
+        <p data-reveal class="text-body max-w-[480px] text-grey-500">
           Работаем с объектами разного назначения, включая нестандартные и
           сложные по конструкции. Обеспечиваем полный цикл работ и чёткую
           организацию процессов вне зависимости от региона.
@@ -26,6 +26,7 @@ import { stats } from "../../data/home";
           {
             stats.map((s, i) => (
               <div
+                data-reveal
                 class:list={[
                   "py-9",
                   i % 2 === 1 && "border-l border-grey-300/70 pl-6 sm:pl-10",
@@ -34,7 +35,7 @@ import { stats } from "../../data/home";
               >
                 <p class="text-body text-grey-500">{s.label}</p>
                 <p class="mt-7 flex items-baseline gap-2">
-                  <span class="display text-stat text-charcoal">{s.value}</span>
+                  <span class="display text-stat text-charcoal" data-count>{s.value}</span>
                   <span class="display text-unit text-charcoal">{s.unit}</span>
                 </p>
               </div>

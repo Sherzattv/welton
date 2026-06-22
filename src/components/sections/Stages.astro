@@ -8,14 +8,14 @@ import { stages } from "../../data/home";
 <section id="stages" class="relative bg-paper text-charcoal">
   <GridLines />
   <Container class="relative z-10 py-16 sm:py-24 lg:py-32">
-    <Heading as="h2" size="lg" class="max-w-2xl text-charcoal">
+    <Heading as="h2" size="lg" class="max-w-2xl text-charcoal" data-split>
       Прозрачный процесс реализации проекта
     </Heading>
 
     <div class="mt-12">
       {
         stages.map((s) => (
-          <article class="grid grid-cols-1 gap-4 border-t border-grey-200 py-8 lg:grid-cols-12 lg:gap-8">
+          <article data-reveal class="grid grid-cols-1 gap-4 border-t border-grey-200 py-8 lg:grid-cols-12 lg:gap-8">
             <span class="text-grey-400 lg:col-span-1">{s.num}</span>
             <Heading as="h3" size="sm" class="text-charcoal lg:col-span-5">
               {s.title}
