@@ -1,43 +1,71 @@
-# Astro Starter Kit: Minimal
+# Велес Групп — Astro rebuild
 
-```sh
-npm create astro@latest -- --template minimal
+Чистый ребилд сайта `okna-veles-group.ru` после Tilda. Цель — визуально близко к оригиналу, но без Tilda-кода: масштабируемая Astro-архитектура, переиспользуемые секции, единые дизайн-токены и подготовка к дальнейшему развитию/CMS.
+
+## Стек
+
+- Astro 7
+- Tailwind CSS 4
+- TypeScript
+- GSAP + Lenis для motion-слоя
+- Playwright/pixelmatch/sharp для вспомогательной визуальной проверки
+
+## Команды
+
+```bash
+npm install
+npm run build
+npm run preview
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Dev-сервер запускать в background-режиме:
 
-## 🚀 Project Structure
+```bash
+npx astro dev --background
+npx astro dev status
+npx astro dev stop
+npx astro dev logs
+```
 
-Inside of your Astro project, you'll see the following folders and files:
+Reference-копия Tilda:
+
+```bash
+npm run diff:serve
+# original: http://localhost:8765/
+# rebuild:  http://localhost:4321/
+```
+
+## Структура
 
 ```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+src/
+  components/
+    layout/       Header/Footer
+    sections/     секции главной страницы
+    Button.astro  фирменная CTA-кнопка
+    GridLines.astro глобальные вертикальные направляющие
+  data/home.ts    контент главной страницы
+  layouts/        базовый HTML/layout
+  scripts/        motion-инициализация
+  styles/global.css дизайн-токены и глобальные CSS-переменные
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Важные решения
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- Контент главной вынесен в `src/data/home.ts`.
+- Вертикальные направляющие имеют один источник правды в `src/styles/global.css`: `--guide-a`, `--guide-b`, `--guide-c`. `GridLines` и sticky-шапка используют одни и те же координаты.
+- Header повторяет Tilda-модель из двух шапок:
+  - верхняя прозрачная шапка статично лежит в hero и уезжает вместе со страницей;
+  - белая fixed-шапка создаётся как отдельный клон и появляется только при обратном скролле ниже порога.
+- Hero откалиброван под ключевые размеры оригинала: desktop `1200/1440`, tablet `640`, mobile `360/390`.
+- Кнопка использует фирменную структуру: текст слева, правый блок стрелки с вертикальным разделителем.
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Проверка качества
 
-## 🧞 Commands
+Перед коммитом:
 
-All commands are run from the root of the project, from a terminal:
+```bash
+npm run build
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Для визуальной работы основная проверка — глазами в браузере. Скрипт `npm run diff` оставлен как вспомогательный инструмент, но не является главным критерием совпадения.

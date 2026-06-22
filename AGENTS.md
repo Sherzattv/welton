@@ -1,3 +1,13 @@
+## Project notes
+
+This is a clean Astro rebuild of a Tilda reference site. Keep implementation scalable: reusable Astro components, content in `src/data/home.ts`, no copied Tilda classes/markup.
+
+Important visual conventions:
+
+- Global vertical guide positions live in `src/styles/global.css` as `--guide-a`, `--guide-b`, `--guide-c`; use them everywhere lines must align.
+- Header behavior mirrors Tilda with two headers: static transparent hero header + separate white fixed header shown on reverse scroll.
+- Hero typography/spacing is calibrated for 1440, 1200, 640, 390, and 360 widths; verify these breakpoints when changing hero/header.
+
 ## Development
 
 When starting the dev server, use background mode:

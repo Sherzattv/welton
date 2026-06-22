@@ -2,8 +2,9 @@
 dist/
 # generated types
 .astro/
-# visual-diff output (screenshots + report)
+# visual comparison outputs (screenshots + reports)
 visual-diff/
+visual-manual/
 
 # dependencies
 node_modules/
