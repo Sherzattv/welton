@@ -29,7 +29,7 @@ const SECTIONS = [
   { name: "Stats", original: "#rec1997626802", rebuild: "#about" },
   { name: "Services", original: "#rec1997890712", rebuild: "#services" },
   { name: "Advantages", original: "#rec2003448691", rebuild: "#advantages" },
-  { name: "Objects", original: null, rebuild: "#objects" },
+  { name: "Objects", original: "#rec2044167971", rebuild: "#objects" },
   { name: "Partners", original: "#rec2048718351", rebuild: "#partners" },
   { name: "Stages", original: "#rec2049072211", rebuild: "#stages" },
   { name: "CTA", original: "#rec2049227251", rebuild: "#invoice" },
