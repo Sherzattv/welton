@@ -1,71 +1,382 @@
 ---
-import Container from "../Container.astro";
 import GridLines from "../GridLines.astro";
+import Logo from "../Logo.astro";
 import { contact } from "../../data/home";
 ---
 
-<footer id="contacts" class="relative bg-charcoal text-paper">
+<footer id="contacts" class="footer-section relative bg-charcoal text-paper">
   <GridLines />
-  <Container class="relative z-10 py-16 sm:py-20">
-    <div class="flex items-start justify-between">
-      <a href="/" aria-label="Велес Групп" class="shrink-0">
-        <img src="/img/Vector.svg" alt="Велес Групп" width="78" height="35" class="h-9 w-auto" />
-      </a>
-      <a
-        href="#top"
-        aria-label="Наверх"
-        class="flex h-12 w-12 items-center justify-center border border-paper/20 transition-colors hover:border-accent hover:text-accent"
-      >
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-          <path d="M9 17V1M1 9l8-8 8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"></path>
-        </svg>
-      </a>
+  <div class="mx-auto w-full max-w-[1680px] px-gutter footer-inner relative z-10">
+    <a href="/" aria-label="Велес Групп" class="footer-logo">
+      <Logo class="h-8 w-[71px]" />
+    </a>
+
+    <a href="#top" aria-label="Наверх" class="footer-top">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <path d="M9 17V1M1 9l8-8 8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"></path>
+      </svg>
+    </a>
+
+    <div class="footer-address">
+      <p class="footer-label">Адрес</p>
+      <p class="footer-text">{contact.address}</p>
     </div>
 
-    <div class="mt-12 grid grid-cols-1 gap-10 sm:grid-cols-2">
-      <div class="space-y-10">
-        <div>
-          <p class="text-sm text-grey-500">Адрес</p>
-          <p class="mt-2 max-w-xs text-paper/90">{contact.address}</p>
-        </div>
-        <div>
-          <p class="text-sm text-grey-500">Соцсети</p>
-          <ul class="mt-2 space-y-1">
-            <li>
-              <a href={contact.telegram} target="_blank" rel="noopener" class="transition-colors hover:text-accent">Telegram</a>
-            </li>
-            <li>
-              <a href={contact.max} target="_blank" rel="noopener" class="transition-colors hover:text-accent">Max</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div>
-        <p class="text-sm text-grey-500">Правовая информация</p>
-        <ul class="mt-2 space-y-1">
-          <li><a href="/policy" class="transition-colors hover:text-accent">Политика конфиденциальности</a></li>
-          <li><a href="/agreement" class="transition-colors hover:text-accent">Пользовательское соглашение</a></li>
-        </ul>
-      </div>
+    <div class="footer-socials">
+      <p class="footer-label">Соцсети</p>
+      <a href={contact.telegram} target="_blank" rel="noopener" class="footer-link">Telegram</a>
+      <a href={contact.max} target="_blank" rel="noopener" class="footer-link">Max</a>
     </div>
 
-    <div class="mt-16 flex flex-col justify-between gap-6 border-t border-paper/10 pt-8 sm:flex-row">
-      <div class="text-sm text-grey-400">
-        <p class="text-paper/90">{contact.company}</p>
-        <p>ИНН: {contact.inn}</p>
-        <p>КПП: {contact.kpp}</p>
-      </div>
-      <p class="text-sm text-grey-500">Разработка сайта</p>
+    <div class="footer-legal">
+      <p class="footer-label">Правовая информация</p>
+      <a href="/policy" class="footer-link">Политика конфиденциальности</a>
+      <a href="/agreement" class="footer-link">Пользовательское соглашение</a>
     </div>
 
-    <div class="mt-12 space-y-2" data-reveal>
-      <a href={contact.phoneHref} class="display block text-[2.5rem] leading-none transition-colors hover:text-accent sm:text-6xl lg:text-7xl">
-        {contact.phone}
+    <div class="footer-company">
+      <p>{contact.company}</p>
+    </div>
+
+    <div class="footer-requisites">
+      <p>ИНН: {contact.inn}</p>
+      <p>КПП: {contact.kpp}</p>
+    </div>
+
+    <p class="footer-dev">Разработка сайта</p>
+
+    <div class="footer-contacts">
+      <a href={contact.phoneHref} class="footer-phone footer-contact-link link-slide display">
+        <span class="slide-text" data-text={contact.phone}>{contact.phone}</span>
       </a>
-      <a href={contact.emailHref} class="display block text-[2rem] leading-none break-all transition-colors hover:text-accent sm:text-5xl lg:text-6xl">
-        {contact.email}
+      <a href={contact.emailHref} class="footer-email footer-contact-link link-slide display">
+        <span class="slide-text" data-text={contact.email}>{contact.email}</span>
       </a>
     </div>
-  </Container>
+  </div>
 </footer>
+
+<style>
+  .footer-section {
+    --s: calc(100vw / 360);
+  }
+
+  .footer-inner {
+    min-height: calc(var(--s) * 760);
+    padding-top: calc(var(--s) * 32);
+    padding-bottom: calc(var(--s) * 32);
+  }
+
+  .footer-logo {
+    display: inline-flex;
+  }
+
+  .footer-top {
+    position: absolute;
+    top: calc(var(--s) * 32);
+    right: var(--spacing-gutter);
+    display: grid;
+    width: calc(var(--s) * 40);
+    height: calc(var(--s) * 40);
+    place-items: center;
+    border: 1px solid rgb(238 238 238 / 0.35);
+    border-radius: var(--radius-sm);
+    transition: color 200ms ease, border-color 200ms ease;
+  }
+
+  .footer-top:hover,
+  .footer-top:focus-visible {
+    color: var(--color-accent);
+    outline: none;
+  }
+
+  .footer-link:hover,
+  .footer-link:focus-visible {
+    opacity: 0.5;
+    outline: none;
+  }
+
+  .footer-label {
+    margin-bottom: calc(var(--s) * 18);
+    color: var(--color-grey-500);
+  }
+
+  .footer-link {
+    display: block;
+    transition: opacity 100ms linear;
+  }
+
+  .footer-address,
+  .footer-socials,
+  .footer-legal,
+  .footer-company,
+  .footer-requisites,
+  .footer-dev,
+  .footer-contacts {
+    position: absolute;
+    left: var(--spacing-gutter);
+  }
+
+  .footer-address {
+    top: calc(var(--s) * 118);
+    max-width: calc(var(--s) * 280);
+  }
+
+  .footer-socials {
+    top: calc(var(--s) * 260);
+  }
+
+  .footer-legal {
+    top: calc(var(--s) * 375);
+  }
+
+  .footer-company {
+    bottom: calc(var(--s) * 32);
+  }
+
+  .footer-requisites {
+    bottom: calc(var(--s) * 72);
+  }
+
+  .footer-dev {
+    bottom: calc(var(--s) * 112);
+    color: var(--color-paper);
+  }
+
+  .footer-contacts {
+    right: var(--spacing-gutter);
+    bottom: calc(var(--s) * 170);
+    left: var(--spacing-gutter);
+    text-transform: uppercase;
+  }
+
+  .footer-phone,
+  .footer-email {
+    display: block;
+    transition: color 200ms ease;
+  }
+
+  /* Footer phone/email in Tilda use the same link-slide hover as the header. */
+  .footer-contact-link {
+    overflow: hidden;
+  }
+  .footer-contact-link .slide-text {
+    position: relative;
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+  .footer-contact-link .slide-text::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    color: var(--color-grey-300);
+    white-space: nowrap;
+  }
+  .footer-contact-link:hover .slide-text,
+  .footer-contact-link:focus-visible .slide-text {
+    transform: translateY(-100%);
+  }
+  .footer-contact-link:focus-visible {
+    outline: none;
+  }
+
+  .footer-phone {
+    font-size: calc(var(--s) * 34);
+    line-height: 1;
+  }
+
+  .footer-email {
+    margin-top: calc(var(--s) * 8);
+    overflow-wrap: anywhere;
+    font-size: calc(var(--s) * 28);
+    line-height: 1;
+  }
+
+  @media (min-width: 640px) {
+    .footer-section {
+      --s: 1px;
+    }
+
+    .footer-inner {
+      min-height: 640px;
+      padding: 0;
+    }
+
+    .footer-logo {
+      position: absolute;
+      top: 32px;
+      left: var(--spacing-gutter);
+    }
+
+    .footer-top {
+      top: 32px;
+      width: 40px;
+      height: 40px;
+    }
+
+    .footer-address {
+      top: 32px;
+      left: calc(var(--guide-b) + 7px);
+      width: 168px;
+      max-width: none;
+    }
+
+    .footer-socials {
+      top: 32px;
+      left: calc(var(--guide-c) + 7px);
+    }
+
+    .footer-legal {
+      top: 172px;
+      left: calc(var(--guide-b) + 7px);
+    }
+
+    .footer-company {
+      left: var(--spacing-gutter);
+      bottom: 42px;
+    }
+
+    .footer-requisites {
+      left: calc(var(--guide-a) + 7px);
+      bottom: 42px;
+    }
+
+    .footer-dev {
+      left: calc(var(--guide-b) + 7px);
+      bottom: 42px;
+    }
+
+    .footer-contacts {
+      left: auto;
+      right: var(--spacing-gutter);
+      bottom: 31px;
+      text-align: right;
+    }
+
+    .footer-phone {
+      font-size: 48px;
+    }
+
+    .footer-email {
+      margin-top: 4px;
+      font-size: 48px;
+    }
+  }
+
+  @media (min-width: 640px) and (max-width: 959px) {
+    .footer-inner {
+      min-height: 740px;
+      padding: 0;
+    }
+
+    .footer-logo {
+      position: absolute;
+      top: 32px;
+      left: var(--guide-edge-left);
+    }
+
+    .footer-top {
+      top: 32px;
+      right: var(--guide-edge-right);
+      width: 40px;
+      height: 40px;
+    }
+
+    .footer-address {
+      top: 112px;
+      left: 22px;
+      width: 304px;
+      max-width: none;
+    }
+
+    .footer-socials {
+      top: 225px;
+      left: 22px;
+    }
+
+    .footer-legal {
+      top: 224px;
+      left: 326px;
+    }
+
+    .footer-company {
+      left: var(--guide-edge-left);
+      bottom: auto;
+      top: 481px;
+    }
+
+    .footer-requisites {
+      left: var(--guide-edge-left);
+      bottom: auto;
+      top: 508px;
+    }
+
+    .footer-dev {
+      left: 326px;
+      bottom: auto;
+      top: 485px;
+    }
+
+    .footer-contacts {
+      left: var(--guide-edge-left);
+      right: var(--guide-edge-right);
+      bottom: auto;
+      top: 576px;
+      text-align: left;
+    }
+
+    .footer-phone,
+    .footer-email {
+      font-size: 64px;
+    }
+
+    .footer-email {
+      margin-top: 4px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .footer-inner {
+      min-height: clamp(640px, 53.333vw, 768px);
+    }
+
+    .footer-logo {
+      top: clamp(32px, 2.667vw, 38px);
+    }
+
+    .footer-top {
+      top: clamp(32px, 2.667vw, 38px);
+      width: clamp(40px, 3.333vw, 48px);
+      height: clamp(40px, 3.333vw, 48px);
+    }
+
+    .footer-address,
+    .footer-socials {
+      top: clamp(32px, 2.667vw, 38px);
+    }
+
+    .footer-address {
+      width: clamp(168px, 14vw, 202px);
+    }
+
+    .footer-legal {
+      top: clamp(172px, 14.333vw, 206px);
+    }
+
+    .footer-company,
+    .footer-requisites,
+    .footer-dev {
+      bottom: clamp(42px, 3.5vw, 50px);
+    }
+
+    .footer-contacts {
+      bottom: clamp(31px, 2.583vw, 37px);
+    }
+
+    .footer-phone,
+    .footer-email {
+      font-size: clamp(48px, 4vw, 58px);
+    }
+  }
+</style>

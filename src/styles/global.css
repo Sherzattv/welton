@@ -43,29 +43,29 @@
   --text-h1--line-height: 1;
   --text-h1--letter-spacing: -0.012em;
 
-  --text-h2: clamp(1.75rem, 4vw, 3.4rem); /* 48px@1200 */
+  --text-h2: clamp(2rem, 4vw, 3.6rem); /* Tilda: 32px mobile → 48px@1200 → 57.6px@1440 */
   --text-h2--line-height: 1;
-  --text-h2--letter-spacing: -0.012em;
+  --text-h2--letter-spacing: -0.5px;
 
-  --text-h3: clamp(1.35rem, 2.5vw, 2.1rem); /* ~30px@1200 */
-  --text-h3--line-height: 1.02;
-  --text-h3--letter-spacing: -0.012em;
+  --text-h3: 1.5rem; /* Tilda card titles: 24px mobile */
+  --text-h3--line-height: 1;
+  --text-h3--letter-spacing: -0.2px;
 
-  --text-h4: clamp(1.2rem, 1.85vw, 1.55rem); /* ~22px@1200 */
-  --text-h4--line-height: 1.05;
-  --text-h4--letter-spacing: -0.012em;
+  --text-h4: 1.125rem; /* Tilda FAQ/subtitle: 18px mobile */
+  --text-h4--line-height: 1;
+  --text-h4--letter-spacing: -0.2px;
 
-  --text-stat: clamp(3.25rem, 8vw, 7rem); /* 96px@1200 */
+  --text-stat: 7.75rem; /* Tilda counters: 124px mobile */
   --text-stat--line-height: 1;
-  --text-stat--letter-spacing: -0.016em;
+  --text-stat--letter-spacing: -1.5px;
 
-  --text-unit: clamp(1rem, 1.66vw, 1.4rem); /* 20px@1200 */
+  --text-unit: 1.25rem; /* 20px */
   --text-unit--line-height: 1;
-  --text-unit--letter-spacing: -0.015em;
+  --text-unit--letter-spacing: -0.3px;
 
-  --text-body: clamp(0.85rem, 1.17vw, 1.05rem); /* 14px@1200 */
-  --text-body--line-height: 1.3;
-  --text-body--letter-spacing: -0.02em;
+  --text-body: clamp(0.875rem, 1.1667vw, 1.05rem); /* Tilda: 14px → 16.8px visual scale@1440 */
+  --text-body--line-height: 1.2857;
+  --text-body--letter-spacing: -0.6px;
 
   /* --- Раскладка --- */
   --spacing-gutter: clamp(13px, 2vw, 34px); /* боковые поля: 13px@375 → 2vw → стоп на 34px (заморозка на ultrawide); замерено по оригиналу */
@@ -88,6 +88,7 @@
    mobile/tablet → края контентной области + центр.
    ============================================================ */
 :root {
+  --guide-opacity: 0.02;
   --guide-a: var(--spacing-gutter);
   --guide-b: 50%;
   --guide-c: calc(100% - var(--spacing-gutter));
@@ -104,11 +105,46 @@
   }
 }
 
+@media (max-width: 479px) {
+  :root {
+    /* Tilda zero-block mobile artboard scales 360 → 390 proportionally. */
+    --text-h2: calc(100vw * 32 / 360);
+    --text-h3: calc(100vw * 24 / 360);
+    --text-h4: calc(100vw * 18 / 360);
+    --text-body: calc(100vw * 14 / 360);
+    --text-stat: calc(100vw * 124 / 360);
+    --text-unit: calc(100vw * 20 / 360);
+  }
+}
+
+@media (min-width: 640px) {
+  :root {
+    --text-h2: 2.5rem; /* 40px tablet */
+    --text-h2--letter-spacing: -0.5px;
+    --text-h3: 1.875rem; /* 30px from tablet/desktop in Tilda */
+    --text-h3--letter-spacing: -0.5px;
+    --text-h4: 1.375rem; /* 22px FAQ/subtitle */
+    --text-h4--letter-spacing: -0.5px;
+    --text-stat: 6rem;
+    --text-unit: 1.25rem;
+  }
+}
+
 @media (min-width: 960px) {
   :root {
     --guide-a: 25.667%;
     --guide-b: 49.917%;
     --guide-c: 74.167%;
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --text-h2: clamp(3rem, 4vw, 3.6rem); /* 48px@1200 → 57.6px@1440 */
+    --text-h3: clamp(1.875rem, 2.5vw, 2.25rem); /* 30px@1200 → 36px@1440 */
+    --text-h4: clamp(1.375rem, 1.8333vw, 1.65rem); /* 22px@1200 → 26.4px@1440 */
+    --text-stat: clamp(6rem, 8vw, 7.2rem); /* 96px@1200 → 115.2px@1440 */
+    --text-unit: clamp(1.25rem, 1.6667vw, 1.5rem); /* 20px@1200 → 24px@1440 */
   }
 }
 
@@ -118,6 +154,7 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
   }
 
   /* Lenis (плавный скролл) */
@@ -136,11 +173,14 @@
   }
 
   body {
+    overflow-x: hidden;
     background-color: var(--color-charcoal);
     color: var(--color-paper);
     font-family: var(--font-sans);
-    font-weight: 300; /* Inter Light — воздушный текст, как в оригинале */
-    line-height: 1.55;
+    font-size: var(--text-body);
+    font-weight: 400;
+    line-height: var(--text-body--line-height);
+    letter-spacing: var(--text-body--letter-spacing);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -167,12 +207,12 @@
 }
 
 /* ============================================================
-   Утилита: дисплейный заголовок с плотным негативным трекингом
+   Утилита: дисплейный заголовок Adderley с плотным трекингом.
+   Регистр оставляем из контента: так совпадают переносы Tilda.
    ============================================================ */
 @utility display {
   font-family: var(--font-display);
-  font-weight: 700;
-  text-transform: uppercase;
+  font-weight: 500;
 }
 
 /* ============================================================

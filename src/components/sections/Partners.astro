@@ -1,27 +1,27 @@
 ---
-import Container from "../Container.astro";
 import GridLines from "../GridLines.astro";
 import Heading from "../Heading.astro";
 import { partners } from "../../data/home";
 
-const loop = [...partners, ...partners];
+const ordered = [...partners].reverse();
+const loop = [...ordered, ...ordered];
 ---
 
-<section id="partners" class="relative overflow-hidden bg-paper text-charcoal">
+<section id="partners" class="partners-section relative overflow-hidden bg-paper text-charcoal">
   <GridLines />
-  <Container class="relative z-10 py-16 sm:py-24 lg:py-32">
-    <Heading as="h2" size="lg" class="max-w-2xl text-charcoal" data-split>
+  <div class="mx-auto w-full max-w-[1680px] px-gutter partners-inner relative z-10">
+    <Heading as="h2" size="lg" class="partners-heading text-charcoal" data-split>
       Используем проверенные профильные системы и комплектующие
     </Heading>
-  </Container>
+  </div>
 
-  <div class="group relative overflow-hidden pb-16 sm:pb-24">
-    <div class="marquee flex w-max gap-5">
+  <div class="partners-marquee-wrap">
+    <div class="partners-marquee">
       {
         loop.map((p) => (
-          <div class="flex h-44 w-60 shrink-0 flex-col items-center justify-center gap-5 bg-white">
-            <img src={p.logo} alt={p.name} loading="lazy" class="max-h-12 w-auto max-w-[60%] object-contain" />
-            <span class="text-sm text-grey-500">{p.name}</span>
+          <div class="partner-card">
+            <img src={p.logo} alt={p.name} loading="lazy" class="partner-logo" />
+            <span class="partner-name">{p.name}</span>
           </div>
         ))
       }
@@ -30,19 +30,206 @@ const loop = [...partners, ...partners];
 </section>
 
 <style>
-  .marquee {
-    animation: marquee 36s linear infinite;
+  .partners-section {
+    --s: calc(100vw / 360);
+    min-height: calc(var(--s) * 460);
   }
-  .group:hover .marquee {
+
+  .partners-inner {
+    min-height: inherit;
+    padding-top: calc(var(--s) * 72);
+  }
+
+  .partners-heading {
+    max-width: calc(var(--s) * 315);
+    text-transform: uppercase;
+  }
+
+  .partners-marquee-wrap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(var(--s) * 48);
+    z-index: 10;
+    max-width: 100vw;
+    overflow: hidden;
+    contain: paint;
+  }
+
+  .partners-marquee {
+    display: flex;
+    width: max-content;
+    gap: calc(var(--s) * 12);
+    padding-left: var(--spacing-gutter);
+    animation: partners-marquee 84s linear infinite;
+  }
+
+  .partners-marquee-wrap:hover .partners-marquee {
     animation-play-state: paused;
   }
-  @keyframes marquee {
+
+  .partner-card {
+    position: relative;
+    display: flex;
+    width: calc(var(--s) * 182);
+    height: calc(var(--s) * 182);
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
+  }
+
+  .partner-logo {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: cover;
+  }
+
+  .partner-name {
+    position: absolute;
+    left: calc(var(--s) * 16);
+    bottom: calc(var(--s) * 16);
+    color: var(--color-charcoal);
+    font-size: calc(var(--s) * 10);
+    line-height: 1.3;
+  }
+
+  @keyframes partners-marquee {
     to {
-      transform: translateX(calc(-50% - 0.625rem));
+      transform: translateX(calc(-50% - 6px));
     }
   }
+
+  @media (min-width: 640px) {
+    .partners-section {
+      --s: 1px;
+      min-height: 364px;
+    }
+
+    .partners-inner {
+      padding-top: 0;
+    }
+
+    .partners-heading {
+      position: absolute;
+      top: 0;
+      left: var(--spacing-gutter);
+      width: 416px;
+      max-width: none;
+    }
+
+    .partners-marquee-wrap {
+      bottom: 5px;
+    }
+
+    .partners-marquee {
+      gap: 12px;
+    }
+
+    .partner-card {
+      width: 182px;
+      height: 182px;
+    }
+
+    .partner-logo {
+      max-height: none;
+    }
+
+    .partner-name {
+      left: 16px;
+      bottom: 16px;
+      font-size: 10px;
+    }
+  }
+
+  @media (min-width: 640px) and (max-width: 959px) {
+    .partners-section {
+      min-height: 480px;
+    }
+
+    .partners-inner {
+      min-height: inherit;
+      padding-top: 0;
+    }
+
+    .partners-heading {
+      position: absolute;
+      top: 0;
+      left: var(--guide-edge-left);
+      width: 498px;
+      max-width: none;
+    }
+
+    .partners-marquee-wrap {
+      top: 156px;
+      bottom: auto;
+    }
+
+    .partners-marquee {
+      gap: 12px;
+      padding-left: var(--guide-edge-left);
+    }
+
+    .partner-card {
+      width: 220px;
+      height: 220px;
+    }
+
+    .partner-logo {
+      width: 100%;
+      height: 100%;
+      max-height: none;
+    }
+
+    .partner-name {
+      left: 16px;
+      bottom: 18px;
+      font-size: 10px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .partners-section {
+      --partners-cards-top: clamp(200px, 18vw, 360px);
+      --partners-bottom-gap: clamp(96px, 6vw, 150px);
+      min-height: calc(var(--partners-cards-top) + 15.167vw + var(--partners-bottom-gap));
+    }
+
+    .partners-heading {
+      width: 34.667vw;
+    }
+
+    .partners-marquee-wrap {
+      top: var(--partners-cards-top);
+      bottom: auto;
+    }
+
+    .partners-marquee {
+      gap: 1vw;
+    }
+
+    .partner-card {
+      width: 15.167vw;
+      height: 15.167vw;
+    }
+
+    .partner-logo {
+      max-height: none;
+    }
+
+    .partner-name {
+      left: 1.333vw;
+      bottom: 1.333vw;
+      font-size: 0.833vw;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .marquee {
+    .partners-marquee {
       animation: none;
     }
   }

@@ -1,9 +1,9 @@
 // ============================================================
 // Моушн-слой сайта. Один источник правды для всего движения:
 //   • Lenis — плавный скролл (конфиг 1:1 с оригиналом Велес Групп)
-//   • GSAP ScrollTrigger — reveal-блоки на скролле со stagger
+//   • GSAP ScrollTrigger — точечные fade-in элементы как в Tilda SBS
 //   • GSAP SplitText — заголовки «въезжают» построчно из-под маски
-//   • счётчики цифр, прогресс-бар, плавный скролл по якорям
+//   • прогресс-бар, плавный скролл по якорям
 //
 // Полностью уважает prefers-reduced-motion: при reduced весь контент
 // статичен (класс html.motion не выставляется — см. Layout.astro),
@@ -29,54 +29,16 @@ function initProgressBar(read: () => number) {
   return update;
 }
 
-/** Счётчики цифр: сохраняем префикс/суффикс (>300, 10+, 2022 …). */
-function initCounters() {
-  const hasViewport = !!window.innerHeight;
-  document.querySelectorAll<HTMLElement>("[data-count]").forEach((el) => {
-    const raw = (el.textContent ?? "").trim();
-    const match = raw.match(/^(\D*?)([\d\s ]+)(.*)$/);
-    if (!match) return;
-    const [, prefix, digits, suffix] = match;
-    const grouped = /[\s ]/.test(digits);
-    const target = parseInt(digits.replace(/[\s ]/g, ""), 10);
-    if (!Number.isFinite(target)) return;
-
-    const fmt = (n: number) => {
-      const s = Math.round(n).toString();
-      return grouped ? s.replace(/\B(?=(\d{3})+(?!\d))/g, " ") : s;
-    };
-
-    // Без вьюпорта (странное окружение) — сразу показываем финальное значение.
-    if (!hasViewport) {
-      el.textContent = `${prefix}${fmt(target)}${suffix}`;
-      return;
-    }
-
-    const counter = { v: 0 };
-    el.textContent = `${prefix}${fmt(0)}${suffix}`;
-    gsap.to(counter, {
-      v: target,
-      duration: 1.4,
-      ease: "power2.out",
-      scrollTrigger: { trigger: el, start: "top 90%", once: true },
-      onUpdate: () => {
-        el.textContent = `${prefix}${fmt(counter.v)}${suffix}`;
-      },
-    });
-  });
-}
-
-/** Reveal: блоки всплывают и проявляются при входе в кадр, со stagger. */
+/** Reveal: Tilda SBS blockintoview — чистый fade 0 → 1, без сдвига. */
 function initReveals() {
   const items = gsap.utils.toArray<HTMLElement>("[data-reveal]");
 
   const reveal = (els: Element[]) =>
     gsap.to(els, {
-      y: 0,
       autoAlpha: 1,
-      duration: 0.85,
-      ease: "expo.out",
-      stagger: 0.1,
+      duration: 0.6,
+      delay: 0.2,
+      ease: "power1.inOut",
       overwrite: true,
     });
 
@@ -87,7 +49,7 @@ function initReveals() {
     return;
   }
 
-  gsap.set(items, { y: 40, autoAlpha: 0 });
+  gsap.set(items, { autoAlpha: 0 });
 
   // Что уже в кадре на первом экране — показываем сразу (на загрузке).
   const inView = items.filter(
@@ -104,29 +66,28 @@ function initReveals() {
   });
 }
 
-/** Заголовки: построчный «въезд» из-под маски (как в оригинале). */
+/** Заголовки/крупные цифры: Tilda SplitText — строки выезжают из-под маски. */
 function initSplitHeadings() {
-  // Без вьюпорта — оставляем заголовки обычным текстом (видимыми).
+  // Без вьюпорта — оставляем текст обычным и видимым.
   if (!window.innerHeight) {
     gsap.set("[data-split]", { autoAlpha: 1 });
     return;
   }
   document.querySelectorAll<HTMLElement>("[data-split]").forEach((el) => {
     const split = SplitText.create(el, {
-      type: "lines",
+      type: "words,lines",
       mask: "lines",
       linesClass: "split-line",
+      autoSplit: true,
     });
     gsap.set(el, { autoAlpha: 1 });
     gsap.from(split.lines, {
       yPercent: 100,
       opacity: 0,
-      duration: 1,
-      stagger: 0.12,
-      ease: "power3.out",
-      scrollTrigger: { trigger: el, start: "top 85%", once: true },
-      // вернуть чистый DOM заголовка после анимации → текст снова текучий
-      onComplete: () => split.revert(),
+      duration: 1.2,
+      stagger: 0.15,
+      ease: "power2.out",
+      scrollTrigger: { trigger: el, start: "top 75%", once: true },
     });
   });
 }
@@ -174,7 +135,6 @@ export function initMotion() {
 
   initAnchors(lenis);
   initReveals();
-  initCounters();
 
   // Заголовки рвём на строки только после загрузки шрифтов — иначе
   // переносы строк посчитаются по системному шрифту и поедут.

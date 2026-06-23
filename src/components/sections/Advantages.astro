@@ -1,29 +1,193 @@
 ---
-import Container from "../Container.astro";
 import GridLines from "../GridLines.astro";
 import Heading from "../Heading.astro";
 import { advantages } from "../../data/home";
+
+// Tilda orders cards visually as: control → teams → volume → geography.
+const orderedAdvantages = [advantages[0], advantages[3], advantages[2], advantages[1]];
 ---
 
-<section id="advantages" class="relative bg-charcoal text-paper">
+<section id="advantages" class="advantages-section relative overflow-hidden text-paper">
+  <video
+    class="absolute inset-0 h-full w-full object-cover"
+    src="/video/advantages.mp4"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    aria-hidden="true"
+  ></video>
+  <div class="absolute inset-0 bg-charcoal/35"></div>
   <GridLines />
-  <Container class="relative z-10 py-16 sm:py-24 lg:py-32">
-    <Heading as="h2" size="lg" class="max-w-2xl" data-split>
-      Ответственный подход к каждому объекту
+
+  <div class="mx-auto w-full max-w-[1680px] px-gutter advantages-inner relative z-10">
+    <Heading as="h2" size="lg" class="advantages-heading" data-split>
+      Ответственный&nbsp;подход к&nbsp;каждому объекту
     </Heading>
 
-    <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <div class="advantages-grid">
       {
-        advantages.map((a) => (
-          <article data-reveal class="flex min-h-[20rem] flex-col justify-between bg-paper p-8 text-charcoal sm:min-h-[24rem]">
-            <span class="block h-2.5 w-2.5 self-end rounded-full bg-accent"></span>
-            <div>
-              <Heading as="h3" size="sm" class="text-charcoal">{a.title}</Heading>
-              <p class="mt-4 max-w-md text-grey-500">{a.desc}</p>
-            </div>
+        orderedAdvantages.map((a, i) => (
+          <article class="advantage-card" style={`--left:${(24 + 291 * i) / 12}vw`}>
+            <span class="advantage-dot" aria-hidden="true"></span>
+            <Heading as="h3" size="md" class="advantage-title text-charcoal">{a.title}</Heading>
+            <p class="advantage-desc text-charcoal">{a.desc}</p>
           </article>
         ))
       }
     </div>
-  </Container>
+  </div>
 </section>
+
+<style>
+  .advantages-section {
+    --s: calc(100vw / 360);
+    min-height: calc(var(--s) * 1040);
+  }
+
+  .advantages-inner {
+    min-height: inherit;
+    padding-top: calc(var(--s) * 72);
+    padding-bottom: calc(var(--s) * 48);
+  }
+
+  .advantages-heading {
+    max-width: calc(var(--s) * 300);
+    text-transform: uppercase;
+  }
+
+  .advantages-grid {
+    margin-top: calc(var(--s) * 180);
+    display: grid;
+    gap: calc(var(--s) * 12);
+  }
+
+  .advantage-card {
+    position: relative;
+    min-height: calc(var(--s) * 250);
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
+    padding: calc(var(--s) * 16);
+  }
+
+  .advantage-dot {
+    position: absolute;
+    top: calc(var(--s) * 16);
+    right: calc(var(--s) * 16);
+    width: calc(var(--s) * 8);
+    height: calc(var(--s) * 8);
+    border-radius: 999px;
+    background: var(--color-accent);
+  }
+
+  .advantage-title {
+    max-width: calc(var(--s) * 235);
+    text-transform: uppercase;
+  }
+
+  .advantage-desc {
+    position: absolute;
+    left: calc(var(--s) * 16);
+    right: calc(var(--s) * 16);
+    bottom: calc(var(--s) * 16);
+  }
+
+  @media (min-width: 640px) {
+    .advantages-section {
+      --s: 1px;
+      min-height: 720px;
+    }
+
+    .advantages-inner {
+      padding-top: 48px;
+      padding-bottom: 64px;
+    }
+
+    .advantages-heading {
+      max-width: 381px;
+    }
+
+    .advantages-grid {
+      margin-top: 190px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .advantage-card {
+      min-height: 279px;
+      padding: 16px;
+    }
+
+    .advantage-dot {
+      top: 16px;
+      right: 16px;
+      width: 8px;
+      height: 8px;
+    }
+
+    .advantage-title {
+      max-width: 245px;
+    }
+
+    .advantage-desc {
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      max-width: 245px;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .advantages-section {
+      min-height: 53.333vw;
+    }
+
+    .advantages-inner {
+      min-height: inherit;
+      padding: 0;
+    }
+
+    .advantages-heading {
+      position: absolute;
+      top: 2.667vw;
+      left: var(--spacing-gutter);
+      width: 31.75vw;
+      max-width: none;
+    }
+
+    .advantages-grid {
+      margin: 0;
+      display: block;
+    }
+
+    .advantage-card {
+      position: absolute;
+      top: 27.417vw;
+      left: var(--left);
+      width: 23.25vw;
+      min-height: 0;
+      height: 23.25vw;
+      padding: 1.333vw;
+    }
+
+    .advantage-dot {
+      top: 1.333vw;
+      right: 1.333vw;
+      width: 0.667vw;
+      height: 0.667vw;
+    }
+
+    .advantage-title {
+      max-width: 20.417vw;
+    }
+
+    .advantage-desc {
+      left: 1.333vw;
+      right: 1.333vw;
+      bottom: 1.333vw;
+      max-width: 20.417vw;
+    }
+  }
+</style>

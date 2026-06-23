@@ -1,29 +1,263 @@
 ---
-import Container from "../Container.astro";
 import GridLines from "../GridLines.astro";
 import Heading from "../Heading.astro";
 import { stages } from "../../data/home";
 ---
 
-<section id="stages" class="relative bg-paper text-charcoal">
+<section id="stages" class="stages-section relative bg-paper text-charcoal">
   <GridLines />
-  <Container class="relative z-10 py-16 sm:py-24 lg:py-32">
-    <Heading as="h2" size="lg" class="max-w-2xl text-charcoal" data-split>
-      Прозрачный процесс реализации проекта
-    </Heading>
+  <div class="mx-auto w-full max-w-[1680px] px-gutter stages-inner relative z-10">
+    <div class="stages-heading-rail">
+      <div class="stages-heading-wrap">
+        <Heading as="h2" size="lg" class="stages-heading text-charcoal" data-split>
+          Прозрачный процесс реализации проекта
+        </Heading>
+      </div>
+    </div>
 
-    <div class="mt-12">
+    <div class="stages-list">
       {
-        stages.map((s) => (
-          <article data-reveal class="grid grid-cols-1 gap-4 border-t border-grey-200 py-8 lg:grid-cols-12 lg:gap-8">
-            <span class="text-grey-400 lg:col-span-1">{s.num}</span>
-            <Heading as="h3" size="sm" class="text-charcoal lg:col-span-5">
-              {s.title}
-            </Heading>
-            <p class="max-w-xl text-grey-500 lg:col-span-6">{s.desc}</p>
-          </article>
-        ))
+        stages.map((s, i) => {
+          const tops = [0, 174, 348, 522, 677];
+          const tabletTops = [128, 300, 472, 644, 816];
+          return (
+            <article class="stage-row" style={`--top:clamp(${tops[i]}px, ${tops[i] / 12}vw, ${tops[i] * 1.2}px);--tab-top:${tabletTops[i]}px`}>
+              <span class="stage-line" aria-hidden="true"></span>
+              <span class="stage-num text-grey-400">{s.num}</span>
+              <Heading as="h3" size="md" class="stage-title text-charcoal">{s.title}</Heading>
+              <p class="stage-desc text-charcoal">{s.desc}</p>
+            </article>
+          );
+        })
       }
     </div>
-  </Container>
+  </div>
 </section>
+
+<style>
+  .stages-section {
+    --s: calc(100vw / 360);
+  }
+
+  .stages-inner {
+    min-height: calc(var(--s) * 1050);
+    padding-top: calc(var(--s) * 72);
+    padding-bottom: calc(var(--s) * 64);
+  }
+
+  .stages-heading-rail {
+    max-width: calc(var(--s) * 295);
+  }
+
+  .stages-heading-wrap,
+  .stages-heading {
+    width: 100%;
+  }
+
+  .stages-heading {
+    text-transform: uppercase;
+  }
+
+  .stages-list {
+    margin-top: calc(var(--s) * 56);
+  }
+
+  .stage-row {
+    position: relative;
+    display: grid;
+    gap: calc(var(--s) * 16);
+    padding-block: calc(var(--s) * 21) calc(var(--s) * 36);
+  }
+
+  .stage-line {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background: currentColor;
+    opacity: var(--guide-opacity, 0.02);
+  }
+
+  .stage-title {
+    text-transform: uppercase;
+  }
+
+  .stage-desc {
+    max-width: calc(var(--s) * 320);
+  }
+
+  @media (min-width: 640px) {
+    .stages-section {
+      --s: 1px;
+    }
+
+    .stages-inner {
+      min-height: 780px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .stages-heading-rail {
+      position: absolute;
+      top: 0;
+      left: var(--spacing-gutter);
+      width: 343px;
+      max-width: none;
+    }
+
+    .stages-list {
+      position: absolute;
+      top: 0;
+      left: calc(var(--guide-b) + 7px);
+      right: var(--spacing-gutter);
+      margin: 0;
+    }
+
+    .stage-row {
+      min-height: 150px;
+      padding: 21px 0 32px;
+      grid-template-columns: 72px minmax(0, 1fr);
+      gap: 16px 29px;
+    }
+
+    .stage-title,
+    .stage-desc {
+      grid-column: 2;
+    }
+
+    .stage-num {
+      grid-row: 1 / span 2;
+    }
+
+    .stage-desc {
+      max-width: 364px;
+    }
+  }
+
+  @media (min-width: 640px) and (max-width: 959px) {
+    .stages-inner {
+      min-height: 1050px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .stages-heading-rail {
+      position: absolute;
+      top: 0;
+      left: var(--guide-edge-left);
+      width: 291px;
+      max-width: none;
+    }
+
+    .stages-list {
+      position: absolute;
+      top: 0;
+      left: var(--guide-edge-left);
+      right: var(--guide-edge-right);
+      margin: 0;
+    }
+
+    .stage-row {
+      position: absolute;
+      top: var(--tab-top);
+      left: 0;
+      right: 0;
+      min-height: 150px;
+      display: block;
+      padding: 0;
+    }
+
+    .stage-num {
+      position: absolute;
+      top: 21px;
+      left: 0;
+    }
+
+    .stage-title {
+      position: absolute;
+      top: 45px;
+      left: 0;
+      width: min(530px, calc(100vw - 48px));
+    }
+
+    .stage-desc {
+      position: absolute;
+      top: 88px;
+      left: 0;
+      width: min(530px, calc(100vw - 48px));
+      max-width: none;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .stages-inner {
+      --stages-content-height: clamp(780px, 65vw, 936px);
+      --stages-bottom-gap: clamp(160px, 10vw, 220px);
+      min-height: calc(var(--stages-content-height) + var(--stages-bottom-gap));
+    }
+
+    .stages-heading-rail {
+      position: absolute;
+      top: 0;
+      left: var(--spacing-gutter);
+      width: clamp(343px, 28.583vw, 412px);
+      max-width: none;
+      height: var(--stages-content-height);
+    }
+
+    .stages-heading-wrap {
+      position: sticky;
+      top: clamp(64px, 5.333vw, 76.8px);
+    }
+
+    .stages-list {
+      left: calc(var(--guide-b) + clamp(7px, 0.583vw, 8.4px));
+      width: clamp(570px, 47.5vw, 684px);
+      right: auto;
+    }
+
+    .stage-row {
+      position: absolute;
+      top: var(--top);
+      left: 0;
+      width: 100%;
+      height: clamp(103px, 8.583vw, 124px);
+      min-height: 0;
+      display: block;
+      padding: 0;
+    }
+
+    .stage-num {
+      position: absolute;
+      top: clamp(21px, 1.75vw, 25px);
+      left: 0;
+    }
+
+    .stage-title {
+      position: absolute;
+      top: clamp(21px, 1.75vw, 25px);
+      left: clamp(101px, 8.417vw, 121px);
+      width: clamp(340px, 28.333vw, 408px);
+    }
+
+    .stage-desc {
+      position: absolute;
+      top: clamp(56px, 4.667vw, 67px);
+      left: clamp(101px, 8.417vw, 121px);
+      width: clamp(364px, 30.333vw, 437px);
+      max-width: none;
+    }
+  }
+
+  @media (min-width: 960px) and (max-width: 1199px) {
+    .stages-list {
+      right: var(--spacing-gutter);
+      width: auto;
+    }
+
+    .stage-title,
+    .stage-desc {
+      width: calc(100% - 101px);
+    }
+  }
+</style>

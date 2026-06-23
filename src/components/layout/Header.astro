@@ -1,5 +1,6 @@
 ---
 import Container from "../Container.astro";
+import Logo from "../Logo.astro";
 import { nav, contact } from "../../data/home";
 ---
 
@@ -18,27 +19,7 @@ import { nav, contact } from "../../data/home";
     <!-- Левая группа: логотип + меню -->
     <div class="flex items-stretch gap-7">
       <a href="/" aria-label="Велес Групп — на главную" class="flex items-center">
-        <svg
-          width="71"
-          height="32"
-          viewBox="0 0 80 36"
-          fill="currentColor"
-          aria-hidden="true"
-          class="h-[35px] w-[77px] lg:h-8 lg:w-[71px] xl:h-[38px] xl:w-[85px]"
-        >
-          <path d="M74.8396 35.9582H72.4445V20.7387H80V35.9582H77.5613V22.9129H74.8396V35.9582Z"></path>
-          <path d="M65.7652 35.9582H63.3701V20.7387H70.9256V35.9582H68.487V22.9129H65.7652V35.9582Z"></path>
-          <path d="M60.0125 32.0881C59.7077 33.5665 59.2505 34.5812 58.6408 35.132C57.915 35.7987 56.761 36.0814 55.1788 35.9799V33.8492C55.832 33.8927 56.311 33.8347 56.6158 33.6752C56.9787 33.4868 57.2037 33.1317 57.2908 32.6099L57.3126 32.4794L54.003 20.7387H56.3763L57.6827 25.935L58.423 29.5007L58.9892 25.9568L60.0779 20.7387H62.5818L60.0125 32.0881Z"></path>
-          <path d="M50.2372 20.7387C52.6178 20.7387 53.8081 21.9925 53.8081 24.5001V26.4786C53.8081 28.9862 52.6178 30.24 50.2372 30.24H49.1049V35.9582H46.7098V20.7387H50.2372ZM49.1049 22.9129V28.0658H50.2372C51.021 28.0658 51.413 27.5874 51.413 26.6308V24.3479C51.413 23.3912 51.021 22.9129 50.2372 22.9129H49.1049Z"></path>
-          <path d="M38.9968 35.9582V20.7387H45.3112V22.9129H41.3919V35.9582H38.9968Z"></path>
-          <path d="M79.7305 11.8863V13.9083C79.7305 16.4594 78.5402 17.7349 76.1596 17.7349C73.779 17.7349 72.5887 16.4594 72.5887 13.9083V5.99417C72.5887 3.44309 73.779 2.16756 76.1596 2.16756C78.5402 2.16756 79.7305 3.44309 79.7305 5.99417V7.47263H77.4661V5.84197C77.4661 4.84184 77.0524 4.34177 76.225 4.34177C75.3976 4.34177 74.9839 4.84184 74.9839 5.84197V14.0605C74.9839 15.0461 75.3976 15.539 76.225 15.539C77.0524 15.539 77.4661 15.0461 77.4661 14.0605V11.8863H79.7305Z"></path>
-          <path d="M67.3813 8.75542H70.6691V10.9296H67.3813V15.3868H71.5183V17.561H64.9862V2.3415H71.5183V4.51571H67.3813V8.75542Z"></path>
-          <path d="M54.7264 15.4085C55.3071 15.4085 55.6845 15.3215 55.8587 15.1476C56.0764 14.9592 56.1925 14.5243 56.2071 13.8431L56.599 2.3415H63.3706V17.561H60.932V4.51571H58.8417L58.5804 13.7126C58.5369 15.1041 58.2465 16.097 57.7094 16.6913C57.1724 17.2856 56.3014 17.5827 55.0966 17.5827H54.7264V15.4085Z"></path>
-          <path d="M49.998 8.75542H53.2858V10.9296H49.998V15.3868H54.135V17.561H47.6029V2.3415H54.135V4.51571H49.998V8.75542Z"></path>
-          <path d="M42.5894 2.3415C44.9555 2.3415 46.1386 3.50833 46.1386 5.84198V6.38553C46.1386 7.95097 45.6232 8.97285 44.5926 9.45117C45.7829 9.915 46.3781 11.0021 46.3781 12.7125V13.9518C46.3781 16.3579 45.166 17.561 42.7419 17.561H38.975V2.3415H42.5894ZM41.3701 10.7122V15.3868H42.7419C43.5693 15.3868 43.983 14.8867 43.983 13.8866V12.5603C43.983 11.8645 43.8596 11.379 43.6128 11.1036C43.3806 10.8427 42.9886 10.7122 42.437 10.7122H41.3701ZM41.3701 4.51571V8.538H42.3064C43.2644 8.538 43.7434 8.0017 43.7434 6.92909V6.08114C43.7434 5.03752 43.337 4.51571 42.5241 4.51571H41.3701Z"></path>
-          <path d="M33.0794 22.8635V35.9581H0V22.8635L22.1925 17.4594L33.0794 22.8635ZM22.1925 33.6718H30.7997V24.1106L22.1925 19.7458V33.6718Z"></path>
-          <path d="M33.0794 9.35327V21.8243L22.1925 16.4202L0 21.8243V9.35327L22.1925 0L33.0794 9.35327ZM22.1925 14.1338L30.9857 18.7065V9.97682L22.1925 2.28635V14.1338Z"></path>
-        </svg>
+        <Logo class="h-[35px] w-[77px] lg:h-8 lg:w-[71px] xl:h-[38px] xl:w-[85px]" />
       </a>
 
       <nav class="hidden lg:block">
@@ -71,8 +52,9 @@ import { nav, contact } from "../../data/home";
       <button
         type="button"
         data-menu-toggle
-        aria-label="Меню"
+        aria-label="Открыть меню"
         aria-expanded="false"
+        aria-controls="site-menu"
         class="burger relative z-50 self-center cursor-pointer lg:hidden"
       >
         <span></span><span></span><span></span><span></span>
@@ -83,53 +65,131 @@ import { nav, contact } from "../../data/home";
   </Container>
 </header>
 
-<!-- Затемнение под меню (мобила/планшет) -->
+<!-- Затемнение под меню (мобила/планшет): мягко прокрашивается, пока панель едет. -->
 <div
   data-menu-overlay
-  class="invisible fixed inset-0 z-30 bg-charcoal/40 opacity-0 transition-opacity duration-300 ease-in-out lg:hidden"
+  class="invisible fixed inset-0 z-30 bg-charcoal/40 opacity-0 transition-opacity duration-300 ease-out lg:hidden"
 ></div>
 
-<!-- Меню-шторка справа (мобила/планшет) -->
+<!-- Меню на весь экран (мобила/планшет). -->
 <aside
+  id="site-menu"
   data-menu
+  role="dialog"
+  aria-modal="true"
   aria-hidden="true"
-  class="fixed bottom-0 right-0 top-0 z-[60] flex w-[240px] max-w-full translate-x-full flex-col bg-charcoal text-paper transition-transform duration-300 ease-in-out lg:hidden"
+  aria-labelledby="site-menu-title"
+  class="site-menu fixed inset-0 z-[60] flex translate-x-full flex-col bg-charcoal text-paper lg:hidden"
 >
-  <button
-    type="button"
-    data-menu-toggle
-    aria-label="Закрыть меню"
-    aria-expanded="false"
-    class="burger menu-close absolute right-[5px] top-[5px] z-10 cursor-pointer"
-  >
-    <span></span><span></span><span></span><span></span>
-  </button>
+  <h2 id="site-menu-title" class="sr-only">Меню навигации</h2>
 
-  <nav class="flex flex-col gap-[15px] px-[25px] pt-[42px]">
-    {
-      nav.map((item) => (
-        <a
-          href={item.href}
-          data-menu-link
-          class="display text-[24px] leading-none text-paper transition-colors duration-200 hover:text-grey-300"
-        >
-          {item.label}
-        </a>
-      ))
-    }
+  <!-- Топ-бар внутри меню повторяет геометрию хедера: логотип и крестик
+       встают точно туда, где были логотип и бургер — без визуального прыжка. -->
+  <div class="menu-topbar relative flex h-[69px] shrink-0 items-stretch xl:h-[76px]">
+    <Container class="relative flex h-full items-stretch justify-between">
+      <a
+        href="/"
+        data-menu-link
+        aria-label="Велес Групп — на главную"
+        class="flex items-center"
+      >
+        <Logo class="h-[35px] w-[77px] xl:h-[38px] xl:w-[85px]" />
+      </a>
+
+      <button
+        type="button"
+        data-menu-toggle
+        aria-label="Закрыть меню"
+        aria-expanded="false"
+        aria-controls="site-menu"
+        class="burger relative z-50 self-center cursor-pointer"
+      >
+        <span></span><span></span><span></span><span></span>
+      </button>
+    </Container>
+    <span
+      aria-hidden="true"
+      class="menu-topbar-hairline pointer-events-none absolute bottom-0 h-px bg-paper/10"
+    ></span>
+  </div>
+
+  <!-- Пронумерованные пункты: 01–05 + display uppercase + стрелка-аффорданс. -->
+  <nav class="menu-nav min-h-0 flex-1 overflow-y-auto">
+    <Container as="ul">
+      {
+        nav.map((item, i) => (
+          <li class="menu-item" style={`--i:${i}`}>
+            <a
+              href={item.href}
+              data-menu-link
+              class="menu-link group flex items-center justify-between gap-4 border-b border-paper/10 py-[clamp(18px,4.5vw,30px)] text-paper transition-colors duration-200 hover:text-accent focus-visible:text-accent focus-visible:outline-none"
+            >
+              <span class="flex items-baseline gap-[clamp(16px,5vw,32px)]">
+                <span class="text-[12px] font-medium uppercase tracking-[0.14em] text-grey-500">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span class="display text-[clamp(32px,9vw,56px)] leading-[0.95] tracking-[-0.01em]">
+                  {item.label}
+                </span>
+              </span>
+              <svg
+                width="20"
+                height="14"
+                viewBox="0 0 18 14"
+                fill="none"
+                aria-hidden="true"
+                class="shrink-0 transition-transform duration-300 ease-out group-hover:translate-x-1 group-focus-visible:translate-x-1"
+              >
+                <path d="M11 1l6 6-6 6M17 7H1" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path>
+              </svg>
+            </a>
+          </li>
+        ))
+      }
+    </Container>
   </nav>
 
-  <div class="mt-auto flex flex-col gap-[22px] px-[25px] pb-[25px]">
-    <div class="flex gap-2">
-      <a href={contact.telegram} aria-label="Telegram" class="flex size-[30px] items-center justify-center rounded-full bg-paper text-charcoal transition-colors hover:bg-accent hover:text-paper">T</a>
-      <a href={contact.max} aria-label="Max" class="flex size-[30px] items-center justify-center rounded-full bg-paper text-charcoal transition-colors hover:bg-accent hover:text-paper">M</a>
-    </div>
-    <a
-      href={contact.phoneHref}
-      class="inline-flex h-[50px] w-[155px] items-center justify-center rounded-[3px] bg-paper px-4 text-[14px] font-semibold tracking-[-0.5px] text-charcoal transition-colors duration-200 hover:bg-accent hover:text-paper"
-    >
-      {contact.phone}
-    </a>
+  <!-- Низ: большой телефон + email (как в футере), под чертой соцсети текстом. -->
+  <div class="menu-foot shrink-0">
+    <Container class="pt-[clamp(28px,6vw,44px)] pb-[max(28px,env(safe-area-inset-bottom))]">
+      <div class="flex flex-col gap-[clamp(6px,1vw,10px)] border-b border-paper/10 pb-[clamp(24px,5vw,32px)]">
+        <a
+          href={contact.phoneHref}
+          data-menu-link
+          class="display block text-[clamp(28px,7vw,44px)] leading-none transition-colors duration-200 hover:text-accent focus-visible:text-accent focus-visible:outline-none"
+        >
+          {contact.phone}
+        </a>
+        <a
+          href={contact.emailHref}
+          data-menu-link
+          class="display block break-all text-[clamp(18px,4.5vw,28px)] leading-none transition-colors duration-200 hover:text-accent focus-visible:text-accent focus-visible:outline-none"
+        >
+          {contact.email}
+        </a>
+      </div>
+      <div class="mt-[clamp(20px,4vw,28px)] flex items-center gap-5 text-[12px] font-medium uppercase tracking-[0.16em] text-grey-400">
+        <a
+          href={contact.telegram}
+          target="_blank"
+          rel="noopener"
+          data-menu-link
+          class="transition-colors duration-200 hover:text-accent focus-visible:text-accent focus-visible:outline-none"
+        >
+          Telegram
+        </a>
+        <span aria-hidden="true" class="h-3 w-px bg-paper/20"></span>
+        <a
+          href={contact.max}
+          target="_blank"
+          rel="noopener"
+          data-menu-link
+          class="transition-colors duration-200 hover:text-accent focus-visible:text-accent focus-visible:outline-none"
+        >
+          Max
+        </a>
+      </div>
+    </Container>
   </div>
 </aside>
 
@@ -142,21 +202,19 @@ import { nav, contact } from "../../data/home";
     color: var(--color-charcoal);
     background: var(--color-paper);
     transform: translateY(-100%);
-    transition: transform 350ms linear;
+    transition: transform 500ms linear;
     pointer-events: none;
   }
   .header-sticky[data-mode="sticky"] {
     transform: translateY(0);
     pointer-events: auto;
   }
-  .header-sticky[data-menu-open="true"] {
-    transform: translateY(0);
-    pointer-events: auto;
+  /* В «top»-зоне (верх страницы) sticky обязана быть невидимой без шлейфа:
+     если бы здесь дотягивалась анимация 350ms slide-out, пользователь видел бы
+     остаток уезжающей белой шапки уже стоя на y=0 — особенно при быстром скролле. */
+  .header-sticky[data-mode="top"] {
+    transition: none;
   }
-  .top-header[data-menu-open="true"] {
-    color: var(--color-paper);
-  }
-
   .header-guides {
     color: var(--color-charcoal);
     opacity: 0;
@@ -171,7 +229,7 @@ import { nav, contact } from "../../data/home";
     bottom: 0;
     width: 1px;
     background: currentColor;
-    opacity: 0.04;
+    opacity: var(--guide-opacity, 0.02);
   }
   .header-guide-a {
     left: var(--guide-a);
@@ -189,7 +247,7 @@ import { nav, contact } from "../../data/home";
     bottom: 0;
     height: 1px;
     background: currentColor;
-    opacity: 0.06;
+    opacity: var(--guide-opacity, 0.02);
   }
 
   /* Hover как в оригинале: текст уезжает вверх, снизу приходит серая копия. */
@@ -214,10 +272,16 @@ import { nav, contact } from "../../data/home";
     transform: translateY(-100%);
   }
 
-  /* Бургер: в оригинале на мобиле две тонкие линии шириной ~45px. */
+  /* Бургер: две тонкие линии шириной ~45px, как в оригинале. */
   .burger {
     height: 40px;
     width: 45px;
+  }
+  /* Расширенная мобильная hit-area без визуального увеличения. */
+  .burger::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
   }
   .burger span {
     position: absolute;
@@ -245,18 +309,67 @@ import { nav, contact } from "../../data/home";
     bottom: 50%;
     transform: translateY(50%) rotate(-45deg);
   }
-  .menu-close {
-    width: 40px;
-  }
-  .menu-close span {
-    left: 8px;
-    right: 8px;
-  }
-
   /* Бургер должен оставаться видимым поверх открытого меню. Его цвет инвертируем
      в открытом состоянии — фон шторки тёмный, иконка светлая. */
   .burger[aria-expanded="true"] {
     color: var(--color-paper);
+  }
+
+  /* Меню: смягчённая кривая входа, чтобы панель «доводилась», а не вылетала.
+     В закрытом состоянии убираем из layout: иначе off-canvas увеличивает
+     scrollWidth и ломает визуальные срезы/может дать горизонтальный скролл. */
+  .site-menu {
+    display: none;
+    visibility: hidden;
+    transition:
+      translate 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 420ms;
+  }
+  .site-menu[aria-hidden="false"] {
+    display: flex;
+    visibility: visible;
+    transition:
+      translate 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .menu-topbar-hairline {
+    left: var(--guide-edge-left);
+    right: var(--guide-edge-right);
+  }
+
+  /* Stagger: пункты и низ оживают сразу, как панель пошла. */
+  .menu-item,
+  .menu-foot {
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 360ms ease-out,
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .menu-item {
+    transition-delay: calc(140ms + 50ms * var(--i, 0));
+  }
+  .menu-foot {
+    transition-delay: 420ms;
+  }
+  [data-menu][aria-hidden="false"] .menu-item,
+  [data-menu][aria-hidden="false"] .menu-foot {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Acessibility: уважаем reduced-motion — никаких сдвигов, только мгновенное появление. */
+  @media (prefers-reduced-motion: reduce) {
+    .site-menu {
+      transition: none;
+    }
+    .menu-item,
+    .menu-foot {
+      transition: none;
+      opacity: 1;
+      transform: none;
+    }
   }
 </style>
 
@@ -278,10 +391,19 @@ import { nav, contact } from "../../data/home";
   const toggles = document.querySelectorAll<HTMLButtonElement>("[data-menu-toggle]");
   const menu = document.querySelector<HTMLElement>("[data-menu]");
   const overlay = document.querySelector<HTMLElement>("[data-menu-overlay]");
-  const links = document.querySelectorAll<HTMLAnchorElement>("[data-menu-link]");
+  const menuLinks = document.querySelectorAll<HTMLAnchorElement>("[data-menu-link]");
+
+  // Кнопка, открывшая меню, — чтобы вернуть фокус ей при закрытии.
+  let opener: HTMLElement | null = null;
 
   let lastY = Math.max(window.scrollY, 0);
   let ticking = false;
+  // Гистерезис у порога: «заряжаем» появление sticky только после ARM_AT,
+  // снимаем заряд ниже HIDE_AT. Зазор 800–900 — мёртвая зона, в которой
+  // шапка не успевает мелькнуть при возврате к началу страницы.
+  const ARM_AT = 900;
+  const HIDE_AT = 800;
+  let armed = false;
 
   const syncHeader = () => {
     if (!stickyHeader) return;
@@ -290,8 +412,13 @@ import { nav, contact } from "../../data/home";
     const scrollingUp = delta < -1;
     const scrollingDown = delta > 1;
 
-    if (y < 800) {
-      stickyHeader.dataset.mode = "hidden";
+    if (y >= ARM_AT) armed = true;
+    if (y < HIDE_AT) armed = false;
+
+    if (!armed) {
+      // Мы в верхней зоне — снап без анимации, чтобы хвост слайд-аута
+      // не «дотягивался» до экрана уже после того, как юзер встал на y=0.
+      stickyHeader.dataset.mode = "top";
     } else if (scrollingUp) {
       stickyHeader.dataset.mode = "sticky";
     } else if (scrollingDown) {
@@ -314,28 +441,78 @@ import { nav, contact } from "../../data/home";
   );
   syncHeader();
 
+  let closeTimer: number | undefined;
+
   const setOpen = (open: boolean) => {
     if (!menu || !overlay) return;
+    if (closeTimer) window.clearTimeout(closeTimer);
+
     toggles.forEach((toggle) => toggle.setAttribute("aria-expanded", String(open)));
-    menu.setAttribute("aria-hidden", String(!open));
-    menu.classList.toggle("translate-x-full", !open);
-    menu.classList.toggle("translate-x-0", open);
     overlay.classList.toggle("invisible", !open);
     overlay.classList.toggle("opacity-0", !open);
-    topHeader?.setAttribute("data-menu-open", String(open));
-    stickyHeader?.setAttribute("data-menu-open", String(open));
+    // Скролл-лок: и для Lenis (через класс), и для тех окружений, где Lenis не активен.
+    document.documentElement.classList.toggle("lenis-stopped", open);
     document.body.style.overflow = open ? "hidden" : "";
+
+    if (open) {
+      menu.setAttribute("aria-hidden", "false");
+      menu.classList.add("translate-x-full");
+      menu.classList.remove("translate-x-0");
+      // Даем браузеру зафиксировать стартовую позицию display:flex + translate-x-full,
+      // затем запускаем transition в translate-x-0.
+      void menu.offsetWidth;
+      requestAnimationFrame(() => {
+        menu.classList.remove("translate-x-full");
+        menu.classList.add("translate-x-0");
+      });
+
+      // Фокус — на первую интерактивную ссылку, чтобы клавиатура / screen-reader сразу попали внутрь.
+      const firstLink = menu.querySelector<HTMLElement>("a[href]");
+      firstLink?.focus({ preventScroll: true });
+    } else {
+      menu.classList.add("translate-x-full");
+      menu.classList.remove("translate-x-0");
+      closeTimer = window.setTimeout(() => {
+        menu.setAttribute("aria-hidden", "true");
+      }, 420);
+
+      opener?.focus({ preventScroll: true });
+      opener = null;
+    }
   };
 
   toggles.forEach((toggle) => {
     toggle.addEventListener("click", () => {
-      const isOpen = toggle.getAttribute("aria-expanded") === "true";
-      setOpen(!isOpen);
+      const wasOpen = toggle.getAttribute("aria-expanded") === "true";
+      if (!wasOpen) opener = toggle;
+      setOpen(!wasOpen);
     });
   });
   overlay?.addEventListener("click", () => setOpen(false));
-  links.forEach((l) => l.addEventListener("click", () => setOpen(false)));
+  menuLinks.forEach((l) => l.addEventListener("click", () => setOpen(false)));
+
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") setOpen(false);
+    if (menu?.getAttribute("aria-hidden") !== "false") return;
+    if (e.key === "Escape") {
+      setOpen(false);
+      return;
+    }
+    if (e.key === "Tab") {
+      // Фокус-трэп: Tab не уходит за пределы открытого меню.
+      const focusables = menu.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled])',
+      );
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
   });
 </script>

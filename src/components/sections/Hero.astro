@@ -106,6 +106,42 @@ import Button from "../Button.astro";
     }
   }
 
+  @media (min-width: 960px) and (max-width: 1199px) {
+    .hero-layout {
+      inset-inline: 24px;
+      bottom: 40px;
+      flex-direction: row;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 0;
+    }
+
+    .hero-title {
+      width: 420px;
+      font-size: 64px;
+      line-height: 0.9;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-side {
+      width: 219px;
+      justify-content: space-between;
+      gap: 0;
+    }
+
+    .hero-desc {
+      max-width: none;
+      font-size: 14px;
+      line-height: 18px;
+      letter-spacing: -0.6px;
+    }
+
+    .hero-cta {
+      width: 219px;
+      height: 48px;
+    }
+  }
+
   @media (min-width: 1200px) {
     .hero-section {
       min-height: clamp(640px, 53.333vw, 768px);

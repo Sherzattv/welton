@@ -1,74 +1,358 @@
 ---
-import Container from "../Container.astro";
 import GridLines from "../GridLines.astro";
 import Heading from "../Heading.astro";
 import { objects } from "../../data/home";
 ---
 
-<section id="objects" class="relative bg-charcoal text-paper">
+<section id="objects" class="objects-section relative overflow-hidden bg-paper text-charcoal">
   <GridLines />
-  <Container class="relative z-10 py-16 sm:py-24 lg:py-32">
-    <div class="flex items-end justify-between gap-6">
-      <Heading as="h2" size="lg" class="max-w-2xl" data-split>
-        Объекты, с которыми мы работаем
-      </Heading>
-      <div class="hidden gap-3 sm:flex">
-        <button
-          type="button"
-          data-obj-prev
-          aria-label="Назад"
-          class="flex h-12 w-12 items-center justify-center border border-paper/25 transition-colors hover:border-accent hover:text-accent"
-        >
-          <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"
-            ><path d="M7 1L1 7l6 6M1 7h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path></svg>
-        </button>
-        <button
-          type="button"
-          data-obj-next
-          aria-label="Вперёд"
-          class="flex h-12 w-12 items-center justify-center border border-paper/25 transition-colors hover:border-accent hover:text-accent"
-        >
-          <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"
-            ><path d="M11 1l6 6-6 6M17 7H1" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path></svg>
-        </button>
-      </div>
+  <div class="mx-auto w-full max-w-[1680px] px-gutter objects-inner relative z-10">
+    <Heading as="h2" size="lg" class="objects-heading text-charcoal" data-split>
+      Объекты, с которыми мы работаем
+    </Heading>
+
+    <div class="objects-controls" aria-label="Навигация по объектам">
+      <button type="button" data-obj-prev aria-label="Назад" class="objects-arrow">
+        <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><path d="M7 1L1 7l6 6M1 7h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path></svg>
+      </button>
+      <button type="button" data-obj-next aria-label="Вперёд" class="objects-arrow">
+        <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><path d="M11 1l6 6-6 6M17 7H1" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path></svg>
+      </button>
     </div>
 
-    <div
-      data-obj-track
-      class="mt-12 flex snap-x snap-mandatory gap-6 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-    >
+    <div data-obj-track class="objects-track">
       {
         objects.map((o) => (
-          <article data-reveal class="group w-[280px] shrink-0 snap-start sm:w-[360px]">
-            <div class="relative aspect-[3/4] overflow-hidden bg-ink">
+          <article class="object-card group">
+            <div class="object-image-wrap">
               <img
                 src={o.img}
                 alt={o.title}
                 loading="lazy"
                 decoding="async"
-                class="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
+                class="object-image"
               />
-              <span class="display absolute top-4 right-5 text-4xl text-paper drop-shadow">
-                {o.num}
-              </span>
             </div>
-            <Heading as="h3" size="sm" class="mt-6">{o.title}</Heading>
-            <p class="mt-3 text-grey-400">{o.desc}</p>
+            <span class="object-num text-grey-400">{o.num}</span>
+            <Heading as="h3" size="md" class="object-title text-charcoal">{o.title}</Heading>
+            <p class="object-desc text-charcoal">{o.desc}</p>
           </article>
         ))
       }
     </div>
-  </Container>
+  </div>
 </section>
+
+<style>
+  .objects-section {
+    --s: calc(100vw / 360);
+    min-height: calc(var(--s) * 690);
+  }
+
+  .objects-inner {
+    min-height: inherit;
+    padding-top: calc(var(--s) * 72);
+    padding-bottom: calc(var(--s) * 48);
+  }
+
+  .objects-heading {
+    max-width: calc(var(--s) * 300);
+    text-transform: uppercase;
+  }
+
+  .objects-controls {
+    margin-top: calc(var(--s) * 32);
+    display: flex;
+    gap: calc(var(--s) * 10);
+  }
+
+  .objects-arrow {
+    display: grid;
+    width: calc(var(--s) * 40);
+    height: calc(var(--s) * 40);
+    place-items: center;
+    border: 1px solid currentColor;
+    border-radius: var(--radius-sm);
+    transition: color 200ms ease, border-color 200ms ease;
+  }
+
+  .objects-arrow:hover,
+  .objects-arrow:focus-visible {
+    color: var(--color-accent);
+    outline: none;
+  }
+
+  .objects-track {
+    margin-top: calc(var(--s) * 32);
+    display: flex;
+    gap: calc(var(--s) * 12);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .objects-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .object-card {
+    position: relative;
+    width: calc(var(--s) * 310);
+    min-height: calc(var(--s) * 430);
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
+  }
+
+  .object-image-wrap {
+    position: absolute;
+    top: calc(var(--s) * 16);
+    left: calc(var(--s) * 16);
+    width: calc(var(--s) * 172);
+    height: calc(var(--s) * 220);
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--color-grey-200);
+  }
+
+  .object-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: transform 200ms ease-in-out;
+  }
+
+  .object-card:hover .object-image {
+    transform: scale(1.05);
+  }
+
+  .object-num {
+    position: absolute;
+    top: calc(var(--s) * 16);
+    right: calc(var(--s) * 16);
+  }
+
+  .object-title {
+    position: absolute;
+    left: calc(var(--s) * 16);
+    right: calc(var(--s) * 16);
+    top: calc(var(--s) * 290);
+    text-transform: uppercase;
+  }
+
+  .object-desc {
+    position: absolute;
+    left: calc(var(--s) * 16);
+    right: calc(var(--s) * 16);
+    top: calc(var(--s) * 354);
+  }
+
+  @media (min-width: 640px) {
+    .objects-section {
+      --s: 1px;
+      min-height: 620px;
+    }
+
+    .objects-inner {
+      padding-top: 80px;
+      padding-bottom: 80px;
+    }
+
+    .objects-heading {
+      max-width: 327px;
+    }
+
+    .objects-controls {
+      margin-top: 64px;
+      gap: 10px;
+    }
+
+    .objects-arrow {
+      width: 40px;
+      height: 40px;
+    }
+
+    .objects-track {
+      margin-top: 32px;
+      gap: 12px;
+    }
+
+    .object-card {
+      width: 376px;
+      min-height: 440px;
+    }
+
+    .object-image-wrap {
+      top: 16px;
+      left: 16px;
+      width: 172px;
+      height: 220px;
+    }
+
+    .object-num {
+      top: 16px;
+      right: 16px;
+    }
+
+    .object-title {
+      top: 290px;
+      left: 16px;
+      right: 16px;
+    }
+
+    .object-desc {
+      top: 354px;
+      left: 16px;
+      right: 16px;
+      width: 278px;
+    }
+  }
+
+  @media (min-width: 640px) and (max-width: 959px) {
+    .objects-section {
+      min-height: 734px;
+    }
+
+    .objects-inner {
+      min-height: inherit;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .objects-heading {
+      position: absolute;
+      top: 0;
+      left: var(--guide-edge-left);
+      width: 327px;
+      max-width: none;
+    }
+
+    .objects-controls {
+      position: absolute;
+      top: 119px;
+      left: var(--guide-edge-left);
+      margin: 0;
+    }
+
+    .objects-track {
+      position: absolute;
+      top: 191px;
+      left: var(--guide-edge-left);
+      right: 0;
+      margin: 0;
+      gap: 12px;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .objects-section {
+      --objects-top-gap: clamp(96px, 7vw, 150px);
+      --objects-bottom-gap: clamp(72px, 6vw, 120px);
+      min-height: calc(36.667vw + var(--objects-top-gap) + var(--objects-bottom-gap));
+    }
+
+    .objects-inner {
+      min-height: inherit;
+      padding: 0;
+    }
+
+    .objects-heading {
+      position: absolute;
+      top: var(--objects-top-gap);
+      left: var(--spacing-gutter);
+      width: 31.917vw;
+      max-width: none;
+    }
+
+    .objects-controls {
+      position: absolute;
+      left: var(--spacing-gutter);
+      bottom: var(--objects-bottom-gap);
+      margin: 0;
+    }
+
+    .objects-track {
+      position: absolute;
+      top: var(--objects-top-gap);
+      left: calc(var(--guide-b) + 0.583vw);
+      right: 0;
+      margin: 0;
+      gap: 1vw;
+      overflow-x: auto;
+    }
+
+    .object-card {
+      width: 31.333vw;
+      height: 36.667vw;
+      min-height: 0;
+    }
+
+    .object-image-wrap {
+      top: 1.333vw;
+      left: 1.333vw;
+      width: 14.333vw;
+      height: 18.333vw;
+    }
+
+    .object-num {
+      top: 1.333vw;
+      right: 1.333vw;
+    }
+
+    .object-title {
+      top: 24.167vw;
+      left: 1.333vw;
+      right: 1.333vw;
+    }
+
+    .object-desc {
+      top: 29.5vw;
+      left: 1.333vw;
+      right: auto;
+      width: 23.167vw;
+    }
+  }
+</style>
 
 <script>
   const track = document.querySelector<HTMLElement>("[data-obj-track]");
-  const step = () => Math.min(track?.clientWidth ?? 360, 380);
-  document
-    .querySelector("[data-obj-prev]")
-    ?.addEventListener("click", () => track?.scrollBy({ left: -step(), behavior: "smooth" }));
-  document
-    .querySelector("[data-obj-next]")
-    ?.addEventListener("click", () => track?.scrollBy({ left: step(), behavior: "smooth" }));
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const step = () => {
+    if (!track) return 388;
+    const card = track.querySelector<HTMLElement>(".object-card");
+    const styles = getComputedStyle(track);
+    const rawGap = styles.columnGap === "normal" ? styles.gap : styles.columnGap;
+    const gap = parseFloat(rawGap || "0") || 0;
+    return card ? card.offsetWidth + gap : Math.min(track.clientWidth, 388);
+  };
+
+  const goNext = () => {
+    if (!track) return;
+    const max = track.scrollWidth - track.clientWidth;
+    if (track.scrollLeft + step() >= max - 2) {
+      track.scrollTo({ left: 0, behavior: "smooth" });
+    } else {
+      track.scrollBy({ left: step(), behavior: "smooth" });
+    }
+  };
+
+  const goPrev = () => {
+    if (!track) return;
+    const max = track.scrollWidth - track.clientWidth;
+    if (track.scrollLeft <= 2) {
+      track.scrollTo({ left: max, behavior: "smooth" });
+    } else {
+      track.scrollBy({ left: -step(), behavior: "smooth" });
+    }
+  };
+
+  document.querySelector("[data-obj-prev]")?.addEventListener("click", goPrev);
+  document.querySelector("[data-obj-next]")?.addEventListener("click", goNext);
+
+  if (track && !reduceMotion) {
+    window.setInterval(goNext, 3000);
+  }
 </script>

@@ -1,36 +1,284 @@
 ---
-import Container from "../Container.astro";
 import GridLines from "../GridLines.astro";
 import Heading from "../Heading.astro";
 import { faq } from "../../data/home";
 ---
 
-<section id="faq" class="relative bg-paper text-charcoal">
+<section id="faq" class="faq-section relative bg-paper text-charcoal">
   <GridLines />
-  <Container class="relative z-10 py-16 sm:py-24 lg:py-32">
-    <Heading as="h2" size="lg" class="text-charcoal" data-split>Часто задаваемые вопросы</Heading>
+  <div class="mx-auto w-full max-w-[1680px] px-gutter faq-inner relative z-10">
+    <Heading as="h2" size="lg" class="faq-heading text-charcoal" data-split>Часто задаваемые вопросы</Heading>
 
-    <div class="mt-12">
+    <div class="faq-list">
       {
         faq.map((item) => (
-          <details data-reveal class="group border-t border-grey-200">
-            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 [&::-webkit-details-marker]:hidden">
-              <Heading as="h3" size="sm" class="text-charcoal">{item.q}</Heading>
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 22 22"
-                fill="none"
-                aria-hidden="true"
-                class="shrink-0 text-charcoal transition-transform duration-300 group-open:rotate-180"
-              >
+          <details class="faq-item group">
+            <summary class="faq-summary">
+              <Heading as="h3" size="sm" class="faq-question text-charcoal">{item.q}</Heading>
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true" class="faq-icon">
                 <path d="M5 8l6 6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" />
               </svg>
             </summary>
-            <p class="max-w-3xl pb-7 text-grey-500">{item.a}</p>
+            <div class="faq-panel">
+              <p class="faq-answer text-charcoal">{item.a}</p>
+            </div>
           </details>
         ))
       }
     </div>
-  </Container>
+  </div>
 </section>
+
+<style>
+  .faq-section {
+    --s: calc(100vw / 360);
+  }
+
+  .faq-inner {
+    min-height: calc(var(--s) * 720);
+    padding-top: calc(var(--s) * 72);
+    padding-bottom: calc(var(--s) * 72);
+  }
+
+  .faq-heading {
+    max-width: calc(var(--s) * 315);
+    text-transform: uppercase;
+  }
+
+  .faq-list {
+    margin-top: calc(var(--s) * 44);
+  }
+
+  .faq-item {
+    border-top: 1px solid rgb(27 27 27 / var(--guide-opacity, 0.02));
+  }
+
+  .faq-item:last-child {
+    border-bottom: 1px solid rgb(27 27 27 / var(--guide-opacity, 0.02));
+  }
+
+  .faq-summary {
+    display: flex;
+    min-height: calc(var(--s) * 84);
+    cursor: pointer;
+    list-style: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(var(--s) * 24);
+  }
+
+  .faq-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-question {
+    text-transform: uppercase;
+  }
+
+  .faq-icon {
+    flex: 0 0 auto;
+    transition: transform 300ms ease;
+  }
+
+  .faq-item[open] .faq-icon {
+    transform: rotate(180deg);
+  }
+
+  .faq-panel {
+    overflow: hidden;
+  }
+
+  .faq-answer {
+    max-width: calc(var(--s) * 320);
+    padding-bottom: calc(var(--s) * 28);
+  }
+
+  @media (min-width: 640px) {
+    .faq-section {
+      --s: 1px;
+    }
+
+    .faq-inner {
+      min-height: 720px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .faq-heading {
+      position: absolute;
+      top: 0;
+      left: var(--spacing-gutter);
+      width: 487px;
+      max-width: none;
+    }
+
+    .faq-list {
+      position: absolute;
+      top: 92px;
+      left: var(--spacing-gutter);
+      right: var(--spacing-gutter);
+      margin: 0;
+    }
+
+    .faq-summary {
+      min-height: 84px;
+      gap: 24px;
+    }
+
+    .faq-answer {
+      max-width: 760px;
+      padding-bottom: 28px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .faq-inner {
+      min-height: clamp(720px, 58vw, 840px);
+    }
+
+    .faq-heading {
+      width: clamp(487px, 40.583vw, 584px);
+    }
+
+    .faq-list {
+      top: clamp(92px, 7.667vw, 110px);
+    }
+
+    .faq-summary {
+      min-height: clamp(84px, 7vw, 101px);
+    }
+
+    .faq-answer {
+      max-width: clamp(760px, 63.333vw, 912px);
+      padding-bottom: clamp(28px, 2.333vw, 34px);
+    }
+  }
+</style>
+<script>
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const faqRoot = document.querySelector<HTMLElement>("#faq");
+  const items = Array.from(document.querySelectorAll<HTMLDetailsElement>("#faq .faq-item"));
+
+  const getPanel = (item: HTMLDetailsElement) => item.querySelector<HTMLElement>(".faq-panel");
+
+  const easeOutExpo = (t: number) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
+
+  let scrollRaf = 0;
+  const smoothScrollTo = (target: number, duration = 400) => {
+    cancelAnimationFrame(scrollRaf);
+    const start = window.scrollY;
+    const distance = target - start;
+    const startedAt = performance.now();
+
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - startedAt) / duration);
+      window.scrollTo(0, start + distance * easeOutExpo(t));
+      if (t < 1) scrollRaf = requestAnimationFrame(tick);
+    };
+
+    scrollRaf = requestAnimationFrame(tick);
+  };
+
+  const scrollToQuestion = (item: HTMLDetailsElement) => {
+    const summary = item.querySelector<HTMLElement>(".faq-summary");
+    if (!summary) return;
+    const headerOffset = window.innerWidth >= 960 ? 92 : 76;
+    const target = Math.max(0, summary.getBoundingClientRect().top + window.scrollY - headerOffset);
+    if (reduceMotion) window.scrollTo(0, target);
+    else smoothScrollTo(target);
+  };
+
+  const openItem = (item: HTMLDetailsElement) => {
+    const panel = getPanel(item);
+    if (!panel) return;
+
+    item.open = true;
+    item.dataset.animating = "true";
+
+    if (reduceMotion) {
+      panel.style.height = "auto";
+      delete item.dataset.animating;
+      scrollToQuestion(item);
+      return;
+    }
+
+    panel.style.height = "0px";
+    panel.style.opacity = "0";
+    panel.style.transform = "translateY(-10px)";
+    panel.getBoundingClientRect();
+    panel.style.transition = "height 400ms ease-in-out, opacity 400ms ease-in-out, transform 400ms ease-in-out";
+    panel.style.height = `${panel.scrollHeight}px`;
+    panel.style.opacity = "1";
+    panel.style.transform = "translateY(0)";
+
+    window.setTimeout(() => scrollToQuestion(item), 600);
+
+    panel.addEventListener(
+      "transitionend",
+      (event) => {
+        if (event.propertyName !== "height") return;
+        panel.style.transition = "";
+        panel.style.height = "auto";
+        panel.style.transform = "";
+        delete item.dataset.animating;
+      },
+      { once: true },
+    );
+  };
+
+  const closeItem = (item: HTMLDetailsElement) => {
+    const panel = getPanel(item);
+    if (!panel || !item.open) return;
+
+    item.dataset.animating = "true";
+
+    if (reduceMotion) {
+      item.open = false;
+      panel.style.height = "";
+      delete item.dataset.animating;
+      return;
+    }
+
+    panel.style.height = `${panel.scrollHeight}px`;
+    panel.style.opacity = "1";
+    panel.style.transform = "translateY(0)";
+    panel.getBoundingClientRect();
+    panel.style.transition = "height 400ms ease-in-out, opacity 400ms ease-in-out, transform 400ms ease-in-out";
+    panel.style.height = "0px";
+    panel.style.opacity = "0";
+    panel.style.transform = "translateY(-8px)";
+
+    panel.addEventListener(
+      "transitionend",
+      (event) => {
+        if (event.propertyName !== "height") return;
+        item.open = false;
+        panel.style.transition = "";
+        panel.style.height = "";
+        panel.style.opacity = "";
+        panel.style.transform = "";
+        delete item.dataset.animating;
+      },
+      { once: true },
+    );
+  };
+
+  faqRoot?.addEventListener("click", (event) => {
+    const summary = (event.target as Element | null)?.closest?.(".faq-summary");
+    if (!summary) return;
+
+    const item = summary.closest<HTMLDetailsElement>(".faq-item");
+    if (!item) return;
+
+    event.preventDefault();
+    if (item.dataset.animating === "true") return;
+
+    const willOpen = !item.open;
+    items.forEach((other) => {
+      if (other !== item && other.open) closeItem(other);
+    });
+
+    if (willOpen) openItem(item);
+    else closeItem(item);
+  });
+</script>

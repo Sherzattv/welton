@@ -1,38 +1,163 @@
 ---
-import Container from "../Container.astro";
 import GridLines from "../GridLines.astro";
 import Heading from "../Heading.astro";
 import Button from "../Button.astro";
 import { contact } from "../../data/home";
 ---
 
-<section id="invoice" class="relative flex min-h-[640px] flex-col justify-between overflow-hidden py-16 text-paper sm:py-20">
+<section id="invoice" class="cta-section relative overflow-hidden bg-paper text-paper">
   <img
     src="/img/high-rise-buildings-.jpg"
     alt=""
     loading="lazy"
-    class="absolute inset-0 h-full w-full object-cover"
+    class="cta-bg absolute inset-x-0 top-0 h-full w-full object-cover"
   />
-  <div class="absolute inset-0 bg-charcoal/55"></div>
+  <div class="cta-bg absolute inset-x-0 top-0 bg-gradient-to-b from-charcoal/5 to-charcoal/70"></div>
   <GridLines />
 
-  <Container class="relative z-10">
-    <Heading as="h2" size="lg" class="max-w-2xl text-paper" data-split>
+  <div class="mx-auto w-full max-w-[1680px] px-gutter cta-inner relative z-10">
+    <Heading as="h2" size="lg" class="cta-heading text-paper" data-split>
       Предварительный расчёт остекления под ваш объект
     </Heading>
-    <div class="mt-8" data-reveal>
-      <Button variant="light" href="#contacts">Оставить заявку</Button>
-    </div>
-  </Container>
 
-  <Container class="relative z-10">
-    <p data-reveal class="text-paper/80">Не хотите ждать звонка?<br />Позвоните нам по этому номеру:</p>
-    <a
-      data-reveal
-      href={contact.phoneHref}
-      class="display mt-4 block text-4xl text-paper transition-colors hover:text-accent sm:text-6xl"
-    >
+    <div class="cta-button">
+      <Button variant="light" href="#contacts" class="bg-white">Оставить заявку</Button>
+    </div>
+
+    <p data-reveal class="cta-note text-paper/80">Не хотите ждать звонка?<br />Позвоните нам по этому номеру:</p>
+    <a href={contact.phoneHref} class="cta-phone display text-paper transition-colors hover:text-accent">
       {contact.phone}
     </a>
-  </Container>
+  </div>
 </section>
+
+<style>
+  .cta-section {
+    --s: calc(100vw / 360);
+    min-height: calc(var(--s) * 640);
+  }
+
+  .cta-bg {
+    height: 100%;
+  }
+
+  .cta-inner {
+    min-height: inherit;
+    padding-top: calc(var(--s) * 72);
+    padding-bottom: calc(var(--s) * 36);
+  }
+
+  .cta-heading {
+    max-width: calc(var(--s) * 315);
+    text-transform: uppercase;
+  }
+
+  .cta-button {
+    margin-top: calc(var(--s) * 36);
+  }
+
+  .cta-button :global(a) {
+    width: calc(var(--s) * 199);
+    height: calc(var(--s) * 48);
+  }
+
+  .cta-note {
+    position: absolute;
+    left: var(--spacing-gutter);
+    bottom: calc(var(--s) * 86);
+    max-width: calc(var(--s) * 260);
+  }
+
+  .cta-phone {
+    position: absolute;
+    left: var(--spacing-gutter);
+    bottom: calc(var(--s) * 34);
+    font-size: calc(var(--s) * 30);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  @media (min-width: 640px) {
+    .cta-section {
+      --s: 1px;
+      min-height: 740px;
+    }
+
+    .cta-bg {
+      height: 640px;
+    }
+
+    .cta-inner {
+      padding-top: 32px;
+      padding-bottom: 32px;
+    }
+
+    .cta-heading {
+      max-width: 461px;
+    }
+
+    .cta-button {
+      margin-top: 36px;
+    }
+
+    .cta-button :global(a) {
+      width: 199px;
+      height: 48px;
+    }
+
+    .cta-note {
+      display: none;
+      bottom: 75px;
+      max-width: 224px;
+    }
+
+    .cta-phone {
+      top: 581px;
+      bottom: auto;
+      font-size: 30px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .cta-section {
+      /* Tilda artboard is 640px + 100px quiet paper tail at 1200.
+         Keep the proportion up to ~1440, then cap it so ultrawide
+         screens don't turn this CTA into an oversized billboard. */
+      min-height: clamp(700px, 52vw, 780px);
+    }
+
+    .cta-bg {
+      height: clamp(600px, 47vw, 680px);
+    }
+
+    .cta-inner {
+      padding-top: clamp(32px, 2.667vw, 38px);
+      padding-bottom: clamp(32px, 2.667vw, 38px);
+    }
+
+    .cta-heading {
+      width: clamp(461px, 38.417vw, 553px);
+      max-width: none;
+    }
+
+    .cta-button {
+      margin-top: clamp(24px, 2vw, 29px);
+    }
+
+    .cta-button :global(a) {
+      width: clamp(199px, 16.583vw, 239px);
+      height: clamp(48px, 4vw, 58px);
+    }
+
+    .cta-note {
+      bottom: clamp(75px, 6.25vw, 90px);
+      max-width: clamp(224px, 18.667vw, 269px);
+    }
+
+    .cta-phone {
+      top: clamp(540px, 42vw, 620px);
+      bottom: auto;
+      font-size: clamp(30px, 2.5vw, 36px);
+    }
+  }
+</style>

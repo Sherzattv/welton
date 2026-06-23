@@ -1,43 +1,234 @@
 ---
-import Container from "../Container.astro";
 import GridLines from "../GridLines.astro";
 import Heading from "../Heading.astro";
 import Button from "../Button.astro";
 import { services } from "../../data/home";
 ---
 
-<section id="services" class="relative bg-paper text-charcoal">
+<section id="services" class="services-section relative bg-paper text-charcoal">
   <GridLines />
-  <Container class="relative z-10 py-16 sm:py-24 lg:py-32">
-    <Heading as="h2" size="lg" class="max-w-2xl text-charcoal" data-split>
+  <div class="mx-auto w-full max-w-[1680px] px-gutter services-inner relative z-10">
+    <Heading as="h2" size="lg" class="services-heading text-charcoal" data-split>
       Выполняем остекление объектов под ключ
     </Heading>
 
-    <div class="mt-12 flex flex-col gap-16 sm:gap-20">
+    <div class="services-list">
       {
-        services.map((s) => (
-          <article data-reveal class="group border-t border-grey-200 pt-10">
-            <div class="overflow-hidden">
+        services.map((s, i) => (
+          <article class="service-row group" style={`--top:${(144 + 361 * i) / 12}vw`}>
+            <span class="service-line" aria-hidden="true"></span>
+            <span class="service-num text-grey-400">{s.num}</span>
+            <div class="service-copy">
+              <Heading as="h3" size="md" class="service-title text-charcoal">{s.title}</Heading>
+              <p class="service-desc text-charcoal">{s.desc}</p>
+            </div>
+            <div class="service-image-wrap">
               <img
                 src={s.img}
                 alt={s.title}
                 loading="lazy"
                 decoding="async"
-                class="aspect-[16/9] w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
+                class="service-image"
               />
             </div>
-            <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-12">
-              <div class="lg:col-span-7">
-                <Heading as="h3" size="md" class="text-charcoal">{s.title}</Heading>
-                <p class="mt-4 max-w-xl text-grey-500">{s.desc}</p>
-              </div>
-              <div class="flex items-start lg:col-span-5 lg:justify-end">
-                <Button variant="light" href="#invoice">Оставить заявку</Button>
-              </div>
-            </div>
+            <Button variant="light" href="#invoice" class="service-button bg-white">Оставить заявку</Button>
           </article>
         ))
       }
     </div>
-  </Container>
+  </div>
 </section>
+
+<style>
+  .services-section {
+    --s: calc(100vw / 360);
+  }
+
+  .services-inner {
+    min-height: calc(var(--s) * 1510);
+    padding-top: calc(var(--s) * 72);
+    padding-bottom: calc(var(--s) * 80);
+  }
+
+  .services-heading {
+    max-width: calc(var(--s) * 305);
+    text-transform: uppercase;
+  }
+
+  .services-list {
+    margin-top: calc(var(--s) * 54);
+    display: grid;
+    gap: calc(var(--s) * 48);
+  }
+
+  .service-row {
+    position: relative;
+    display: grid;
+    gap: calc(var(--s) * 18);
+    padding-top: calc(var(--s) * 20);
+  }
+
+  .service-line {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background: currentColor;
+    opacity: var(--guide-opacity, 0.02);
+  }
+
+  .service-num {
+    font-size: var(--text-body);
+    line-height: 1;
+  }
+
+  .service-copy {
+    max-width: calc(var(--s) * 320);
+  }
+
+  .service-title {
+    text-transform: uppercase;
+  }
+
+  .service-desc {
+    margin-top: calc(var(--s) * 12);
+    max-width: calc(var(--s) * 320);
+  }
+
+  .service-image-wrap {
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--color-grey-200);
+  }
+
+  .service-image {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    object-fit: cover;
+    transition: transform 200ms ease-in-out;
+  }
+
+  .service-row:hover .service-image {
+    transform: scale(1.04);
+  }
+
+  .service-button {
+    width: calc(var(--s) * 199);
+    height: calc(var(--s) * 48);
+  }
+
+  @media (min-width: 640px) {
+    .services-section {
+      --s: 1px;
+    }
+
+    .services-inner {
+      min-height: 1320px;
+      padding-top: 96px;
+      padding-bottom: 96px;
+    }
+
+    .services-heading {
+      max-width: 383px;
+    }
+
+    .services-list {
+      margin-top: 64px;
+      gap: 64px;
+    }
+
+    .service-row {
+      grid-template-columns: 72px minmax(0, 1fr);
+      gap: 22px 28px;
+      padding-top: 24px;
+    }
+
+    .service-copy {
+      max-width: 430px;
+    }
+
+    .service-image-wrap,
+    .service-button {
+      grid-column: 2;
+    }
+
+    .service-button {
+      width: 199px;
+      height: 48px;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .services-inner {
+      min-height: 102.5vw;
+      padding-block: 0;
+    }
+
+    .services-heading {
+      position: absolute;
+      top: 0;
+      left: var(--spacing-gutter);
+      width: 40.583vw;
+      max-width: none;
+    }
+
+    .services-list {
+      margin: 0;
+      display: block;
+    }
+
+    .service-row {
+      position: absolute;
+      left: var(--spacing-gutter);
+      right: var(--spacing-gutter);
+      top: var(--top);
+      height: 28.417vw;
+      display: block;
+      padding: 0;
+    }
+
+    .service-line {
+      inset-inline: 0;
+    }
+
+    .service-num {
+      position: absolute;
+      top: 1.75vw;
+      left: 0;
+    }
+
+    .service-copy {
+      position: absolute;
+      top: 1.75vw;
+      left: 8.333vw;
+      width: 31vw;
+      max-width: none;
+    }
+
+    .service-desc {
+      margin-top: 1vw;
+      max-width: 31vw;
+    }
+
+    .service-image-wrap {
+      position: absolute;
+      top: 1.75vw;
+      right: 0;
+      width: 47.5vw;
+      height: 26.667vw;
+    }
+
+    .service-image {
+      height: 100%;
+      aspect-ratio: auto;
+    }
+
+    .service-button {
+      position: absolute;
+      left: 8.333vw;
+      bottom: 0;
+      width: 16.583vw;
+      height: 4vw;
+    }
+  }
+</style>

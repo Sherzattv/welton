@@ -1,48 +1,259 @@
 ---
-import Container from "../Container.astro";
 import GridLines from "../GridLines.astro";
 import Heading from "../Heading.astro";
 import { stats } from "../../data/home";
 ---
 
-<section id="about" class="relative bg-paper text-charcoal">
+<section id="about" class="stats-section relative bg-paper text-charcoal">
   <GridLines />
-  <Container class="relative z-10 py-16 sm:py-24 lg:py-32">
-    <div class="grid gap-12 lg:grid-cols-2 lg:gap-16">
-      <!-- Левая колонка: заголовок -->
-      <Heading as="h2" size="lg" class="max-w-[460px] text-charcoal" data-split>
-        Профессионально реализуем проекты в сфере остекления зданий
-      </Heading>
 
-      <!-- Правая колонка: подзаголовок + сетка цифр -->
-      <div>
-        <p data-reveal class="text-body max-w-[480px] text-grey-500">
-          Работаем с объектами разного назначения, включая нестандартные и
-          сложные по конструкции. Обеспечиваем полный цикл работ и чёткую
-          организацию процессов вне зависимости от региона.
-        </p>
-
-        <div class="mt-20 grid grid-cols-2 border-t border-grey-300/70">
-          {
-            stats.map((s, i) => (
-              <div
-                data-reveal
-                class:list={[
-                  "py-9",
-                  i % 2 === 1 && "border-l border-grey-300/70 pl-6 sm:pl-10",
-                  i >= 2 && "border-t border-grey-300/70",
-                ]}
-              >
-                <p class="text-body text-grey-500">{s.label}</p>
-                <p class="mt-7 flex items-baseline gap-2">
-                  <span class="display text-stat text-charcoal" data-count>{s.value}</span>
-                  <span class="display text-unit text-charcoal">{s.unit}</span>
-                </p>
-              </div>
-            ))
-          }
-        </div>
+  <div class="stats-inner relative z-10">
+    <div class="stats-heading-rail">
+      <div class="stats-heading-wrap">
+        <Heading as="h2" size="lg" class="stats-heading text-charcoal" data-split>
+          ПРОФЕССИОНАЛЬНО Реализуем проекты в сфере остекления ЗДАНИЙ
+        </Heading>
       </div>
     </div>
-  </Container>
+
+    <p class="stats-lead text-body text-charcoal">
+      Работаем с объектами разного назначения, включая нестандартные и
+      сложные по конструкции. Обеспечиваем полный цикл работ и чёткую
+      организацию процессов вне зависимости от региона.
+    </p>
+
+    <div class="stats-grid">
+      {
+        stats.map((s) => (
+          <article class="stat-card">
+            <p class="stat-label text-body text-charcoal">{s.label}</p>
+            <p class="stat-value-row">
+              <span class="display text-stat text-charcoal" data-split>{s.value}</span>
+              <span class="display text-unit text-charcoal">{s.unit}</span>
+            </p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
 </section>
+
+<style>
+  .stats-section {
+    /* Quiet zone between hero and the first about-title.
+       It is part of the section padding (not a separate spacer), so the block
+       stays semantic while visually breathing after the hero. */
+    --stats-top-gap: calc(100vw * 150 / 360);
+    --stats-content-height: calc(100vw * 1300 / 360);
+    min-height: calc(var(--stats-top-gap) + var(--stats-content-height));
+    padding-top: var(--stats-top-gap);
+  }
+
+  .stats-inner {
+    min-height: var(--stats-content-height);
+  }
+
+  .stats-heading-rail {
+    position: absolute;
+    top: 0;
+    left: calc(100vw * 12 / 360);
+    width: calc(100vw * 315 / 360);
+  }
+
+  .stats-heading-wrap,
+  .stats-heading {
+    width: 100%;
+  }
+
+  .stats-lead {
+    position: absolute;
+    top: calc(100vw * 112 / 360);
+    left: calc(100vw * 12 / 360);
+    width: calc(100vw * 317 / 360);
+  }
+
+  .stats-grid {
+    position: absolute;
+    top: calc(100vw * 298 / 360);
+    left: calc(100vw * 12 / 360);
+    width: calc(100vw * 336 / 360);
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    position: relative;
+    height: calc(100vw * 239 / 360);
+  }
+
+  .stat-card::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background: currentColor;
+    opacity: var(--guide-opacity, 0.02);
+  }
+
+  .stat-label {
+    position: absolute;
+    top: calc(100vw * 17 / 360);
+    left: 0;
+  }
+
+  .stat-value-row {
+    position: absolute;
+    top: calc(100vw * 67 / 360);
+    left: 0;
+    display: flex;
+    align-items: baseline;
+    gap: calc(100vw * 12 / 360);
+    line-height: 1;
+  }
+
+  .stat-value-row .text-unit {
+    display: inline-block;
+    transform: translateY(calc(100vw * 2 / 360));
+  }
+
+  @media (min-width: 640px) {
+    .stats-section {
+      --stats-top-gap: 120px;
+      --stats-content-height: 780px;
+    }
+
+    .stats-heading-rail {
+      left: 24px;
+      width: 526px;
+    }
+
+    .stats-lead {
+      top: 84px;
+      left: 24px;
+      width: 455px;
+    }
+
+    .stats-grid {
+      top: 234px;
+      left: 24px;
+      right: 23px;
+      width: auto;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 12px;
+      row-gap: 0;
+    }
+
+    .stat-card {
+      height: 240px;
+    }
+
+    .stat-label {
+      top: 21px;
+    }
+
+    .stat-value-row {
+      top: 79px;
+      gap: 12px;
+    }
+
+    .stat-value-row .text-unit {
+      transform: translateY(2px);
+    }
+  }
+
+  @media (min-width: 960px) {
+    .stats-section {
+      --stats-content-height: 700px;
+    }
+
+    .stats-heading-rail {
+      top: 0;
+      left: 24px;
+      width: 388px;
+      /* Sticky rail ends exactly on the lower counters baseline zone:
+         grid top 173 + row 224 + number top 79 + number line-height 96. */
+      height: 572px;
+    }
+
+    .stats-heading-wrap {
+      position: sticky;
+      top: 64px;
+    }
+
+    .stats-lead {
+      top: 3px;
+      left: calc(var(--guide-b) + 7px);
+      width: 455px;
+    }
+
+    .stats-grid {
+      top: 173px;
+      left: calc(var(--guide-b) + 7px);
+      right: 23px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 12px;
+    }
+
+    .stat-card {
+      height: 224px;
+    }
+
+    .stat-label {
+      top: 21px;
+    }
+
+    .stat-value-row {
+      top: 79px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .stats-section {
+      --stats-top-gap: calc(100vw * 120 / 1200);
+      --stats-content-height: calc(100vw * 720 / 1200);
+    }
+
+    .stats-heading-rail {
+      top: 0;
+      left: calc(100vw * 24 / 1200);
+      width: calc(100vw * 462 / 1200);
+      /* Same geometry at desktop scale: 173 + 237 + 79 + 96 = 585. */
+      height: calc(100vw * 585 / 1200);
+    }
+
+    .stats-heading-wrap {
+      top: clamp(64px, 5.333vw, 76.8px);
+    }
+
+    .stats-lead {
+      top: calc(100vw * 3 / 1200);
+      left: calc(var(--guide-b) + (100vw * 7 / 1200));
+      width: calc(100vw * 471 / 1200);
+    }
+
+    .stats-grid {
+      top: calc(100vw * 173 / 1200);
+      left: calc(var(--guide-b) + (100vw * 7 / 1200));
+      right: calc(100vw * 24 / 1200);
+      column-gap: calc(100vw * 12 / 1200);
+    }
+
+    .stat-card {
+      height: calc(100vw * 237 / 1200);
+    }
+
+    .stat-label {
+      top: calc(100vw * 21 / 1200);
+    }
+
+    .stat-value-row {
+      top: calc(100vw * 79 / 1200);
+      gap: calc(100vw * 12 / 1200);
+    }
+
+    .stat-value-row .text-unit {
+      transform: translateY(calc(100vw * 2 / 1200));
+    }
+  }
+</style>
