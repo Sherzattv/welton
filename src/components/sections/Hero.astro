@@ -2,11 +2,12 @@
 import Container from "../Container.astro";
 import GridLines from "../GridLines.astro";
 import Button from "../Button.astro";
+import { asset } from "../../lib/asset";
 ---
 
 <section id="top" class="hero-section relative overflow-hidden text-paper">
   <img
-    src="/img/omni-753e3760-83e9-4.jpg"
+    src={asset("/img/omni-753e3760-83e9-4.jpg")}
     alt=""
     fetchpriority="high"
     class="absolute inset-0 h-full w-full object-cover"

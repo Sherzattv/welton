@@ -2,12 +2,13 @@
 import GridLines from "../GridLines.astro";
 import Logo from "../Logo.astro";
 import { contact } from "../../data/home";
+import { asset } from "../../lib/asset";
 ---
 
 <footer id="contacts" class="footer-section relative bg-charcoal text-paper">
   <GridLines />
   <div class="mx-auto w-full max-w-[1680px] px-gutter footer-inner relative z-10">
-    <a href="/" aria-label="Велес Групп" class="footer-logo">
+    <a href={asset("/")} aria-label="Велес Групп" class="footer-logo">
       <Logo class="h-8 w-[71px]" />
     </a>
 
@@ -30,8 +31,8 @@ import { contact } from "../../data/home";
 
     <div class="footer-legal">
       <p class="footer-label">Правовая информация</p>
-      <a href="/policy" class="footer-link">Политика конфиденциальности</a>
-      <a href="/agreement" class="footer-link">Пользовательское соглашение</a>
+      <a href={asset("/policy")} class="footer-link">Политика конфиденциальности</a>
+      <a href={asset("/agreement")} class="footer-link">Пользовательское соглашение</a>
     </div>
 
     <div class="footer-company">

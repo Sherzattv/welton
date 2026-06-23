@@ -2,6 +2,7 @@
 import Container from "../Container.astro";
 import Logo from "../Logo.astro";
 import { nav, contact } from "../../data/home";
+import { asset } from "../../lib/asset";
 ---
 
 <header
@@ -18,7 +19,7 @@ import { nav, contact } from "../../data/home";
   <Container class="relative flex h-full items-stretch justify-between">
     <!-- Левая группа: логотип + меню -->
     <div class="flex items-stretch gap-7">
-      <a href="/" aria-label="Велес Групп — на главную" class="flex items-center">
+      <a href={asset("/")} aria-label="Велес Групп — на главную" class="flex items-center">
         <Logo class="h-[35px] w-[77px] lg:h-8 lg:w-[71px] xl:h-[38px] xl:w-[85px]" />
       </a>
 
@@ -88,7 +89,7 @@ import { nav, contact } from "../../data/home";
   <div class="menu-topbar relative flex h-[69px] shrink-0 items-stretch xl:h-[76px]">
     <Container class="relative flex h-full items-stretch justify-between">
       <a
-        href="/"
+        href={asset("/")}
         data-menu-link
         aria-label="Велес Групп — на главную"
         class="flex items-center"

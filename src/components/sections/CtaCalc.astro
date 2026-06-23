@@ -3,11 +3,12 @@ import GridLines from "../GridLines.astro";
 import Heading from "../Heading.astro";
 import Button from "../Button.astro";
 import { contact } from "../../data/home";
+import { asset } from "../../lib/asset";
 ---
 
 <section id="invoice" class="cta-section relative overflow-hidden bg-paper text-paper">
   <img
-    src="/img/high-rise-buildings-.jpg"
+    src={asset("/img/high-rise-buildings-.jpg")}
     alt=""
     loading="lazy"
     class="cta-bg absolute inset-x-0 top-0 h-full w-full object-cover"

@@ -2,6 +2,7 @@
 import GridLines from "../GridLines.astro";
 import Heading from "../Heading.astro";
 import { objects } from "../../data/home";
+import { asset } from "../../lib/asset";
 ---
 
 <section id="objects" class="objects-section relative overflow-hidden bg-paper text-charcoal">
@@ -26,7 +27,7 @@ import { objects } from "../../data/home";
           <article class="object-card group">
             <div class="object-image-wrap">
               <img
-                src={o.img}
+                src={asset(o.img)}
                 alt={o.title}
                 loading="lazy"
                 decoding="async"

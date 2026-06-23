@@ -2,6 +2,7 @@
 import GridLines from "../GridLines.astro";
 import Heading from "../Heading.astro";
 import { partners } from "../../data/home";
+import { asset } from "../../lib/asset";
 
 const ordered = [...partners].reverse();
 const loop = [...ordered, ...ordered];
@@ -20,7 +21,7 @@ const loop = [...ordered, ...ordered];
       {
         loop.map((p) => (
           <div class="partner-card">
-            <img src={p.logo} alt={p.name} loading="lazy" class="partner-logo" />
+            <img src={asset(p.logo)} alt={p.name} loading="lazy" class="partner-logo" />
             <span class="partner-name">{p.name}</span>
           </div>
         ))

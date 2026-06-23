@@ -3,6 +3,7 @@ import GridLines from "../GridLines.astro";
 import Heading from "../Heading.astro";
 import Button from "../Button.astro";
 import { services } from "../../data/home";
+import { asset } from "../../lib/asset";
 ---
 
 <section id="services" class="services-section relative bg-paper text-charcoal">
@@ -24,7 +25,7 @@ import { services } from "../../data/home";
             </div>
             <div class="service-image-wrap">
               <img
-                src={s.img}
+                src={asset(s.img)}
                 alt={s.title}
                 loading="lazy"
                 decoding="async"

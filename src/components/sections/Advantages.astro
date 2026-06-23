@@ -2,6 +2,7 @@
 import GridLines from "../GridLines.astro";
 import Heading from "../Heading.astro";
 import { advantages } from "../../data/home";
+import { asset } from "../../lib/asset";
 
 // Tilda orders cards visually as: control → teams → volume → geography.
 const orderedAdvantages = [advantages[0], advantages[3], advantages[2], advantages[1]];
@@ -10,7 +11,7 @@ const orderedAdvantages = [advantages[0], advantages[3], advantages[2], advantag
 <section id="advantages" class="advantages-section relative overflow-hidden text-paper">
   <video
     class="absolute inset-0 h-full w-full object-cover"
-    src="/video/advantages.mp4"
+    src={asset("/video/advantages.mp4")}
     autoplay
     muted
     loop

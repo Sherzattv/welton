@@ -1,0 +1,40 @@
+name: Deploy to GitHub Pages
+
+on:
+  # Деплой при каждом пуше в main
+  push:
+    branches: [main]
+  # И возможность запустить вручную из вкладки Actions
+  workflow_dispatch:
+
+# Права, нужные для публикации на GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Одновременно — только один деплой; новый пуш отменяет предыдущий прогон
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build with Astro
+        uses: withastro/action@v3
+        # path по умолчанию ".", node-version по умолчанию свежий LTS
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
