@@ -13,10 +13,10 @@ import { asset } from "../../lib/asset";
     </Heading>
 
     <div class="objects-controls" aria-label="Навигация по объектам">
-      <button type="button" data-obj-prev aria-label="Назад" class="objects-arrow">
+      <button type="button" data-obj-prev aria-label="Назад" class="objects-arrow objects-arrow--prev">
         <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><path d="M7 1L1 7l6 6M1 7h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path></svg>
       </button>
-      <button type="button" data-obj-next aria-label="Вперёд" class="objects-arrow">
+      <button type="button" data-obj-next aria-label="Вперёд" class="objects-arrow objects-arrow--next">
         <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><path d="M11 1l6 6-6 6M17 7H1" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path></svg>
       </button>
     </div>
@@ -74,13 +74,30 @@ import { asset } from "../../lib/asset";
     place-items: center;
     border: 1px solid currentColor;
     border-radius: var(--radius-sm);
-    transition: color 200ms ease, border-color 200ms ease;
+    background: transparent;
+    transition: color 200ms ease, border-color 200ms ease, background-color 200ms ease;
+  }
+
+  .objects-arrow svg {
+    transition: transform 200ms ease-in-out;
   }
 
   .objects-arrow:hover,
   .objects-arrow:focus-visible {
-    color: var(--color-accent);
+    color: var(--color-paper);
+    background: var(--color-accent);
+    border-color: var(--color-accent);
     outline: none;
+  }
+
+  .objects-arrow--next:hover svg,
+  .objects-arrow--next:focus-visible svg {
+    transform: translateX(4px);
+  }
+
+  .objects-arrow--prev:hover svg,
+  .objects-arrow--prev:focus-visible svg {
+    transform: translateX(-4px);
   }
 
   .objects-track {

@@ -18,7 +18,9 @@ import { asset } from "../../lib/asset";
   <Container class="hero-content absolute inset-0 z-10">
     <div class="hero-layout">
       <h1 data-split class="hero-title display">
-        Остекление крупных объектов по России
+        <span class="hero-title-line">Остекление</span>
+        <span class="hero-title-line">крупных объектов</span>
+        <span class="hero-title-line">по России</span>
       </h1>
 
       <div class="hero-side">
@@ -52,6 +54,24 @@ import { asset } from "../../lib/asset";
     font-size: calc(100vw * 42 / 360);
     line-height: calc(100vw * 42 / 360);
     letter-spacing: -0.6px;
+  }
+
+  .hero-title-line {
+    display: inline;
+  }
+
+  .hero-title-line:not(:last-child)::after {
+    content: " ";
+  }
+
+  @media (min-width: 960px) {
+    .hero-title-line {
+      display: block;
+    }
+
+    .hero-title-line:not(:last-child)::after {
+      content: "";
+    }
   }
 
   .hero-side {
@@ -159,9 +179,10 @@ import { asset } from "../../lib/asset";
 
     .hero-title {
       width: 41.75vw;
+      min-height: clamp(195px, 16.25vw, 234px);
       font-size: clamp(72px, 6vw, 86.4px);
       line-height: 0.9;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.5px;
     }
 
     .hero-side {
@@ -173,14 +194,14 @@ import { asset } from "../../lib/asset";
 
     .hero-desc {
       max-width: none;
-      font-size: clamp(14px, 1.15vw, 16.56px);
-      line-height: 1.3;
-      letter-spacing: -0.6px;
+      font-size: 16px;
+      line-height: normal;
+      letter-spacing: normal;
     }
 
     .hero-cta {
       width: 100%;
-      height: clamp(48px, 4vw, 57.6px);
+      height: clamp(48px, 4vw, 58px);
       margin-bottom: clamp(14px, 1.17vw, 16.8px);
     }
   }
