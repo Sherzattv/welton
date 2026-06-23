@@ -1,32 +1,44 @@
-## Project notes
+# Соглашения для разработчиков и AI-агентов
 
-This is a clean Astro rebuild of a Tilda reference site. Keep implementation scalable: reusable Astro components, content in `src/data/home.ts`, no copied Tilda classes/markup.
+Краткие правила работы над проектом. Полные детали — в [README.md](README.md) и
+[docs/](docs).
 
-Important visual conventions:
+## Что это
 
-- Global vertical guide positions live in `src/styles/global.css` as `--guide-a`, `--guide-b`, `--guide-c`; use them everywhere lines must align.
-- Header behavior mirrors Tilda with two headers: static transparent hero header + separate white fixed header shown on reverse scroll.
-- Hero typography/spacing is calibrated for 1440, 1200, 640, 390, and 360 widths; verify these breakpoints when changing hero/header.
+Welton — статический сайт-одностраничник на Astro 7 + Tailwind CSS 4 (TypeScript,
+strict). Масштабируемая архитектура: переиспользуемые секции, контент в данных,
+единые дизайн-токены. Никакого фреймворк-рантайма на клиенте, кроме motion-слоя.
 
-## Development
+## Главные правила
 
-When starting the dev server, use background mode:
+- **Контент — в данных, не в разметке.** Тексты, контакты и пути к картинкам
+  правьте в [`src/data/home.ts`](src/data/home.ts). См.
+  [docs/content-editing.md](docs/content-editing.md).
+- **Оформление — в токенах.** Цвета, типографику, отступы, брейкпоинты меняйте в
+  `@theme` внутри [`src/styles/global.css`](src/styles/global.css), а не локально
+  по секциям.
+- **Переиспользуйте компоненты и motion-паттерны.** Новые секции собирайте из
+  `Heading`, `Button`, `Container`, `GridLines`; для анимаций используйте
+  `data-reveal` / `data-split`, а не одноразовые скрипты. См.
+  [docs/architecture.md](docs/architecture.md).
+- **Статика — через `asset()`.** Пути к файлам из `public/` оборачивайте в
+  [`asset()`](src/lib/asset.ts): сайт живёт под base-путём `/welton/`, голые
+  `/img/...` сломаются.
+- **Сетка-направляющих — единый источник.** Координаты `--guide-a/b/c` в
+  `global.css`; в секции добавляйте `<GridLines />`, не задавая координаты заново.
 
-```
-astro dev --background
-```
+## Рабочий процесс
 
-Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
+- `main` — рабочая ветка с исходниками. Дев-сервер: `npm run dev` →
+  `http://localhost:4321/welton/`.
+- Перед коммитом прогоняйте `npm run build` — это основная проверка (typecheck +
+  сборка). Визуальную часть проверяйте глазами в браузере.
+- Деплой — отдельный шаг в ветку `gh-pages`. См.
+  [docs/deployment.md](docs/deployment.md).
 
-## Documentation
+## Чего не делать
 
-Full documentation: https://docs.astro.build
-
-Consult these guides before working on related tasks:
-
-- [Adding pages, dynamic routes, or middleware](https://docs.astro.build/en/guides/routing/)
-- [Working with Astro components](https://docs.astro.build/en/basics/astro-components/)
-- [Using React, Vue, Svelte, or other framework components](https://docs.astro.build/en/guides/framework-components/)
-- [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
-- [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
-- [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+- Не писать абсолютные `/img/...`, `/video/...` в обход `asset()`.
+- Не дублировать значения цветов/размеров вместо токенов.
+- Не убирать `base: '/welton'` из `astro.config.mjs`.
+- Не копировать чужую разметку — собирать из своих компонентов.

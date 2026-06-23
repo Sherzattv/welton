@@ -1,88 +1,77 @@
-# Велес Групп — Astro rebuild
+# Welton
 
-Чистый ребилд сайта `okna-veles-group.ru` после Tilda. Цель — визуально близко к оригиналу, но без Tilda-кода: масштабируемая Astro-архитектура, переиспользуемые секции, единые дизайн-токены и подготовка к дальнейшему развитию/CMS.
+Корпоративный сайт-одностраничник строительной компании на [Astro](https://astro.build).
+Статическая генерация, нулевой JS по умолчанию, аккуратный motion-слой и единая
+дизайн-система. Контент вынесен из разметки — страница собирается из секций,
+а тексты и изображения лежат в одном файле данных.
+
+> Текущее наполнение — компания «Велес Групп» (остекление объектов). Это базовая
+> версия: контент, бренд и набор секций предполагается менять и расширять.
+
+**Прод:** https://sherzattv.github.io/welton/
+
+---
 
 ## Стек
 
-- Astro 7
-- Tailwind CSS 4
-- TypeScript
-- GSAP + Lenis для motion-слоя
-- Playwright/pixelmatch/sharp для вспомогательной визуальной проверки
+| Технология | Назначение |
+|---|---|
+| **Astro 7** | статическая генерация страниц, островная архитектура |
+| **Tailwind CSS 4** | утилитарные стили + дизайн-токены через `@theme` |
+| **TypeScript** (strict) | типобезопасность компонентов и данных |
+| **GSAP + Lenis** | плавный скролл и анимации (ScrollTrigger, SplitText) |
 
-## Команды
+Требуется **Node.js ≥ 22.12**.
 
-```bash
-npm install
-npm run build
-npm run preview
-```
-
-Dev-сервер запускать в background-режиме:
+## Быстрый старт
 
 ```bash
-npx astro dev --background
-npx astro dev status
-npx astro dev stop
-npx astro dev logs
+npm install      # установить зависимости
+npm run dev      # дев-сервер на http://localhost:4321/welton/
 ```
 
-Reference-копия Tilda:
+Прочие команды:
 
 ```bash
-npm run diff:serve
-# original: http://localhost:8765/
-# rebuild:  http://localhost:4321/
+npm run build    # сборка в dist/
+npm run preview  # локальный предпросмотр собранного сайта
 ```
+
+> Сайт публикуется по под-пути `/welton/`, поэтому в дев-режиме открывайте
+> именно `http://localhost:4321/welton/`, а не корень.
 
 ## Структура
 
 ```text
 src/
+  pages/
+    index.astro        главная — собирает секции в нужном порядке
+    styleguide.astro   /styleguide — живая дизайн-система (цвета, типографика, компоненты)
+  layouts/
+    Layout.astro       базовый HTML-каркас, <head>, подключение global.css
   components/
-    layout/       Header/Footer
-    sections/     секции главной страницы
-    Button.astro  фирменная CTA-кнопка
-    GridLines.astro глобальные вертикальные направляющие
-  data/home.ts    контент главной страницы
-  layouts/        базовый HTML/layout
-  scripts/        motion-инициализация
-  styles/global.css дизайн-токены и глобальные CSS-переменные
+    layout/            Header, Footer
+    sections/          секции главной (Hero, Stats, Services, …)
+    Heading, Button, Container, Logo, GridLines, Motion, …   переиспользуемые блоки
+  data/
+    home.ts            ВЕСЬ контент главной страницы (тексты, изображения, контакты)
+  lib/
+    asset.ts           asset() — префикс путей к файлам из public/ под base-путь
+  scripts/
+    motion.ts          единая инициализация Lenis / GSAP / SplitText
+  styles/
+    global.css         дизайн-токены (@theme) + глобальные стили и сетка-направляющих
+public/                статические файлы: img/, video/, fonts/, favicon
 ```
 
-## Важные решения
+## Документация
 
-- Контент главной вынесен в `src/data/home.ts`.
-- Вертикальные направляющие имеют один источник правды в `src/styles/global.css`: `--guide-a`, `--guide-b`, `--guide-c`. `GridLines` и sticky-шапка используют одни и те же координаты.
-- Header повторяет Tilda-модель из двух шапок:
-  - верхняя прозрачная шапка статично лежит в hero и уезжает вместе со страницей;
-  - белая fixed-шапка создаётся как отдельный клон и появляется только при обратном скролле ниже порога.
-- Hero откалиброван под ключевые размеры оригинала: desktop `1200/1440`, tablet `640`, mobile `360/390`.
-- Кнопка использует фирменную структуру: текст слева, правый блок стрелки с вертикальным разделителем.
+- [docs/architecture.md](docs/architecture.md) — как устроен сайт: секции, дизайн-токены, motion, сетка.
+- [docs/content-editing.md](docs/content-editing.md) — **как менять тексты, картинки и добавлять секции.**
+- [docs/deployment.md](docs/deployment.md) — как опубликовать обновление и про автодеплой.
+- [AGENTS.md](AGENTS.md) — соглашения для разработчиков и AI-агентов.
 
-## Motion / анимации
+## Деплой
 
-Motion-слой максимально повторяет Tilda-reference, но без копирования Tilda-разметки:
-
-- `src/scripts/motion.ts` — единая точка для Lenis, GSAP ScrollTrigger и SplitText.
-- Lenis использует конфиг оригинала: `lerp: 0.1`, `wheelMultiplier: 0.95`, `touchMultiplier: 1.1`.
-- Крупные заголовки и цифры статистики анимируются через SplitText: `duration: 1.2`, `stagger: 0.15`, `ease: power2.out`.
-- `data-reveal` оставлен только для точечных Tilda SBS fade-in элементов: hero description/CTA и CTA note.
-- Sticky header повторяет оригинальную схему: отдельная белая fixed-шапка появляется на обратном скролле, transition `500ms linear`.
-- Hover ссылок `link-slide`: текст уезжает вверх, снизу приходит серая копия.
-- Hover zoom изображений в карточках: `scale(1.04–1.05)` за `200ms ease-in-out`.
-- Objects slider автолистается каждые `3000ms` и остаётся управляемым стрелками.
-- Partners marquee бесконечно движется и ставится на паузу при hover.
-- FAQ раскрывается по высоте `400ms ease-in-out`, один пункт открыт за раз.
-
-При добавлении новых секций сначала переиспользуйте эти паттерны, а не создавайте локальные one-off анимации.
-
-## Проверка качества
-
-Перед коммитом:
-
-```bash
-npm run build
-```
-
-Для визуальной работы основная проверка — глазами в браузере. Скрипт `npm run diff` оставлен как вспомогательный инструмент, но не является главным критерием совпадения.
+Сайт хостится на **GitHub Pages** по адресу https://sherzattv.github.io/welton/.
+Подробности и пошаговый процесс обновления — в [docs/deployment.md](docs/deployment.md).
