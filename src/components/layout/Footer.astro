@@ -1,21 +1,23 @@
 ---
-import GridLines from "../GridLines.astro";
-import Logo from "../Logo.astro";
-import { contact } from "../../data/home";
-import { asset } from "../../lib/asset";
+import GridLines from "@components/GridLines.astro";
+import Logo from "@components/Logo.astro";
+import Icon from "@ui/Icon.astro";
+import SlideLink from "@ui/SlideLink.astro";
+import { contact } from "@data/site";
+import { asset } from "@lib/asset";
 ---
 
 <footer id="contacts" class="footer-section relative bg-charcoal text-paper">
   <GridLines />
-  <div class="mx-auto w-full max-w-[1680px] px-gutter footer-inner relative z-10">
+  <div
+    class="footer-inner relative z-10 mx-auto w-full max-w-[var(--content-max)] px-gutter"
+  >
     <a href={asset("/")} aria-label="Велес Групп" class="footer-logo">
       <Logo class="h-8 w-[71px]" />
     </a>
 
     <a href="#top" aria-label="Наверх" class="footer-top">
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-        <path d="M9 17V1M1 9l8-8 8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"></path>
-      </svg>
+      <Icon name="arrow-up" />
     </a>
 
     <div class="footer-address">
@@ -25,14 +27,25 @@ import { asset } from "../../lib/asset";
 
     <div class="footer-socials">
       <p class="footer-label">Соцсети</p>
-      <a href={contact.telegram} target="_blank" rel="noopener" class="footer-link">Telegram</a>
-      <a href={contact.max} target="_blank" rel="noopener" class="footer-link">Max</a>
+      <a
+        href={contact.telegram}
+        target="_blank"
+        rel="noopener"
+        class="footer-link">Telegram</a
+      >
+      <a href={contact.max} target="_blank" rel="noopener" class="footer-link"
+        >Max</a
+      >
     </div>
 
     <div class="footer-legal">
       <p class="footer-label">Правовая информация</p>
-      <a href={asset("/policy")} class="footer-link">Политика конфиденциальности</a>
-      <a href={asset("/agreement")} class="footer-link">Пользовательское соглашение</a>
+      <a href={asset("/policy")} class="footer-link"
+        >Политика конфиденциальности</a
+      >
+      <a href={asset("/agreement")} class="footer-link"
+        >Пользовательское соглашение</a
+      >
     </div>
 
     <div class="footer-company">
@@ -47,21 +60,21 @@ import { asset } from "../../lib/asset";
     <p class="footer-dev">Разработка сайта</p>
 
     <div class="footer-contacts">
-      <a href={contact.phoneHref} class="footer-phone footer-contact-link link-slide display">
-        <span class="slide-text" data-text={contact.phone}>{contact.phone}</span>
-      </a>
-      <a href={contact.emailHref} class="footer-email footer-contact-link link-slide display">
-        <span class="slide-text" data-text={contact.email}>{contact.email}</span>
-      </a>
+      <SlideLink
+        href={contact.phoneHref}
+        text={contact.phone}
+        class="footer-phone display"
+      />
+      <SlideLink
+        href={contact.emailHref}
+        text={contact.email}
+        class="footer-email display"
+      />
     </div>
   </div>
 </footer>
 
 <style>
-  .footer-section {
-    --s: calc(100vw / 360);
-  }
-
   .footer-inner {
     min-height: calc(var(--s) * 760);
     padding-top: calc(var(--s) * 32);
@@ -82,7 +95,9 @@ import { asset } from "../../lib/asset";
     place-items: center;
     border: 1px solid rgb(238 238 238 / 0.35);
     border-radius: var(--radius-sm);
-    transition: color 200ms ease, border-color 200ms ease;
+    transition:
+      color 200ms ease,
+      border-color 200ms ease;
   }
 
   .footer-top:hover,
@@ -157,31 +172,6 @@ import { asset } from "../../lib/asset";
     transition: color 200ms ease;
   }
 
-  /* Footer phone/email in Tilda use the same link-slide hover as the header. */
-  .footer-contact-link {
-    overflow: hidden;
-  }
-  .footer-contact-link .slide-text {
-    position: relative;
-    display: inline-block;
-    transition: transform 0.3s ease;
-  }
-  .footer-contact-link .slide-text::before {
-    content: attr(data-text);
-    position: absolute;
-    top: 100%;
-    left: 0;
-    color: var(--color-grey-300);
-    white-space: nowrap;
-  }
-  .footer-contact-link:hover .slide-text,
-  .footer-contact-link:focus-visible .slide-text {
-    transform: translateY(-100%);
-  }
-  .footer-contact-link:focus-visible {
-    outline: none;
-  }
-
   .footer-phone {
     font-size: calc(var(--s) * 34);
     line-height: 1;
@@ -195,10 +185,6 @@ import { asset } from "../../lib/asset";
   }
 
   @media (min-width: 640px) {
-    .footer-section {
-      --s: 1px;
-    }
-
     .footer-inner {
       min-height: 640px;
       padding: 0;

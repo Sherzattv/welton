@@ -1,26 +1,39 @@
 ---
-import GridLines from "../GridLines.astro";
-import Heading from "../Heading.astro";
-import Button from "../Button.astro";
-import { services } from "../../data/home";
-import { asset } from "../../lib/asset";
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import Button from "@components/Button.astro";
+import Hairline from "@ui/Hairline.astro";
+import { services } from "@data/home";
+import { asset } from "@lib/asset";
 ---
 
 <section id="services" class="services-section relative bg-paper text-charcoal">
   <GridLines />
-  <div class="mx-auto w-full max-w-[1680px] px-gutter services-inner relative z-10">
-    <Heading as="h2" size="lg" class="services-heading text-charcoal" data-split>
+  <div
+    class="services-inner relative z-10 mx-auto w-full max-w-[var(--content-max)] px-gutter"
+  >
+    <Heading
+      as="h2"
+      size="lg"
+      class="services-heading text-charcoal"
+      data-split
+    >
       Выполняем остекление объектов под ключ
     </Heading>
 
     <div class="services-list">
       {
         services.map((s, i) => (
-          <article class="service-row group" style={`--top:${(144 + 361 * i) / 12}vw`}>
-            <span class="service-line" aria-hidden="true"></span>
+          <article
+            class="service-row group"
+            style={`--top:${(144 + 361 * i) / 12}vw`}
+          >
+            <Hairline />
             <span class="service-num text-grey-400">{s.num}</span>
             <div class="service-copy">
-              <Heading as="h3" size="md" class="service-title text-charcoal">{s.title}</Heading>
+              <Heading as="h3" size="md" class="service-title text-charcoal">
+                {s.title}
+              </Heading>
               <p class="service-desc text-charcoal">{s.desc}</p>
             </div>
             <div class="service-image-wrap">
@@ -32,7 +45,13 @@ import { asset } from "../../lib/asset";
                 class="service-image"
               />
             </div>
-            <Button variant="light" href="#invoice" class="service-button bg-white">Оставить заявку</Button>
+            <Button
+              variant="light"
+              href="#invoice"
+              class="service-button bg-white"
+            >
+              Оставить заявку
+            </Button>
           </article>
         ))
       }
@@ -41,10 +60,6 @@ import { asset } from "../../lib/asset";
 </section>
 
 <style>
-  .services-section {
-    --s: calc(100vw / 360);
-  }
-
   .services-inner {
     min-height: calc(var(--s) * 1510);
     padding-top: calc(var(--s) * 72);
@@ -67,15 +82,6 @@ import { asset } from "../../lib/asset";
     display: grid;
     gap: calc(var(--s) * 18);
     padding-top: calc(var(--s) * 20);
-  }
-
-  .service-line {
-    position: absolute;
-    inset-inline: 0;
-    top: 0;
-    height: 1px;
-    background: currentColor;
-    opacity: var(--guide-opacity, 0.02);
   }
 
   .service-num {
@@ -119,10 +125,6 @@ import { asset } from "../../lib/asset";
   }
 
   @media (min-width: 640px) {
-    .services-section {
-      --s: 1px;
-    }
-
     .services-inner {
       min-height: 1320px;
       padding-top: 96px;
@@ -161,7 +163,9 @@ import { asset } from "../../lib/asset";
 
   @media (min-width: 960px) {
     .services-inner {
-      min-height: 102.5vw;
+      /* 102.5vw артборда + ~3vw нижней «воздушной» зоны после последнего ряда
+         (ряды позиционированы абсолютно по --top, внутри ничего не смещается). */
+      min-height: 105.5vw;
       padding-block: 0;
     }
 
@@ -186,10 +190,6 @@ import { asset } from "../../lib/asset";
       height: 28.417vw;
       display: block;
       padding: 0;
-    }
-
-    .service-line {
-      inset-inline: 0;
     }
 
     .service-num {

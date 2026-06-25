@@ -1,23 +1,45 @@
 ---
-import GridLines from "../GridLines.astro";
-import Heading from "../Heading.astro";
-import { objects } from "../../data/home";
-import { asset } from "../../lib/asset";
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import Icon from "@ui/Icon.astro";
+import { objects } from "@data/home";
+import { asset } from "@lib/asset";
 ---
 
-<section id="objects" class="objects-section relative overflow-hidden bg-paper text-charcoal">
+<section
+  id="objects"
+  class="objects-section relative overflow-hidden bg-paper text-charcoal"
+>
   <GridLines />
-  <div class="mx-auto w-full max-w-[1680px] px-gutter objects-inner relative z-10">
+  <div
+    class="objects-inner relative z-10 mx-auto w-full max-w-[var(--content-max)] px-gutter"
+  >
     <Heading as="h2" size="lg" class="objects-heading text-charcoal" data-split>
       Объекты, с которыми мы работаем
     </Heading>
 
     <div class="objects-controls" aria-label="Навигация по объектам">
-      <button type="button" data-obj-prev aria-label="Назад" class="objects-arrow objects-arrow--prev">
-        <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><path d="M7 1L1 7l6 6M1 7h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path></svg>
+      <button
+        type="button"
+        data-obj-prev
+        aria-label="Назад"
+        class="objects-arrow objects-arrow--prev group"
+      >
+        <Icon
+          name="arrow-left"
+          class="transition-transform duration-200 ease-in-out group-hover:-translate-x-1 group-focus-visible:-translate-x-1"
+        />
       </button>
-      <button type="button" data-obj-next aria-label="Вперёд" class="objects-arrow objects-arrow--next">
-        <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><path d="M11 1l6 6-6 6M17 7H1" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path></svg>
+      <button
+        type="button"
+        data-obj-next
+        aria-label="Вперёд"
+        class="objects-arrow objects-arrow--next group"
+      >
+        <Icon
+          name="arrow-right"
+          class="transition-transform duration-200 ease-in-out group-hover:translate-x-1 group-focus-visible:translate-x-1"
+        />
       </button>
     </div>
 
@@ -35,7 +57,9 @@ import { asset } from "../../lib/asset";
               />
             </div>
             <span class="object-num text-grey-400">{o.num}</span>
-            <Heading as="h3" size="md" class="object-title text-charcoal">{o.title}</Heading>
+            <Heading as="h3" size="md" class="object-title text-charcoal">
+              {o.title}
+            </Heading>
             <p class="object-desc text-charcoal">{o.desc}</p>
           </article>
         ))
@@ -46,7 +70,6 @@ import { asset } from "../../lib/asset";
 
 <style>
   .objects-section {
-    --s: calc(100vw / 360);
     min-height: calc(var(--s) * 690);
   }
 
@@ -75,11 +98,10 @@ import { asset } from "../../lib/asset";
     border: 1px solid currentColor;
     border-radius: var(--radius-sm);
     background: transparent;
-    transition: color 200ms ease, border-color 200ms ease, background-color 200ms ease;
-  }
-
-  .objects-arrow svg {
-    transition: transform 200ms ease-in-out;
+    transition:
+      color 200ms ease,
+      border-color 200ms ease,
+      background-color 200ms ease;
   }
 
   .objects-arrow:hover,
@@ -88,16 +110,6 @@ import { asset } from "../../lib/asset";
     background: var(--color-accent);
     border-color: var(--color-accent);
     outline: none;
-  }
-
-  .objects-arrow--next:hover svg,
-  .objects-arrow--next:focus-visible svg {
-    transform: translateX(4px);
-  }
-
-  .objects-arrow--prev:hover svg,
-  .objects-arrow--prev:focus-visible svg {
-    transform: translateX(-4px);
   }
 
   .objects-track {
@@ -169,7 +181,6 @@ import { asset } from "../../lib/asset";
 
   @media (min-width: 640px) {
     .objects-section {
-      --s: 1px;
       min-height: 620px;
     }
 
@@ -268,7 +279,9 @@ import { asset } from "../../lib/asset";
     .objects-section {
       --objects-top-gap: clamp(96px, 7vw, 150px);
       --objects-bottom-gap: clamp(72px, 6vw, 120px);
-      min-height: calc(36.667vw + var(--objects-top-gap) + var(--objects-bottom-gap));
+      min-height: calc(
+        36.667vw + var(--objects-top-gap) + var(--objects-bottom-gap)
+      );
     }
 
     .objects-inner {
@@ -336,13 +349,16 @@ import { asset } from "../../lib/asset";
 
 <script>
   const track = document.querySelector<HTMLElement>("[data-obj-track]");
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
 
   const step = () => {
     if (!track) return 388;
     const card = track.querySelector<HTMLElement>(".object-card");
     const styles = getComputedStyle(track);
-    const rawGap = styles.columnGap === "normal" ? styles.gap : styles.columnGap;
+    const rawGap =
+      styles.columnGap === "normal" ? styles.gap : styles.columnGap;
     const gap = parseFloat(rawGap || "0") || 0;
     return card ? card.offsetWidth + gap : Math.min(track.clientWidth, 388);
   };

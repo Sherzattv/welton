@@ -1,32 +1,47 @@
 ---
-import GridLines from "../GridLines.astro";
-import Heading from "../Heading.astro";
-import Button from "../Button.astro";
-import { contact } from "../../data/home";
-import { asset } from "../../lib/asset";
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import Button from "@components/Button.astro";
+import { contact } from "@data/site";
+import { asset } from "@lib/asset";
 ---
 
-<section id="invoice" class="cta-section relative overflow-hidden bg-paper text-paper">
+<section
+  id="invoice"
+  class="cta-section relative overflow-hidden bg-paper text-paper"
+>
   <img
     src={asset("/img/high-rise-buildings-.jpg")}
     alt=""
     loading="lazy"
     class="cta-bg absolute inset-x-0 top-0 h-full w-full object-cover"
   />
-  <div class="cta-bg absolute inset-x-0 top-0 bg-gradient-to-b from-charcoal/5 to-charcoal/70"></div>
+  <div
+    class="cta-bg absolute inset-x-0 top-0 bg-gradient-to-b from-charcoal/5 to-charcoal/70"
+  >
+  </div>
   <GridLines />
 
-  <div class="mx-auto w-full max-w-[1680px] px-gutter cta-inner relative z-10">
+  <div
+    class="cta-inner relative z-10 mx-auto w-full max-w-[var(--content-max)] px-gutter"
+  >
     <Heading as="h2" size="lg" class="cta-heading text-paper" data-split>
       Предварительный расчёт остекления под ваш объект
     </Heading>
 
     <div class="cta-button">
-      <Button variant="light" href="#contacts" class="bg-white">Оставить заявку</Button>
+      <Button variant="light" href="#contacts" class="bg-white"
+        >Оставить заявку</Button
+      >
     </div>
 
-    <p data-reveal class="cta-note text-paper/80">Не хотите ждать звонка?<br />Позвоните нам по этому номеру:</p>
-    <a href={contact.phoneHref} class="cta-phone display text-paper transition-colors hover:text-accent">
+    <p data-reveal class="cta-note text-paper/80">
+      Не хотите ждать звонка?<br />Позвоните нам по этому номеру:
+    </p>
+    <a
+      href={contact.phoneHref}
+      class="cta-phone display text-paper transition-colors hover:text-accent"
+    >
       {contact.phone}
     </a>
   </div>
@@ -34,7 +49,6 @@ import { asset } from "../../lib/asset";
 
 <style>
   .cta-section {
-    --s: calc(100vw / 360);
     min-height: calc(var(--s) * 640);
   }
 
@@ -80,7 +94,6 @@ import { asset } from "../../lib/asset";
 
   @media (min-width: 640px) {
     .cta-section {
-      --s: 1px;
       min-height: 740px;
     }
 

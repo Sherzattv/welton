@@ -1,17 +1,27 @@
 ---
-import GridLines from "../GridLines.astro";
-import Heading from "../Heading.astro";
-import { partners } from "../../data/home";
-import { asset } from "../../lib/asset";
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import { partners } from "@data/home";
+import { asset } from "@lib/asset";
 
 const ordered = [...partners].reverse();
 const loop = [...ordered, ...ordered];
 ---
 
-<section id="partners" class="partners-section relative overflow-hidden bg-paper text-charcoal">
+<section
+  id="partners"
+  class="partners-section relative overflow-hidden bg-paper text-charcoal"
+>
   <GridLines />
-  <div class="mx-auto w-full max-w-[1680px] px-gutter partners-inner relative z-10">
-    <Heading as="h2" size="lg" class="partners-heading text-charcoal" data-split>
+  <div
+    class="partners-inner relative z-10 mx-auto w-full max-w-[var(--content-max)] px-gutter"
+  >
+    <Heading
+      as="h2"
+      size="lg"
+      class="partners-heading text-charcoal"
+      data-split
+    >
       Используем проверенные профильные системы и комплектующие
     </Heading>
   </div>
@@ -21,7 +31,12 @@ const loop = [...ordered, ...ordered];
       {
         loop.map((p) => (
           <div class="partner-card">
-            <img src={asset(p.logo)} alt={p.name} loading="lazy" class="partner-logo" />
+            <img
+              src={asset(p.logo)}
+              alt={p.name}
+              loading="lazy"
+              class="partner-logo"
+            />
             <span class="partner-name">{p.name}</span>
           </div>
         ))
@@ -32,7 +47,6 @@ const loop = [...ordered, ...ordered];
 
 <style>
   .partners-section {
-    --s: calc(100vw / 360);
     min-height: calc(var(--s) * 460);
   }
 
@@ -107,7 +121,6 @@ const loop = [...ordered, ...ordered];
 
   @media (min-width: 640px) {
     .partners-section {
-      --s: 1px;
       min-height: 364px;
     }
 
@@ -197,7 +210,9 @@ const loop = [...ordered, ...ordered];
     .partners-section {
       --partners-cards-top: clamp(200px, 18vw, 360px);
       --partners-bottom-gap: clamp(96px, 6vw, 150px);
-      min-height: calc(var(--partners-cards-top) + 15.167vw + var(--partners-bottom-gap));
+      min-height: calc(
+        var(--partners-cards-top) + 15.167vw + var(--partners-bottom-gap)
+      );
     }
 
     .partners-heading {

@@ -1,21 +1,56 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Section from "../components/Section.astro";
-import Heading from "../components/Heading.astro";
-import Button from "../components/Button.astro";
-import ProjectCard from "../components/ProjectCard.astro";
+import Layout from "@layouts/Layout.astro";
+import Section from "@components/Section.astro";
+import Heading from "@components/Heading.astro";
+import Button from "@components/Button.astro";
+import ProjectCard from "@components/ProjectCard.astro";
 
 const colors = [
-  { name: "charcoal", hex: "#1b1b1b", cls: "bg-charcoal", note: "фон + чернила" },
+  {
+    name: "charcoal",
+    hex: "#1b1b1b",
+    cls: "bg-charcoal",
+    note: "фон + чернила",
+  },
   { name: "ink", hex: "#0e100f", cls: "bg-ink", note: "глубокий фон" },
-  { name: "paper", hex: "#eeeeee", cls: "bg-paper", note: "бумага / текст на тёмном" },
+  {
+    name: "paper",
+    hex: "#eeeeee",
+    cls: "bg-paper",
+    note: "бумага / текст на тёмном",
+  },
   { name: "white", hex: "#ffffff", cls: "bg-white", note: "чистый белый" },
   { name: "grey-200", hex: "#dddddd", cls: "bg-grey-200", note: "линии" },
-  { name: "grey-300", hex: "#c3c3c3", cls: "bg-grey-300", note: "слабый текст" },
-  { name: "grey-400", hex: "#9a9a9a", cls: "bg-grey-400", note: "приглушённый текст" },
-  { name: "grey-500", hex: "#767676", cls: "bg-grey-500", note: "вторичный текст" },
-  { name: "accent", hex: "#22866b", cls: "bg-accent", note: "ЕДИНСТВЕННЫЙ акцент" },
-  { name: "accent-hover", hex: "#1e785f", cls: "bg-accent-hover", note: "ховер акцента" },
+  {
+    name: "grey-300",
+    hex: "#c3c3c3",
+    cls: "bg-grey-300",
+    note: "слабый текст",
+  },
+  {
+    name: "grey-400",
+    hex: "#9a9a9a",
+    cls: "bg-grey-400",
+    note: "приглушённый текст",
+  },
+  {
+    name: "grey-500",
+    hex: "#767676",
+    cls: "bg-grey-500",
+    note: "вторичный текст",
+  },
+  {
+    name: "accent",
+    hex: "#22866b",
+    cls: "bg-accent",
+    note: "ЕДИНСТВЕННЫЙ акцент",
+  },
+  {
+    name: "accent-hover",
+    hex: "#1e785f",
+    cls: "bg-accent-hover",
+    note: "ховер акцента",
+  },
 ];
 
 const typeScale = [
@@ -40,8 +75,8 @@ const bodyScale = [
     <p class="text-sm tracking-widest text-accent uppercase">Дизайн-система</p>
     <Heading as="h1" size="xl" class="mt-3">Велес Групп</Heading>
     <p class="mt-4 max-w-xl text-grey-400">
-      Монохром-уголь, один зелёный акцент, острые углы, тяжёлый дисплейный
-      шрифт над лёгким текстом. Источник истины для всех страниц.
+      Монохром-уголь, один зелёный акцент, острые углы, тяжёлый дисплейный шрифт
+      над лёгким текстом. Источник истины для всех страниц.
     </p>
   </Section>
 
@@ -121,7 +156,11 @@ const bodyScale = [
     <Heading as="h2" size="md">Карточка проекта</Heading>
     <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       <ProjectCard number="01" title="Жилой комплекс" location="Москва" />
-      <ProjectCard number="02" title="Бизнес-центр" location="Санкт-Петербург" />
+      <ProjectCard
+        number="02"
+        title="Бизнес-центр"
+        location="Санкт-Петербург"
+      />
       <ProjectCard number="03" title="Терминал аэропорта" location="Казань" />
     </div>
   </Section>

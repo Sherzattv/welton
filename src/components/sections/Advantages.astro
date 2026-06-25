@@ -1,14 +1,22 @@
 ---
-import GridLines from "../GridLines.astro";
-import Heading from "../Heading.astro";
-import { advantages } from "../../data/home";
-import { asset } from "../../lib/asset";
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import { advantages } from "@data/home";
+import { asset } from "@lib/asset";
 
 // Tilda orders cards visually as: control → teams → volume → geography.
-const orderedAdvantages = [advantages[0], advantages[3], advantages[2], advantages[1]];
+const orderedAdvantages = [
+  advantages[0],
+  advantages[3],
+  advantages[2],
+  advantages[1],
+];
 ---
 
-<section id="advantages" class="advantages-section relative overflow-hidden text-paper">
+<section
+  id="advantages"
+  class="advantages-section relative overflow-hidden text-paper"
+>
   <video
     class="absolute inset-0 h-full w-full object-cover"
     src={asset("/video/advantages.mp4")}
@@ -17,12 +25,13 @@ const orderedAdvantages = [advantages[0], advantages[3], advantages[2], advantag
     loop
     playsinline
     preload="metadata"
-    aria-hidden="true"
-  ></video>
+    aria-hidden="true"></video>
   <div class="absolute inset-0 bg-charcoal/35"></div>
   <GridLines />
 
-  <div class="mx-auto w-full max-w-[1680px] px-gutter advantages-inner relative z-10">
+  <div
+    class="advantages-inner relative z-10 mx-auto w-full max-w-[var(--content-max)] px-gutter"
+  >
     <Heading as="h2" size="lg" class="advantages-heading" data-split>
       Ответственный&nbsp;подход к&nbsp;каждому объекту
     </Heading>
@@ -30,9 +39,14 @@ const orderedAdvantages = [advantages[0], advantages[3], advantages[2], advantag
     <div class="advantages-grid">
       {
         orderedAdvantages.map((a, i) => (
-          <article class="advantage-card" style={`--left:${(24 + 291 * i) / 12}vw`}>
-            <span class="advantage-dot" aria-hidden="true"></span>
-            <Heading as="h3" size="md" class="advantage-title text-charcoal">{a.title}</Heading>
+          <article
+            class="advantage-card"
+            style={`--left:${(24 + 291 * i) / 12}vw`}
+          >
+            <span class="advantage-dot" aria-hidden="true" />
+            <Heading as="h3" size="md" class="advantage-title text-charcoal">
+              {a.title}
+            </Heading>
             <p class="advantage-desc text-charcoal">{a.desc}</p>
           </article>
         ))
@@ -43,7 +57,6 @@ const orderedAdvantages = [advantages[0], advantages[3], advantages[2], advantag
 
 <style>
   .advantages-section {
-    --s: calc(100vw / 360);
     min-height: calc(var(--s) * 1040);
   }
 
@@ -97,7 +110,6 @@ const orderedAdvantages = [advantages[0], advantages[3], advantages[2], advantag
 
   @media (min-width: 640px) {
     .advantages-section {
-      --s: 1px;
       min-height: 720px;
     }
 

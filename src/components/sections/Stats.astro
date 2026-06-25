@@ -1,7 +1,7 @@
 ---
-import GridLines from "../GridLines.astro";
-import Heading from "../Heading.astro";
-import { stats } from "../../data/home";
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import { stats } from "@data/home";
 ---
 
 <section id="about" class="stats-section relative bg-paper text-charcoal">
@@ -10,16 +10,21 @@ import { stats } from "../../data/home";
   <div class="stats-inner relative z-10">
     <div class="stats-heading-rail">
       <div class="stats-heading-wrap">
-        <Heading as="h2" size="lg" class="stats-heading text-charcoal" data-split>
+        <Heading
+          as="h2"
+          size="lg"
+          class="stats-heading text-charcoal"
+          data-split
+        >
           ПРОФЕССИОНАЛЬНО Реализуем проекты в сфере остекления ЗДАНИЙ
         </Heading>
       </div>
     </div>
 
     <p class="stats-lead text-body text-charcoal">
-      Работаем с объектами разного назначения, включая нестандартные и
-      сложные по конструкции. Обеспечиваем полный цикл работ и чёткую
-      организацию процессов вне зависимости от региона.
+      Работаем с объектами разного назначения, включая нестандартные и сложные
+      по конструкции. Обеспечиваем полный цикл работ и чёткую организацию
+      процессов вне зависимости от региона.
     </p>
 
     <div class="stats-grid">
@@ -28,7 +33,9 @@ import { stats } from "../../data/home";
           <article class="stat-card">
             <p class="stat-label text-body text-charcoal">{s.label}</p>
             <p class="stat-value-row">
-              <span class="display text-stat text-charcoal" data-split>{s.value}</span>
+              <span class="display text-stat text-charcoal" data-split>
+                {s.value}
+              </span>
               <span class="display text-unit text-charcoal">{s.unit}</span>
             </p>
           </article>

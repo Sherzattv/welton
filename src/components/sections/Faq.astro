@@ -1,23 +1,28 @@
 ---
-import GridLines from "../GridLines.astro";
-import Heading from "../Heading.astro";
-import { faq } from "../../data/home";
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import Icon from "@ui/Icon.astro";
+import { faq } from "@data/home";
 ---
 
 <section id="faq" class="faq-section relative bg-paper text-charcoal">
   <GridLines />
-  <div class="mx-auto w-full max-w-[1680px] px-gutter faq-inner relative z-10">
-    <Heading as="h2" size="lg" class="faq-heading text-charcoal" data-split>Часто задаваемые вопросы</Heading>
+  <div
+    class="faq-inner relative z-10 mx-auto w-full max-w-[var(--content-max)] px-gutter"
+  >
+    <Heading as="h2" size="lg" class="faq-heading text-charcoal" data-split
+      >Часто задаваемые вопросы</Heading
+    >
 
     <div class="faq-list">
       {
         faq.map((item) => (
           <details class="faq-item group">
             <summary class="faq-summary">
-              <Heading as="h3" size="sm" class="faq-question text-charcoal">{item.q}</Heading>
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true" class="faq-icon">
-                <path d="M5 8l6 6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" />
-              </svg>
+              <Heading as="h3" size="sm" class="faq-question text-charcoal">
+                {item.q}
+              </Heading>
+              <Icon name="chevron-down" class="faq-icon" />
             </summary>
             <div class="faq-panel">
               <p class="faq-answer text-charcoal">{item.a}</p>
@@ -30,10 +35,6 @@ import { faq } from "../../data/home";
 </section>
 
 <style>
-  .faq-section {
-    --s: calc(100vw / 360);
-  }
-
   .faq-inner {
     min-height: calc(var(--s) * 720);
     padding-top: calc(var(--s) * 72);
@@ -94,10 +95,6 @@ import { faq } from "../../data/home";
   }
 
   @media (min-width: 640px) {
-    .faq-section {
-      --s: 1px;
-    }
-
     .faq-inner {
       min-height: 720px;
       padding-top: 0;
@@ -155,11 +152,16 @@ import { faq } from "../../data/home";
   }
 </style>
 <script>
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
   const faqRoot = document.querySelector<HTMLElement>("#faq");
-  const items = Array.from(document.querySelectorAll<HTMLDetailsElement>("#faq .faq-item"));
+  const items = Array.from(
+    document.querySelectorAll<HTMLDetailsElement>("#faq .faq-item"),
+  );
 
-  const getPanel = (item: HTMLDetailsElement) => item.querySelector<HTMLElement>(".faq-panel");
+  const getPanel = (item: HTMLDetailsElement) =>
+    item.querySelector<HTMLElement>(".faq-panel");
 
   const easeOutExpo = (t: number) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
 
@@ -183,7 +185,10 @@ import { faq } from "../../data/home";
     const summary = item.querySelector<HTMLElement>(".faq-summary");
     if (!summary) return;
     const headerOffset = window.innerWidth >= 960 ? 92 : 76;
-    const target = Math.max(0, summary.getBoundingClientRect().top + window.scrollY - headerOffset);
+    const target = Math.max(
+      0,
+      summary.getBoundingClientRect().top + window.scrollY - headerOffset,
+    );
     if (reduceMotion) window.scrollTo(0, target);
     else smoothScrollTo(target);
   };
@@ -206,7 +211,8 @@ import { faq } from "../../data/home";
     panel.style.opacity = "0";
     panel.style.transform = "translateY(-10px)";
     panel.getBoundingClientRect();
-    panel.style.transition = "height 400ms ease-in-out, opacity 400ms ease-in-out, transform 400ms ease-in-out";
+    panel.style.transition =
+      "height 400ms ease-in-out, opacity 400ms ease-in-out, transform 400ms ease-in-out";
     panel.style.height = `${panel.scrollHeight}px`;
     panel.style.opacity = "1";
     panel.style.transform = "translateY(0)";
@@ -243,7 +249,8 @@ import { faq } from "../../data/home";
     panel.style.opacity = "1";
     panel.style.transform = "translateY(0)";
     panel.getBoundingClientRect();
-    panel.style.transition = "height 400ms ease-in-out, opacity 400ms ease-in-out, transform 400ms ease-in-out";
+    panel.style.transition =
+      "height 400ms ease-in-out, opacity 400ms ease-in-out, transform 400ms ease-in-out";
     panel.style.height = "0px";
     panel.style.opacity = "0";
     panel.style.transform = "translateY(-8px)";

@@ -1,8 +1,8 @@
 ---
-import Container from "../Container.astro";
-import GridLines from "../GridLines.astro";
-import Button from "../Button.astro";
-import { asset } from "../../lib/asset";
+import Container from "@components/Container.astro";
+import GridLines from "@components/GridLines.astro";
+import Button from "@components/Button.astro";
+import { asset } from "@lib/asset";
 ---
 
 <section id="top" class="hero-section relative overflow-hidden text-paper">
@@ -12,7 +12,10 @@ import { asset } from "../../lib/asset";
     fetchpriority="high"
     class="absolute inset-0 h-full w-full object-cover"
   />
-  <div class="absolute inset-0 bg-gradient-to-b from-transparent to-charcoal/50"></div>
+  <div
+    class="absolute inset-0 bg-gradient-to-b from-transparent to-charcoal/50"
+  >
+  </div>
   <GridLines />
 
   <Container class="hero-content absolute inset-0 z-10">
@@ -26,10 +29,12 @@ import { asset } from "../../lib/asset";
       <div class="hero-side">
         <p data-reveal class="hero-desc">
           Проектируем, производим и монтируем оконные, фасадные и
-          противопожарные конструкции для жилых, общественных и
-          инфраструктурных объектов.
+          противопожарные конструкции для жилых, общественных и инфраструктурных
+          объектов.
         </p>
-        <Button variant="light" href="#invoice" class="hero-cta" data-reveal>Обсудить проект</Button>
+        <Button variant="light" href="#invoice" class="hero-cta" data-reveal
+          >Обсудить проект</Button
+        >
       </div>
     </div>
   </Container>

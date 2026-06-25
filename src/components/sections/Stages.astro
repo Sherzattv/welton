@@ -1,15 +1,23 @@
 ---
-import GridLines from "../GridLines.astro";
-import Heading from "../Heading.astro";
-import { stages } from "../../data/home";
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import Hairline from "@ui/Hairline.astro";
+import { stages } from "@data/home";
 ---
 
 <section id="stages" class="stages-section relative bg-paper text-charcoal">
   <GridLines />
-  <div class="mx-auto w-full max-w-[1680px] px-gutter stages-inner relative z-10">
+  <div
+    class="stages-inner relative z-10 mx-auto w-full max-w-[var(--content-max)] px-gutter"
+  >
     <div class="stages-heading-rail">
       <div class="stages-heading-wrap">
-        <Heading as="h2" size="lg" class="stages-heading text-charcoal" data-split>
+        <Heading
+          as="h2"
+          size="lg"
+          class="stages-heading text-charcoal"
+          data-split
+        >
           Прозрачный процесс реализации проекта
         </Heading>
       </div>
@@ -21,10 +29,15 @@ import { stages } from "../../data/home";
           const tops = [0, 174, 348, 522, 677];
           const tabletTops = [128, 300, 472, 644, 816];
           return (
-            <article class="stage-row" style={`--top:clamp(${tops[i]}px, ${tops[i] / 12}vw, ${tops[i] * 1.2}px);--tab-top:${tabletTops[i]}px`}>
-              <span class="stage-line" aria-hidden="true"></span>
+            <article
+              class="stage-row"
+              style={`--top:clamp(${tops[i]}px, ${tops[i] / 12}vw, ${tops[i] * 1.2}px);--tab-top:${tabletTops[i]}px`}
+            >
+              <Hairline />
               <span class="stage-num text-grey-400">{s.num}</span>
-              <Heading as="h3" size="md" class="stage-title text-charcoal">{s.title}</Heading>
+              <Heading as="h3" size="md" class="stage-title text-charcoal">
+                {s.title}
+              </Heading>
               <p class="stage-desc text-charcoal">{s.desc}</p>
             </article>
           );
@@ -35,10 +48,6 @@ import { stages } from "../../data/home";
 </section>
 
 <style>
-  .stages-section {
-    --s: calc(100vw / 360);
-  }
-
   .stages-inner {
     min-height: calc(var(--s) * 1050);
     padding-top: calc(var(--s) * 72);
@@ -69,15 +78,6 @@ import { stages } from "../../data/home";
     padding-block: calc(var(--s) * 21) calc(var(--s) * 36);
   }
 
-  .stage-line {
-    position: absolute;
-    inset-inline: 0;
-    top: 0;
-    height: 1px;
-    background: currentColor;
-    opacity: var(--guide-opacity, 0.02);
-  }
-
   .stage-title {
     text-transform: uppercase;
   }
@@ -87,10 +87,6 @@ import { stages } from "../../data/home";
   }
 
   @media (min-width: 640px) {
-    .stages-section {
-      --s: 1px;
-    }
-
     .stages-inner {
       min-height: 780px;
       padding-top: 0;

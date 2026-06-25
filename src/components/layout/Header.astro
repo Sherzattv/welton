@@ -1,15 +1,20 @@
 ---
-import Container from "../Container.astro";
-import Logo from "../Logo.astro";
-import { nav, contact } from "../../data/home";
-import { asset } from "../../lib/asset";
+import Container from "@components/Container.astro";
+import Logo from "@components/Logo.astro";
+import Icon from "@ui/Icon.astro";
+import SlideLink from "@ui/SlideLink.astro";
+import { nav, contact } from "@data/site";
+import { asset } from "@lib/asset";
 ---
 
 <header
   data-header-top
   class="top-header absolute inset-x-0 top-0 z-50 h-[69px] lg:h-16 xl:h-[76px]"
 >
-  <div aria-hidden="true" class="header-guides pointer-events-none absolute inset-0">
+  <div
+    aria-hidden="true"
+    class="header-guides pointer-events-none absolute inset-0"
+  >
     <span class="header-guide header-guide-a"></span>
     <span class="header-guide header-guide-b"></span>
     <span class="header-guide header-guide-c"></span>
@@ -19,22 +24,29 @@ import { asset } from "../../lib/asset";
   <Container class="relative flex h-full items-stretch justify-between">
     <!-- Левая группа: логотип + меню -->
     <div class="flex items-stretch gap-7">
-      <a href={asset("/")} aria-label="Велес Групп — на главную" class="flex items-center">
-        <Logo class="h-[35px] w-[77px] lg:h-8 lg:w-[71px] xl:h-[38px] xl:w-[85px]" />
+      <a
+        href={asset("/")}
+        aria-label="Велес Групп — на главную"
+        class="flex items-center"
+      >
+        <Logo
+          class="h-[35px] w-[77px] lg:h-8 lg:w-[71px] xl:h-[38px] xl:w-[85px]"
+        />
       </a>
 
       <nav class="hidden lg:block">
         {
           nav.map((item, index) => {
-            const left = ["26.25%", "50.42%", "57.33%", "63.33%", "74.75%"][index];
+            const left = ["26.25%", "50.42%", "57.33%", "63.33%", "74.75%"][
+              index
+            ];
             return (
-              <a
+              <SlideLink
                 href={item.href}
+                text={item.label}
                 style={`left:${left}`}
-                class="nav-link link-slide absolute top-1/2 -translate-y-1/2 text-[12px] font-medium leading-[1.55] tracking-[-0.3px] xl:text-[14px]"
-              >
-                <span class="slide-text" data-text={item.label}>{item.label}</span>
-              </a>
+                class="nav-link absolute top-1/2 -translate-y-1/2 text-[12px] leading-[1.55] font-medium tracking-[-0.3px] xl:text-[14px]"
+              />
             );
           })
         }
@@ -43,12 +55,11 @@ import { asset } from "../../lib/asset";
 
     <!-- Правая группа: телефон / бургер -->
     <div class="flex items-stretch gap-7">
-      <a
+      <SlideLink
         href={contact.phoneHref}
-        class="nav-link link-slide relative hidden self-center text-[12px] font-medium leading-[1.55] tracking-[-0.3px] lg:block xl:text-[14px]"
-      >
-        <span class="slide-text" data-text={contact.phone}>{contact.phone}</span>
-      </a>
+        text={contact.phone}
+        class="nav-link relative hidden self-center text-[12px] leading-[1.55] font-medium tracking-[-0.3px] lg:block xl:text-[14px]"
+      />
 
       <button
         type="button"
@@ -56,7 +67,7 @@ import { asset } from "../../lib/asset";
         aria-label="Открыть меню"
         aria-expanded="false"
         aria-controls="site-menu"
-        class="burger relative z-50 self-center cursor-pointer lg:hidden"
+        class="burger relative z-50 cursor-pointer self-center lg:hidden"
       >
         <span></span><span></span><span></span><span></span>
       </button>
@@ -70,7 +81,8 @@ import { asset } from "../../lib/asset";
 <div
   data-menu-overlay
   class="invisible fixed inset-0 z-30 bg-charcoal/40 opacity-0 transition-opacity duration-300 ease-out lg:hidden"
-></div>
+>
+</div>
 
 <!-- Меню на весь экран (мобила/планшет). -->
 <aside
@@ -86,7 +98,9 @@ import { asset } from "../../lib/asset";
 
   <!-- Топ-бар внутри меню повторяет геометрию хедера: логотип и крестик
        встают точно туда, где были логотип и бургер — без визуального прыжка. -->
-  <div class="menu-topbar relative flex h-[69px] shrink-0 items-stretch xl:h-[76px]">
+  <div
+    class="menu-topbar relative flex h-[69px] shrink-0 items-stretch xl:h-[76px]"
+  >
     <Container class="relative flex h-full items-stretch justify-between">
       <a
         href={asset("/")}
@@ -103,7 +117,7 @@ import { asset } from "../../lib/asset";
         aria-label="Закрыть меню"
         aria-expanded="false"
         aria-controls="site-menu"
-        class="burger relative z-50 self-center cursor-pointer"
+        class="burger relative z-50 cursor-pointer self-center"
       >
         <span></span><span></span><span></span><span></span>
       </button>
@@ -126,23 +140,19 @@ import { asset } from "../../lib/asset";
               class="menu-link group flex items-center justify-between gap-4 border-b border-paper/10 py-[clamp(18px,4.5vw,30px)] text-paper transition-colors duration-200 hover:text-accent focus-visible:text-accent focus-visible:outline-none"
             >
               <span class="flex items-baseline gap-[clamp(16px,5vw,32px)]">
-                <span class="text-[12px] font-medium uppercase tracking-[0.14em] text-grey-500">
+                <span class="text-[12px] font-medium tracking-[0.14em] text-grey-500 uppercase">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span class="display text-[clamp(32px,9vw,56px)] leading-[0.95] tracking-[-0.01em]">
                   {item.label}
                 </span>
               </span>
-              <svg
-                width="20"
-                height="14"
-                viewBox="0 0 18 14"
-                fill="none"
-                aria-hidden="true"
+              <Icon
+                name="arrow-right"
+                width={20}
+                height={14}
                 class="shrink-0 transition-transform duration-300 ease-out group-hover:translate-x-1 group-focus-visible:translate-x-1"
-              >
-                <path d="M11 1l6 6-6 6M17 7H1" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"></path>
-              </svg>
+              />
             </a>
           </li>
         ))
@@ -152,24 +162,30 @@ import { asset } from "../../lib/asset";
 
   <!-- Низ: большой телефон + email (как в футере), под чертой соцсети текстом. -->
   <div class="menu-foot shrink-0">
-    <Container class="pt-[clamp(28px,6vw,44px)] pb-[max(28px,env(safe-area-inset-bottom))]">
-      <div class="flex flex-col gap-[clamp(6px,1vw,10px)] border-b border-paper/10 pb-[clamp(24px,5vw,32px)]">
+    <Container
+      class="pt-[clamp(28px,6vw,44px)] pb-[max(28px,env(safe-area-inset-bottom))]"
+    >
+      <div
+        class="flex flex-col gap-[clamp(6px,1vw,10px)] border-b border-paper/10 pb-[clamp(24px,5vw,32px)]"
+      >
         <a
           href={contact.phoneHref}
           data-menu-link
-          class="display block text-[clamp(28px,7vw,44px)] leading-none transition-colors duration-200 hover:text-accent focus-visible:text-accent focus-visible:outline-none"
+          class="block display text-[clamp(28px,7vw,44px)] leading-none transition-colors duration-200 hover:text-accent focus-visible:text-accent focus-visible:outline-none"
         >
           {contact.phone}
         </a>
         <a
           href={contact.emailHref}
           data-menu-link
-          class="display block break-all text-[clamp(18px,4.5vw,28px)] leading-none transition-colors duration-200 hover:text-accent focus-visible:text-accent focus-visible:outline-none"
+          class="block display text-[clamp(18px,4.5vw,28px)] leading-none break-all transition-colors duration-200 hover:text-accent focus-visible:text-accent focus-visible:outline-none"
         >
           {contact.email}
         </a>
       </div>
-      <div class="mt-[clamp(20px,4vw,28px)] flex items-center gap-5 text-[12px] font-medium uppercase tracking-[0.16em] text-grey-400">
+      <div
+        class="mt-[clamp(20px,4vw,28px)] flex items-center gap-5 text-[12px] font-medium tracking-[0.16em] text-grey-400 uppercase"
+      >
         <a
           href={contact.telegram}
           target="_blank"
@@ -251,28 +267,6 @@ import { asset } from "../../lib/asset";
     opacity: var(--guide-opacity, 0.02);
   }
 
-  /* Hover как в оригинале: текст уезжает вверх, снизу приходит серая копия. */
-  .link-slide {
-    overflow: hidden;
-  }
-  .slide-text {
-    position: relative;
-    display: inline-block;
-    transition: transform 0.3s ease;
-  }
-  .slide-text::before {
-    content: attr(data-text);
-    position: absolute;
-    top: 100%;
-    left: 0;
-    color: var(--color-grey-300);
-    white-space: nowrap;
-  }
-  .link-slide:hover .slide-text,
-  .link-slide:focus-visible .slide-text {
-    transform: translateY(-100%);
-  }
-
   /* Бургер: две тонкие линии шириной ~45px, как в оригинале. */
   .burger {
     height: 40px;
@@ -290,7 +284,9 @@ import { asset } from "../../lib/asset";
     right: 0;
     height: 1px;
     background: currentColor;
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transition:
+      transform 0.3s ease-in-out,
+      opacity 0.3s ease-in-out;
   }
   .burger span:nth-child(1) {
     top: 13px;
@@ -385,14 +381,17 @@ import { asset } from "../../lib/asset";
     stickyHeader.removeAttribute("data-header-top");
     stickyHeader.setAttribute("data-header-sticky", "");
     stickyHeader.dataset.mode = "hidden";
-    stickyHeader.className = "header-sticky fixed inset-x-0 top-0 z-50 h-[69px] lg:h-16 xl:h-[76px]";
+    stickyHeader.className =
+      "header-sticky fixed inset-x-0 top-0 z-50 h-[69px] lg:h-16 xl:h-[76px]";
     topHeader.after(stickyHeader);
   }
 
-  const toggles = document.querySelectorAll<HTMLButtonElement>("[data-menu-toggle]");
+  const toggles =
+    document.querySelectorAll<HTMLButtonElement>("[data-menu-toggle]");
   const menu = document.querySelector<HTMLElement>("[data-menu]");
   const overlay = document.querySelector<HTMLElement>("[data-menu-overlay]");
-  const menuLinks = document.querySelectorAll<HTMLAnchorElement>("[data-menu-link]");
+  const menuLinks =
+    document.querySelectorAll<HTMLAnchorElement>("[data-menu-link]");
 
   // Кнопка, открывшая меню, — чтобы вернуть фокус ей при закрытии.
   let opener: HTMLElement | null = null;
@@ -448,7 +447,9 @@ import { asset } from "../../lib/asset";
     if (!menu || !overlay) return;
     if (closeTimer) window.clearTimeout(closeTimer);
 
-    toggles.forEach((toggle) => toggle.setAttribute("aria-expanded", String(open)));
+    toggles.forEach((toggle) =>
+      toggle.setAttribute("aria-expanded", String(open)),
+    );
     overlay.classList.toggle("invisible", !open);
     overlay.classList.toggle("opacity-0", !open);
     // Скролл-лок: и для Lenis (через класс), и для тех окружений, где Lenis не активен.
@@ -501,7 +502,7 @@ import { asset } from "../../lib/asset";
     if (e.key === "Tab") {
       // Фокус-трэп: Tab не уходит за пределы открытого меню.
       const focusables = menu.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled])',
+        "a[href], button:not([disabled])",
       );
       if (!focusables.length) return;
       const first = focusables[0];
