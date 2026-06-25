@@ -1,0 +1,264 @@
+# Дорожная карта: подготовка к масштабированию
+
+Статус: **план, к реализации не приступали.** Документ фиксирует результат
+senior-аудита кодовой базы на масштабируемость, переиспользуемость и готовность
+к росту (новые страницы, раздел проектов, SEO-статьи).
+
+Цель — чтобы новая страница или секция **собиралась из готовых кубиков**, а
+отступы, сетка и типографика совпадали с остальным сайтом _by construction_, без
+копипасты и подбора на глаз.
+
+> Порядок важен: **Фаза 1 (фундамент) делается ДО добавления новых страниц.**
+> Иначе технический долг множится с каждым новым экраном.
+
+---
+
+## Вердикт
+
+Код чистый, компактный и местами сделан на senior-уровне, но архитектурно
+спроектирован под **одну** страницу. Главный системный дефект — отсутствует
+принудительный слой примитивов: ширина и боковые поля контента захардкожены в
+9 файлах при том, что `Container.astro` уже умеет быть единственным источником
+правды; `Section`/`ProjectCard` живут только в `styleguide.astro` и дрейфанули от
+прода; вертикального ритма как токена не существует; мобильный скейл
+`--s: calc(100vw/360)` переобъявлен в 8 файлах; нет path-алиасов, общих типов,
+Content Collections, SEO-слоя и гейта качества в CI.
+
+Зрелость: **хороший прототип лендинга**, но до масштабируемой контент-платформы
+~2–3 недели фундаментной работы. Фундамент заложен правильно (Container уже умеет
+нужное, токены есть, контент отделён), поэтому это «отполировать фундамент», а не
+«переписать».
+
+## Что уже сделано хорошо
+
+- **Моушн-слой** — грамотно и доступно: `html.motion` ставится inline-скриптом
+  только без `prefers-reduced-motion`, ранний `return` в `initMotion`, ожидание
+  `document.fonts.ready` перед SplitText, `CustomCursor` гаснет на touch/reduce.
+- **Дизайн-токены** централизованы в `@theme` (`global.css`): один акцент,
+  типошкала с per-size трекингом, замеренный `--spacing-gutter`, брейкпоинты.
+- **`Container.astro` уже спроектирован правильно** — принимает `as` и `class`,
+  поэтому миграция 9 захардкоженных контейнеров на него дешёвая.
+- **Контент отделён** от разметки (`src/data/home.ts`, типизированный экспорт).
+- **`asset()`** аккуратно решает base-путь `/welton/` в одном месте.
+- **strict TS**, `lang="ru"`, `loading=lazy` / `decoding=async`,
+  `fetchpriority=high` на hero — базовая гигиена a11y/perf присутствует.
+
+## Главные системные дефекты
+
+| Проблема                | Факт                                                                                  | Чем вредит                                                                |
+| ----------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Контейнер в 9 местах    | `mx-auto w-full max-w-[1680px] px-gutter` в 8 секциях + `Footer` вместо `<Container>` | 9 источников правды для ширины/полей — корень проблемы с отступами        |
+| Мёртвые абстракции      | `Section` и `ProjectCard` используются только в `styleguide.astro`                    | прод их игнорирует; раздел «проекты» = `ProjectCard`, но он небоеспособен |
+| Нет ритма как токена    | 7 секций → 7 разных систем `py`                                                       | новая секция получает отступы «на глаз»                                   |
+| `--s` в 8 файлах        | сотни магических `calc(var(--s)*NN)`                                                  | скейл-стратегия размазана копипастой                                      |
+| Нет Content Collections | весь контент в `home.ts`                                                              | на блог/проекты не масштабируется                                         |
+| Нет SEO-слоя            | `Layout` отдаёт только `title`/`description`                                          | ни canonical, ни OG, ни JSON-LD, ни sitemap, ни robots                    |
+| Нет path-алиасов        | 64 импорта вида `../../`                                                              | на вложенных страницах разрастётся в `../../../`                          |
+
+---
+
+## Фаза 1 — Фундамент
+
+> Делать ДО любых новых страниц.
+
+### 1. Path-алиасы в `tsconfig` · impact: high · effort: S
+
+Добавить `baseUrl: "."` и `compilerOptions.paths`: `@/*`→`src/*`, плюс
+`@components`, `@data`, `@lib`, `@layouts`, `@styles`, `@content`, `@config`.
+Astro/Vite читают `paths` из `tsconfig` автоматически. Поиск-замена по 64 импортам
+`../`/`../../`. **Делать первым** — разблокирует остальное.
+Файлы: `tsconfig.json`; затем все `.astro` в `src/`.
+
+### 2. `<Container/>` — единственный владелец ширины и полей · impact: critical · effort: M · deps: 1
+
+Завести токен `--content-max: 1680px` в `@theme` (сейчас — литерал в JSX).
+`Container.astro` → `max-w-[var(--content-max)]`. Заменить inline-строку
+`mx-auto w-full max-w-[1680px] px-gutter` во всех 8 секциях + `Footer` на
+`<Container class="...-inner relative z-10">`. Добавить вариант `width="prose"`
+(~70ch) для текстовых страниц блога. Защитить grep-проверкой в CI.
+Файлы: `Container.astro`, `global.css`; `sections/{Objects,Services,Stages,Faq,Partners,Advantages,CtaCalc}.astro`, `layout/Footer.astro`.
+
+### 3. Токены вертикального ритма + оживить `<Section/>` · impact: high · effort: M · deps: 2
+
+Ввести `--section-py: clamp(64px,6vw,120px)` (+ `sm`/`lg`) и `--stack-gap`.
+`Section.astro`: `padding-block` через токен вместо `py-16 sm:py-24 lg:py-32`,
+пропсы `tone`/`density`/`width`/`contained`, внутри `Container`. Сделать его
+каноном для нового flow-контента (проекты/блог) и секций с простым ритмом
+(`Faq`, `Partners`). Absolute-артборд-секции главной обернуть в `Container`.
+Файлы: `Section.astro`, `global.css`.
+
+### 4. Централизовать мобильный скейл `--s` и брейкпоинты · impact: medium · effort: L · deps: 2
+
+Поднять `--s: calc(100% / 360)` (от контейнера, не `100vw` — `100vw` ломается при
+вертикальном скроллбаре) в один источник (`@utility art-scale` или `:root`).
+Убрать переобъявление `--s` из 8 файлов. Сырые `calc(var(--s)*NN)` заменить на
+ограниченную лестницу токенов. Согласовать `guide-*` поля с `--spacing-gutter`
+(на 640–959 сейчас хардкод `24px` расходится с `clamp ~19px`).
+Файлы: `global.css`; `<style>` в 8 секциях + `Footer`.
+
+### 5. Общие типы данных + `satisfies` · impact: high · effort: M · deps: 1
+
+`src/types.ts` с `interface` для каждой сущности (`Service`, `ProjectObject`,
+`Stage`, `Faq`, `Stat`, `Advantage`). В `home.ts` применить через
+`export const services = [...] satisfies Service[]` — ловит опечатки на сборке.
+Эти же типы — основа Zod-схем коллекций (шаг 9). Вынести `contact` и `nav` в
+`src/data/site.ts` (сквозные данные `Header`/`Footer`, не контент главной).
+Файлы: `src/types.ts` (новый), `home.ts`, `src/data/site.ts` (новый), `Header.astro`, `Footer.astro`.
+
+### 6. Слой примитивов · impact: high · effort: L · deps: 2, 5
+
+- `Icon.astro` с реестром path (`arrow-right`/`arrow-left`/`chevron`/`arrow-up`) —
+  заменить 7+ inline-SVG (`Button`, `ProjectCard`, `Objects`, `Header`, `Faq`, `Footer`).
+- `Card` + `MediaFigure` (overflow/radius/hover-zoom — сейчас дублируется в
+  `Services`/`Objects`/`ProjectCard` с разъехавшимися таймингами).
+- `NumberedRow` (num + title + desc + волосяная линия) — один смысловой блок,
+  переписанный 4–5 раз (`Services`/`Stages`/`Objects`/`Stats`/`Advantages`).
+- `Hairline`-утилита вместо 4 копий `1px currentColor`.
+- `SlideLink` / `IconButton` — hover-паттерны, скопированные между `Header` и `Footer`/`Objects`.
+  Файлы: `src/components/ui/{Icon,Card,MediaFigure,NumberedRow,SlideLink,IconButton}.astro` (новые); рефактор перечисленных секций.
+
+### 7. Линт / форматтер / typecheck + CI-гейт · impact: high · effort: M · deps: 1
+
+devDeps: `@astrojs/check` + `typescript`, `prettier` + `prettier-plugin-astro` +
+`prettier-plugin-tailwindcss` (автосортировка классов критична против дрейфа),
+`eslint` + `eslint-plugin-astro`. Scripts: `check`, `lint`, `format`,
+`format:check`. В CI: job `quality` (`check && lint && format:check`) →
+`build needs: quality`. Grep-проверки: запрет `max-w-[1680px]` вне `Container` и
+сырых px-полей.
+Файлы: `package.json`, `.prettierrc`, `eslint.config.js`, `.github/workflows/deploy.yml`.
+
+## Фаза 2 — Масштаб контента
+
+### 8. Свести карточку к одному источнику · impact: high · effort: M · deps: 6
+
+Заточить `ProjectCard` под коллекцию (принимает `ImageMetadata`, `id`→`href`,
+варианты `layout=overlay|stacked`). Перевести каталог объектов главной
+(`.object-card` в `Objects.astro`) на общий `Card`/`MediaFigure`, удалить
+дублирующую вёрстку. Секции читают данные через props со значениями по
+умолчанию (`interface Props { items?: ... }`) — чтобы переиспользовать на других
+страницах без правки `home.ts`.
+Файлы: `ProjectCard.astro`, `sections/{Objects,Services,Faq}.astro`.
+
+### 9. Content Collections: `projects` + `articles` · impact: critical · effort: L · deps: 5
+
+`npx astro add mdx`. `src/content.config.ts` (Astro 7 — не legacy
+`src/content/config.ts`) с `defineCollection({ loader: glob({...}), schema })`.
+
+- `projects`: `title`, `location`, `year`, `category` (enum), `cover image()`, `gallery`, `draft`.
+- `articles`: `title`, `description`, `ogImage image().optional()`,
+  `publishDate z.coerce.date()`, `updatedDate`, `tags`, `draft`, `author`.
+
+Схему держать в синхроне с типами из шага 5. Обложки — в `src/content/.../cover.jpg`
+через `astro:assets` (srcset/AVIF/WebP, исключают CLS). Site-singletons
+(`contact`/`nav`/`partners`) оставить typed TS.
+Файлы: `src/content.config.ts` (новый), `src/content/{projects,articles}/*`, `package.json`, `astro.config.mjs`.
+
+### 10. Динамические роуты · impact: critical · effort: M · deps: 9, 8
+
+`/projects` (`index.astro` с `getCollection`, фильтр `draft` через
+`import.meta.env.PROD`, сетка из `ProjectCard`), `/projects/[id]`
+(`getStaticPaths` + `const { Content } = await render(entry)`). Аналогично
+`/articles` (сортировка по `publishDate` desc). Ссылки — через
+`import.meta.env.BASE_URL`/`asset()`, не хардкодить `/welton/`.
+Файлы: `src/pages/projects/{index,[id]}.astro`, `src/pages/articles/{index,[id]}.astro` (новые).
+
+### 11. `<Prose>` + `ArticleLayout` · impact: high · effort: M · deps: 3, 10
+
+`Prose.astro` со стилями `p`/`h2`/`h3`/`ul`/`a`/`blockquote` на токенах
+типографики, ширина из `--measure` (~70ch). `ArticleLayout` = `Section width=prose`
+
+- `Prose` + meta (дата/теги/хлебные крошки). Статья = frontmatter + markdown без
+  копипасты вёрстки. `Faq.astro` перевести на тот же `--measure`-токен.
+  Файлы: `Prose.astro`, `ArticleLayout.astro` (новые), `sections/Faq.astro`.
+
+## Фаза 3 — SEO-инфраструктура
+
+### 12. `site config` + компонент `<Seo/>` в Layout · impact: high · effort: M · deps: 1, 5
+
+`src/config/site.ts`: `url`, `base`, `brand`, `defaultTitle/Description`,
+`defaultOgImage`, `locale "ru-RU"`, `org` (из `contact`). `src/lib/seo.ts`:
+`absoluteUrl(path) = new URL(asset(path), Astro.site).href` (**важно**: `Astro.site`
+не содержит `/welton` — сначала `asset()` для base, потом домен, иначе canonical/og
+битые). `Seo.astro` с props `{ title?, description?, canonical?, ogImage?, ogType?,
+noindex?, jsonld? }`: meta description, canonical, OG, Twitter `summary_large_image`,
+robots, JSON-LD через `set:html`. `titleTemplate "{title} — {brand}"`.
+Файлы: `src/config/site.ts`, `src/lib/seo.ts`, `Seo.astro` (новые), `Layout.astro`.
+
+### 13. JSON-LD + дефолтный OG-баннер · impact: high · effort: M · deps: 12
+
+На главной — `Organization`/`LocalBusiness` из `contact` (name, telephone, email,
+address, `taxID=inn`, `sameAs=[telegram, max]`). Фабрики `buildArticleSchema` и
+`buildBreadcrumbs` в `seo.ts`. `public/img/og-default.jpg` (1200×630) как fallback
+(`favicon.svg` как og:image не годится).
+Файлы: `seo.ts`, `index.astro`, `ArticleLayout.astro`, `public/img/og-default.jpg` (новый).
+
+### 14. `@astrojs/sitemap` + `robots.txt` · impact: high · effort: S · deps: 12
+
+`npx astro add sitemap` (`site` задан → URL под `/welton/` корректны),
+`filter` исключает `/styleguide`. `public/robots.txt` с абсолютным `Sitemap:`.
+`noindex` для `styleguide.astro`. После сборки грепнуть `dist/` на корректность
+canonical/og:image (base + домен).
+Файлы: `astro.config.mjs`, `public/robots.txt` (новый), `styleguide.astro`, `package.json`.
+
+## Фаза 4 — Полировка
+
+### 15. Миграция изображений на `astro:assets` · impact: medium · effort: L · deps: 6
+
+Обёртка `Img.astro` поверх `<Image>`. Перевести контентные картинки
+(`Objects`/`Services`/`CtaCalc`/`Partners`/`ProjectCard`) — даёт `width/height`
+(убирает CLS), AVIF/WebP, responsive srcset. Hero-LCP: `<Image loading=eager
+fetchpriority=high>` + `width/height`. Логотипы партнёров можно оставить в
+`public/` через `asset()`.
+Файлы: `Img.astro` (новый), `src/assets/*`, `sections/{Hero,Objects,Services,CtaCalc,Partners}.astro`, `ProjectCard.astro`.
+
+### 16. A11y: focus-visible, skip-link, доступная карусель · impact: medium · effort: M · deps: 6
+
+Глобальный `:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px }`
+
+- явный focus-ring у `Button`. Skip-link (`a href="#main"`, `.sr-only`) первым в
+  body. Карусель `Objects`: `role="group"` + `aria-roledescription` + `aria-label`,
+  `aria-live="polite"`, управление стрелками клавиатуры; авто-прокрутка
+  (`setInterval 3000`) — `clearInterval` на `pointerenter`/`focusin`, пауза по
+  `IntersectionObserver` и `document.hidden` (WCAG 2.2.2).
+  Файлы: `global.css`, `Button.astro`, `Layout.astro`, `sections/Objects.astro`.
+
+### 17. Шрифт Adderley → woff2 + preload · impact: low · effort: S
+
+Конвертировать `adderley-bold.woff` в woff2 (~25% легче), поставить первым в `src`
+(`woff` фолбэком). `<link rel="preload" as="font" type="font/woff2" crossorigin>`
+в head — шрифт критичен для LCP hero-заголовка и сейчас даёт FOUT + задерживает
+SplitText (`motion.ts` ждёт `fonts.ready`).
+Файлы: `public/fonts/adderley-bold.woff2` (новый), `global.css`, `Layout.astro`.
+
+### 18. Чек-лист новой страницы в styleguide + docs · impact: medium · effort: S · deps: 2, 3, 6, 7
+
+Обновить `styleguide.astro`, чтобы отражал РЕАЛЬНЫЙ прод-канон
+(`Container`/`Section`/примитивы), а не дрейфанувшие демо. Дополнить
+`docs/architecture.md`: контракт `ui/` vs `sections/` vs `layout/`, правила
+раскладки, паттерн `--s`. Привязать к CI-grep-проверкам из шага 7.
+Файлы: `styleguide.astro`, `docs/architecture.md`, `README.md`.
+
+---
+
+## Воркфлоу новой страницы (после Фазы 1)
+
+1. **Контент сначала, не разметка.** Лендинг → typed-данные в `src/data/` через
+   `satisfies`. Проект/статья → markdown/mdx в `src/content/{projects,articles}/`
+   с frontmatter, который Zod-схема валидирует на сборке.
+2. **Роут в `src/pages/`.** Список — `index.astro` с `getCollection()` и фильтром
+   `draft`. Деталь — `[id].astro` с `getStaticPaths` + `render(entry)`.
+3. **Оборачивай в примитивы раскладки, не в ручные `div`.** Корень страницы —
+   `<Section tone density width>` (даёт вертикальный ритм через `--section-py` и
+   поля через `<Container>`). Ширину/поля руками в px **не писать**.
+4. **Длинный текст** — `<Section width="prose">` + `<Prose>` (~70ch, типографика
+   из токенов автоматически).
+5. **UI из примитивов:** карточки — `<Card>`/`<ProjectCard>`, картинки —
+   `<Img>`/`<MediaFigure>`, иконки — `<Icon>`, ряды — `<NumberedRow>`, ссылки —
+   `<SlideLink>`/`<IconButton>`. Никаких inline-SVG и копипасты блоков.
+6. **Импорты — только через алиасы** (`@components`, `@data`, `@lib`, `@content`).
+7. **SEO декларативно:** страница передаёт `title`/`description`/`ogImage`/`jsonld`
+   в `<Seo/>`. `titleTemplate`, canonical/OG/Twitter/sitemap — автоматически с
+   учётом base `/welton/` через `absoluteUrl()`.
+8. **Перед коммитом** — `npm run check && lint && format:check`. Отступы и стиль
+   совпадут с остальным сайтом _by construction_, а CI-grep заблокирует
+   захардкоженный контейнер и сырые px-поля.
