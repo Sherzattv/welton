@@ -22,25 +22,23 @@
   class="cursor-root pointer-events-none fixed inset-0 z-[100] hidden motion-safe:block"
   aria-hidden="true"
 >
-  <div
-    data-cursor-ring
-    class="absolute left-0 top-0 will-change-transform"
-  >
+  <div data-cursor-ring class="absolute top-0 left-0 will-change-transform">
     <div
       data-cursor-ring-inner
       class="grid h-9 w-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-paper/90 will-change-transform"
     >
       <span
         data-cursor-label
-        class="select-none whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.08em] text-paper opacity-0"
+        class="text-[10px] font-medium tracking-[0.08em] whitespace-nowrap text-paper uppercase opacity-0 select-none"
       ></span>
     </div>
   </div>
-  <div data-cursor-dot class="absolute left-0 top-0 will-change-transform">
+  <div data-cursor-dot class="absolute top-0 left-0 will-change-transform">
     <div
       data-cursor-dot-inner
       class="h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-paper will-change-transform"
-    ></div>
+    >
+    </div>
   </div>
 </div>
 
@@ -213,8 +211,7 @@
       // mix-blend-mode: difference красиво работает на однотонных секциях,
       // но на фото/видео плывёт по средним яркостям и курсор теряется.
       // Над такими элементами переключаемся на сплошной цвет + drop-shadow.
-      const SOLID_SEL =
-        "img, picture, video, canvas, svg, [data-cursor-solid]";
+      const SOLID_SEL = "img, picture, video, canvas, svg, [data-cursor-solid]";
       const enterSolid = () => root.classList.add("is-solid");
       const leaveSolid = () => root.classList.remove("is-solid");
 
