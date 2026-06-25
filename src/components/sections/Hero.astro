@@ -2,14 +2,20 @@
 import Container from "@components/Container.astro";
 import GridLines from "@components/GridLines.astro";
 import Button from "@components/Button.astro";
-import { asset } from "@lib/asset";
+import { Image } from "astro:assets";
+import heroBg from "../../assets/dom-hero.jpg";
 ---
 
 <section id="top" class="hero-section relative overflow-hidden text-paper">
-  <img
-    src={asset("/img/omni-753e3760-83e9-4.jpg")}
+  <Image
+    src={heroBg}
     alt=""
+    widths={[768, 1280, 1920, 2560]}
+    sizes="100vw"
+    format="webp"
+    quality={72}
     fetchpriority="high"
+    loading="eager"
     class="absolute inset-0 h-full w-full object-cover"
   />
   <div
