@@ -1,33 +1,23 @@
 // Контент главной страницы — снят 1:1 с оригинала okna-veles-group.ru.
 // Это временный источник правды для пересборки; позже часть уедет в Sanity CMS.
+// Сквозные данные (контакты, навигация) — в site.ts.
 
-export const contact = {
-  phone: "+7 903 021 12 88",
-  phoneHref: "tel:+79030211288",
-  email: "zakaz.velesgroup@mail.ru",
-  emailHref: "mailto:zakaz.velesgroup@mail.ru",
-  address: "107564, г.Москва, ул. Краснобогатырская, д. 38 стр. 2 , помещ. 1н/4",
-  telegram: "https://t.me/velesgroup2026",
-  max: "https://max.ru/u/f9LHodD0cOKa30SIOmUqIhTqGGMg_IFGfR6i8brxKQYD_MnJrhg1G5IUN_I",
-  company: "ООО «Велес Групп»",
-  inn: "9718270842",
-  kpp: "771801001",
-};
-
-export const nav = [
-  { label: "Направления", href: "#services" },
-  { label: "О компании", href: "#about" },
-  { label: "Партнеры", href: "#partners" },
-  { label: "Этапы работы", href: "#stages" },
-  { label: "Контакты", href: "#contacts" },
-];
+import type {
+  Stat,
+  Service,
+  Advantage,
+  ProjectObject,
+  Partner,
+  Stage,
+  FaqItem,
+} from "@/types";
 
 export const stats = [
   { value: ">300", unit: "тыс. м²", label: "Остекления реализовано" },
   { value: "2022", unit: "год", label: "Начало работы" },
   { value: "10+", unit: "бригад", label: "В штате компании" },
   { value: "20+", unit: "регионов", label: "География работ" },
-];
+] satisfies Stat[];
 
 export const services = [
   {
@@ -48,7 +38,7 @@ export const services = [
     desc: "Изготавливаем и монтируем противопожарные окна, двери и перегородки для объектов с требованиями по огнестойкости, безопасности и нормативному соответствию.",
     img: "/img/viewing-platform-mor.jpg",
   },
-];
+] satisfies Service[];
 
 export const advantages = [
   {
@@ -67,7 +57,7 @@ export const advantages = [
     title: "Собственные монтажные бригады",
     desc: "Команды укомплектованы, обучены и регулярно работают на крупных объектах.",
   },
-];
+] satisfies Advantage[];
 
 export const objects = [
   {
@@ -100,7 +90,7 @@ export const objects = [
     desc: "Многоквартирные жилые комплексы. Обеспечиваем баланс между архитектурой, энергоэффективностью и сроками строительства.",
     img: "/img/2149661403_1_1.jpg",
   },
-];
+] satisfies ProjectObject[];
 
 export const partners = [
   { name: "Maco", logo: "/img/Group_6743.svg" },
@@ -112,7 +102,7 @@ export const partners = [
   { name: "Siegenia", logo: "/img/Group_6728.svg" },
   { name: "Roto", logo: "/img/Group_6725.svg" },
   { name: "Рехау", logo: "/img/Group_6723.svg" },
-];
+] satisfies Partner[];
 
 export const stages = [
   {
@@ -140,7 +130,7 @@ export const stages = [
     title: "Монтаж и сдача объекта",
     desc: "Выполняем монтаж, проводим контроль качества и передаём объект заказчику в согласованные сроки.",
   },
-];
+] satisfies Stage[];
 
 export const faq = [
   {
@@ -167,4 +157,4 @@ export const faq = [
     q: "Работаете ли вы с объектом после его сдачи?",
     a: "Да, мы сопровождаем объект и после завершения работ. Консультируем по эксплуатации, остаёмся на связи с заказчиком и устраняем возможные замечания в рамках гарантийных обязательств.",
   },
-];
+] satisfies FaqItem[];
