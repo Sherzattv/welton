@@ -5,7 +5,9 @@
    ============================================================ */
 @font-face {
   font-family: "Adderley";
-  src: url("/fonts/adderley-bold.woff") format("woff");
+  /* Относительный путь от src/styles → Vite фингерпринтит файл и подставляет
+     правильный base-путь (/welton/). Голый /fonts/... игнорировал бы base и давал 404. */
+  src: url("../assets/fonts/adderley-bold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -43,7 +45,11 @@
   --text-h1--line-height: 1;
   --text-h1--letter-spacing: -0.012em;
 
-  --text-h2: clamp(2rem, 4vw, 3.6rem); /* Tilda: 32px mobile → 48px@1200 → 57.6px@1440 */
+  --text-h2: clamp(
+    2rem,
+    4vw,
+    3.6rem
+  ); /* Tilda: 32px mobile → 48px@1200 → 57.6px@1440 */
   --text-h2--line-height: 1;
   --text-h2--letter-spacing: -0.5px;
 
@@ -63,12 +69,30 @@
   --text-unit--line-height: 1;
   --text-unit--letter-spacing: -0.3px;
 
-  --text-body: clamp(0.875rem, 1.1667vw, 1.05rem); /* Tilda: 14px → 16.8px visual scale@1440 */
+  --text-body: clamp(
+    0.875rem,
+    1.1667vw,
+    1.05rem
+  ); /* Tilda: 14px → 16.8px visual scale@1440 */
   --text-body--line-height: 1.2857;
   --text-body--letter-spacing: -0.6px;
 
   /* --- Раскладка --- */
-  --spacing-gutter: clamp(13px, 2vw, 34px); /* боковые поля: 13px@375 → 2vw → стоп на 34px (заморозка на ultrawide); замерено по оригиналу */
+  --spacing-gutter: clamp(
+    13px,
+    2vw,
+    34px
+  ); /* боковые поля: 13px@375 → 2vw → стоп на 34px (заморозка на ultrawide); замерено по оригиналу */
+  --content-max: 1680px; /* макс-ширина контентной колонки — ЕДИНЫЙ источник для <Container>; vw-математика секций откалибрована под это значение */
+  --content-prose: 70ch; /* узкая читаемая колонка для текстовых страниц (блог/статьи) */
+
+  /* --- Вертикальный ритм секций ---
+     Для flow-контента (страницы, блог) через <Section>. Артборд-секции главной
+     задают свой ритм сами (min-height), эти токены на них не влияют. */
+  --section-py: clamp(64px, 6vw, 120px);
+  --section-py-sm: clamp(40px, 4vw, 72px);
+  --section-py-lg: clamp(96px, 8vw, 160px);
+  --stack-gap: clamp(24px, 3vw, 48px);
 
   /* --- Радиусы (язык дизайна — острые углы, 0 по умолчанию) --- */
   --radius-sm: 3px; /* редкое мягкое скругление мелких UI */
@@ -88,6 +112,10 @@
    mobile/tablet → края контентной области + центр.
    ============================================================ */
 :root {
+  /* Артборд-скейл (Tilda 360px): множитель для calc(var(--s) * N) в секциях.
+     ЕДИНЫЙ источник — не переобъявлять локально по секциям. На ≥640px = 1px. */
+  --s: calc(100vw / 360);
+
   --guide-opacity: 0.02;
   --guide-a: var(--spacing-gutter);
   --guide-b: 50%;
@@ -119,6 +147,7 @@
 
 @media (min-width: 640px) {
   :root {
+    --s: 1px; /* выше 640px секции переходят на пиксельную сетку (артборд 1:1) */
     --text-h2: 2.5rem; /* 40px tablet */
     --text-h2--letter-spacing: -0.5px;
     --text-h3: 1.875rem; /* 30px from tablet/desktop in Tilda */
@@ -173,7 +202,10 @@
   }
 
   body {
-    overflow-x: hidden;
+    /* clip (а не hidden): гасит горизонтальный выход за край, но НЕ создаёт
+       scroll-контейнер — иначе ломается position: sticky у заголовков-рельсов
+       (Stats, Stages). Горизонтальное переполнение всё равно режется на <html>. */
+    overflow-x: clip;
     background-color: var(--color-charcoal);
     color: var(--color-paper);
     font-family: var(--font-sans);
