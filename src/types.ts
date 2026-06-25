@@ -7,8 +7,7 @@ export interface ContactInfo {
   email: string;
   emailHref: string;
   address: string;
-  telegram: string;
-  max: string;
+  instagram: string;
   company: string;
   inn: string;
   kpp: string;

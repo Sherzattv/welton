@@ -4,14 +4,13 @@
 import type { ContactInfo, NavItem } from "@/types";
 
 export const contact = {
-  phone: "+7 903 021 12 88",
-  phoneHref: "tel:+79030211288",
+  phone: "+7 700 510 10 30",
+  phoneHref: "tel:+77005101030",
   email: "zakaz.velesgroup@mail.ru",
   emailHref: "mailto:zakaz.velesgroup@mail.ru",
   address:
     "107564, г.Москва, ул. Краснобогатырская, д. 38 стр. 2 , помещ. 1н/4",
-  telegram: "https://t.me/velesgroup2026",
-  max: "https://max.ru/u/f9LHodD0cOKa30SIOmUqIhTqGGMg_IFGfR6i8brxKQYD_MnJrhg1G5IUN_I",
+  instagram: "https://instagram.com/welton.kz",
   company: "ООО «Велес Групп»",
   inn: "9718270842",
   kpp: "771801001",
