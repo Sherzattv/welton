@@ -116,7 +116,7 @@
      ЕДИНЫЙ источник — не переобъявлять локально по секциям. На ≥640px = 1px. */
   --s: calc(100vw / 360);
 
-  --guide-opacity: 0.02;
+  --guide-opacity: 0.05;
   --guide-a: var(--spacing-gutter);
   --guide-b: 50%;
   --guide-c: calc(100% - var(--spacing-gutter));
