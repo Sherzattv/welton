@@ -1,4 +1,5 @@
 dist/
 .astro/
+.claude/
 public/
 package-lock.json
