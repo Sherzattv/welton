@@ -16,16 +16,14 @@ import heroBg from "../../assets/dom-hero.jpg";
     quality={72}
     fetchpriority="high"
     loading="eager"
-    class="absolute inset-0 h-full w-full object-cover"
+    class="hero-img absolute inset-0 h-full w-full object-cover"
   />
-  <div
-    class="absolute inset-0 bg-gradient-to-b from-transparent to-charcoal/50"
-  >
-  </div>
-  <!-- Скрим сверху: держит читаемость шапки (лого/меню) над светлым небом фото. -->
+  <!-- Один сквозной градиент: верх держит читаемость шапки над светлым небом,
+       низ — заголовок; середина чистая. Растянут на всю высоту → без видимой
+       границы перехода («полоски»). -->
   <div
     aria-hidden="true"
-    class="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-charcoal/60 to-transparent"
+    class="absolute inset-0 bg-gradient-to-b from-charcoal/60 via-charcoal/0 to-charcoal/55"
   >
   </div>
   <GridLines />
@@ -54,6 +52,18 @@ import heroBg from "../../assets/dom-hero.jpg";
 <style>
   .hero-section {
     min-height: calc(100vw * 670 / 360);
+  }
+
+  /* На узких экранах фото обрезается в портрет — смещаем фокус левее, чтобы
+     в кадр попадали дерево и рабочий, а не голый угол дома. На широких — центр. */
+  .hero-img {
+    object-position: 35% center;
+  }
+
+  @media (min-width: 960px) {
+    .hero-img {
+      object-position: center;
+    }
   }
 
   .hero-layout {
