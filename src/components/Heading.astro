@@ -9,13 +9,14 @@ interface Props {
 const { as = "h2", size = "lg", class: className = "", ...rest } = Astro.props;
 const Tag = as;
 
-const sizeClass = {
+const sizes: Record<string, string> = {
   hero: "text-hero",
   xl: "text-h1",
   lg: "text-h2",
   md: "text-h3",
   sm: "text-h4",
-}[size];
+};
+const sizeClass = sizes[size];
 ---
 
 <Tag class={`display ${sizeClass} ${className}`} {...rest}>

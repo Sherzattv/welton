@@ -1,0 +1,31 @@
+---
+// Волосяная линия-разделитель: 1px currentColor с opacity направляющих.
+// По умолчанию горизонтальная, абсолютная (top:0, во всю ширину родителя).
+// vertical — вертикальная вариация.
+interface Props {
+  class?: string;
+  vertical?: boolean;
+}
+const { class: className = "", vertical = false } = Astro.props;
+---
+
+<span
+  aria-hidden="true"
+  class={`hairline ${vertical ? "hairline--v" : ""} ${className}`}></span>
+
+<style>
+  .hairline {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background: currentColor;
+    opacity: var(--guide-opacity, 0.02);
+  }
+  .hairline--v {
+    inset-inline: auto;
+    inset-block: 0;
+    width: 1px;
+    height: auto;
+  }
+</style>

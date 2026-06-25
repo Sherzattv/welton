@@ -1,17 +1,24 @@
 ---
-// Секция с вертикальным ритмом и опциональным тоном фона.
-import Container from "./Container.astro";
+// Секция flow-контента: вертикальный ритм из токенов + тон фона + контейнер.
+// Канон для будущих страниц (проекты/блог). Артборд-секции главной (Services,
+// Stages, Objects, Stats, …) свой ритм задают сами и оборачиваются в <Container>
+// напрямую, а не через <Section>.
+import Container from "@components/Container.astro";
 
 interface Props {
   tone?: "charcoal" | "paper" | "ink" | "transparent";
-  class?: string;
+  density?: "default" | "sm" | "lg";
+  width?: "default" | "prose";
   contained?: boolean;
+  class?: string;
   id?: string;
 }
 const {
   tone = "charcoal",
-  class: className = "",
+  density = "default",
+  width = "default",
   contained = true,
+  class: className = "",
   id,
 } = Astro.props;
 
@@ -21,12 +28,22 @@ const toneClass = {
   ink: "bg-ink text-paper",
   transparent: "",
 }[tone];
+
+const pyVar = {
+  default: "var(--section-py)",
+  sm: "var(--section-py-sm)",
+  lg: "var(--section-py-lg)",
+}[density];
 ---
 
-<section id={id} class={`py-16 sm:py-24 lg:py-32 ${toneClass} ${className}`}>
+<section
+  id={id}
+  class={`section ${toneClass} ${className}`}
+  style={`--py:${pyVar}`}
+>
   {
     contained ? (
-      <Container>
+      <Container width={width}>
         <slot />
       </Container>
     ) : (
@@ -34,3 +51,9 @@ const toneClass = {
     )
   }
 </section>
+
+<style>
+  .section {
+    padding-block: var(--py);
+  }
+</style>

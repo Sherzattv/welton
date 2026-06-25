@@ -1,13 +1,20 @@
 ---
-// Центрирующий контейнер с боковыми отступами.
+// Центрирующий контейнер — ЕДИНЫЙ владелец макс-ширины и боковых полей.
+// Ширина берётся из токена --content-max (см. global.css), поля — из px-gutter.
+// width="prose" — узкая читаемая колонка (~70ch) для текстовых страниц.
 interface Props {
   class?: string;
   as?: keyof HTMLElementTagNameMap;
+  width?: "default" | "prose";
 }
-const { class: className = "", as = "div" } = Astro.props;
+const { class: className = "", as = "div", width = "default" } = Astro.props;
 const Tag = as;
+const widthClass =
+  width === "prose"
+    ? "max-w-[var(--content-prose)]"
+    : "max-w-[var(--content-max)]";
 ---
 
-<Tag class={`mx-auto w-full max-w-[1680px] px-gutter ${className}`}>
+<Tag class={`mx-auto w-full ${widthClass} px-gutter ${className}`}>
   <slot />
 </Tag>

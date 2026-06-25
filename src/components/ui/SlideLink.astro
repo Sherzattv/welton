@@ -1,0 +1,41 @@
+---
+// Ссылка с фирменным hover «текст уезжает вверх, снизу приходит серая копия».
+// Один источник правды для паттерна (раньше дублировался в Header и Footer).
+// Принимает любые атрибуты <a> (href, target, rel, style, class, data-*).
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"a"> {
+  text: string;
+}
+const { text, class: className = "", ...rest } = Astro.props;
+---
+
+<a class={`slide-link ${className}`} {...rest}>
+  <span class="slide-text" data-text={text}>{text}</span>
+</a>
+
+<style>
+  .slide-link {
+    overflow: hidden;
+  }
+  .slide-text {
+    position: relative;
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+  .slide-text::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    color: var(--color-grey-300);
+    white-space: nowrap;
+  }
+  .slide-link:hover .slide-text,
+  .slide-link:focus-visible .slide-text {
+    transform: translateY(-100%);
+  }
+  .slide-link:focus-visible {
+    outline: none;
+  }
+</style>

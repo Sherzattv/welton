@@ -1,0 +1,61 @@
+---
+// Единый реестр линейных иконок. Один источник правды для геометрии стрелок и
+// шевронов — заменяет инлайн-SVG по сайту. Цвет наследуется (currentColor).
+// Анимации/transition задаются на месте вызова через `class` (Tailwind-утилиты).
+interface Props {
+  name: "arrow-right" | "arrow-left" | "chevron-down" | "arrow-up";
+  width?: number;
+  height?: number;
+  stroke?: number;
+  class?: string;
+}
+const { name, width, height, stroke, class: className = "" } = Astro.props;
+
+const REGISTRY = {
+  "arrow-right": {
+    box: "0 0 18 14",
+    w: 18,
+    h: 14,
+    d: "M11 1l6 6-6 6M17 7H1",
+    sw: 1.6,
+  },
+  "arrow-left": {
+    box: "0 0 18 14",
+    w: 18,
+    h: 14,
+    d: "M7 1L1 7l6 6M1 7h16",
+    sw: 1.6,
+  },
+  "chevron-down": {
+    box: "0 0 22 22",
+    w: 22,
+    h: 22,
+    d: "M5 8l6 6 6-6",
+    sw: 1.6,
+  },
+  "arrow-up": {
+    box: "0 0 18 18",
+    w: 18,
+    h: 18,
+    d: "M9 17V1M1 9l8-8 8 8",
+    sw: 1.4,
+  },
+} as const;
+
+const icon = REGISTRY[name];
+---
+
+<svg
+  width={width ?? icon.w}
+  height={height ?? icon.h}
+  viewBox={icon.box}
+  fill="none"
+  aria-hidden="true"
+  class={className}
+>
+  <path
+    d={icon.d}
+    stroke="currentColor"
+    stroke-width={stroke ?? icon.sw}
+    stroke-linecap="square"></path>
+</svg>
