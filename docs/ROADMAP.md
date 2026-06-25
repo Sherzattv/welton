@@ -47,6 +47,8 @@ sticky-заголовки Stats/Stages (`body { overflow-x: clip }` вместо
 - **Фаза 2** — Content Collections + динамические роуты `/projects` и `/articles`.
 - **Фаза 3** — SEO-слой (canonical, Open Graph, JSON-LD, sitemap, robots).
 - **Фаза 4** — `astro:assets` (оптимизация картинок) + доступность.
+- **Инженерная строгость** — перф-бюджет (Core Web Vitals), a11y-гейт, кастомная
+  404, link-check (см. раздел «Инженерная строгость» в конце).
 
 Детали по всем пунктам — в разделах ниже.
 
@@ -280,6 +282,50 @@ SplitText (`motion.ts` ждёт `fonts.ready`).
 `docs/architecture.md`: контракт `ui/` vs `sections/` vs `layout/`, правила
 раскладки, паттерн `--s`. Привязать к CI-grep-проверкам из шага 7.
 Файлы: `styleguide.astro`, `docs/architecture.md`, `README.md`.
+
+---
+
+## Инженерная строгость (senior / Google-grade)
+
+Кросс-секущие практики, поднимающие проект до senior/Google-уровня именно для
+**контент-сайта** (не enterprise-приложения). Частично пересекаются с Фазами 3–4,
+но зафиксированы здесь как стандарт. Принцип — _right-sizing_: только то, что даёт
+ценность статике, без оверинжиниринга.
+
+### R1. Перф-бюджет (Core Web Vitals) · impact: high · effort: M
+
+Google ранжирует по LCP / CLS / INP. Сейчас риск CLS (сырые `<img>` без размеров),
+нет оптимизации изображений и бюджета в CI.
+
+- картинки → `astro:assets` (`<Image>`: width/height, AVIF/WebP, srcset) — см. #15;
+- preload hero-LCP (изображение + шрифт Adderley woff2) — см. #17;
+- Lighthouse CI (`@lhci/cli`) с бюджетом (LCP < 2.5s, CLS < 0.1) — предупреждающий
+  job в `deploy.yml` рядом с `quality`.
+
+### R2. A11y-гейт · impact: high · effort: M
+
+Доступность = UX + SEO + юридические требования.
+
+- статический линт `eslint-plugin-jsx-a11y` (через `eslint-plugin-astro`) или
+  `axe`-проверка собранного `dist/` в CI;
+- руками закрыть #16 (focus-visible, skip-link, доступная карусель, `aria-*`);
+- `prefers-reduced-motion` уже учтён — держать.
+
+### R3. Кастомная 404 · impact: medium · effort: S
+
+`src/pages/404.astro` на `Layout` + `Section` со ссылкой на главную (сейчас отдаётся
+дефолт хоста). GitHub Pages подхватывает статический `404.html` автоматически.
+
+### R4. Link-check · impact: medium · effort: S
+
+Проверка битых внутренних ссылок и ассетов по собранному `dist/` (напр. `linkinator`
+или `lychee`) — предупреждающий job в CI. Дёшево, ловит мёртвые `href` / `asset()`.
+
+### Что НАМЕРЕННО не делаем (снизило бы senior-грейд для статики)
+
+- юнит/e2e-тесты на presentational-вёрстку (вместо них — build + a11y + link-check);
+- сложный state-менеджмент или рантайм-фреймворк на клиенте;
+- избыточный CI/CD, микро-фронтенды.
 
 ---
 
