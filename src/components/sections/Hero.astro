@@ -18,14 +18,10 @@ import heroBg from "../../assets/dom-hero.jpg";
     loading="eager"
     class="hero-img absolute inset-0 h-full w-full object-cover"
   />
-  <!-- Один сквозной градиент: верх держит читаемость шапки над светлым небом,
-       низ — заголовок; середина чистая. Растянут на всю высоту → без видимой
-       границы перехода («полоски»). -->
-  <div
-    aria-hidden="true"
-    class="absolute inset-0 bg-gradient-to-b from-charcoal/60 via-charcoal/0 to-charcoal/55"
-  >
-  </div>
+  <!-- Затемнение фото: верх держит шапку, низ — заголовок/подзаголовок. На узких
+       экранах текст крупный и занимает низ → нижнее затемнение там сильнее
+       (см. .hero-scrim в <style>). Один градиент = без видимой границы. -->
+  <div aria-hidden="true" class="hero-scrim absolute inset-0"></div>
   <GridLines />
 
   <Container class="hero-content absolute inset-0 z-10">
@@ -63,6 +59,31 @@ import heroBg from "../../assets/dom-hero.jpg";
   @media (min-width: 960px) {
     .hero-img {
       object-position: center;
+    }
+  }
+
+  /* Узкие экраны: текст в один столбец, крупный, занимает низ — нижнее
+     затемнение сильное, чтобы заголовок и подзаголовок читались поверх фото. */
+  .hero-scrim {
+    background: linear-gradient(
+      to bottom,
+      rgb(27 27 27 / 0.5) 0%,
+      transparent 20%,
+      rgb(27 27 27 / 0.55) 62%,
+      rgb(27 27 27 / 0.92) 100%
+    );
+  }
+
+  /* Десктоп (≥960): две колонки, текст не на всю ширину низа — мягкое
+     симметричное затемнение верх/низ. */
+  @media (min-width: 960px) {
+    .hero-scrim {
+      background: linear-gradient(
+        to bottom,
+        rgb(27 27 27 / 0.6) 0%,
+        transparent 50%,
+        rgb(27 27 27 / 0.55) 100%
+      );
     }
   }
 
