@@ -13,10 +13,10 @@ import type {
 } from "@/types";
 
 export const stats = [
-  { value: ">300", unit: "тыс. м²", label: "Остекления реализовано" },
-  { value: "2022", unit: "год", label: "Начало работы" },
-  { value: "10+", unit: "бригад", label: "В штате компании" },
-  { value: "20+", unit: "регионов", label: "География работ" },
+  { value: "15", unit: "лет", label: "Опыт в строительстве" },
+  { value: "5000+", unit: "м²", label: "Построено" },
+  { value: "5", unit: "городов", label: "География работ" },
+  { value: "100%", unit: "", label: "Свои бригады" },
 ] satisfies Stat[];
 
 export const services = [
