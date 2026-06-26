@@ -1,0 +1,104 @@
+---
+// Сквозной блок «Дополнения в проект» — одинаковый на всех проектах.
+// Контент в src/data/projectPage.ts → customization.
+import Container from "@components/Container.astro";
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import { customization } from "@data/projectPage";
+---
+
+<section class="custom relative overflow-hidden bg-charcoal text-paper">
+  <GridLines />
+  <Container class="relative z-10">
+    <header class="custom-header">
+      <p class="custom-eyebrow text-grey-400" data-reveal>Адаптируем под вас</p>
+      <Heading as="h2" size="lg" class="custom-title" data-split>
+        Дополнения в проект
+      </Heading>
+      <p class="custom-lead text-grey-300" data-reveal>
+        Любой проект из каталога — отправная точка. Подстраиваем его под ваш
+        участок, образ жизни и бюджет до начала работ.
+      </p>
+    </header>
+
+    <ul class="custom-list">
+      {
+        customization.map((item) => (
+          <li class="custom-item">
+            <Heading as="h3" size="md" class="custom-item-title">
+              {item.title}
+            </Heading>
+            <p class="custom-item-desc text-grey-300">{item.desc}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Container>
+</section>
+
+<style>
+  .custom {
+    padding-block: clamp(72px, 8vw, 128px);
+  }
+
+  .custom-header {
+    max-width: 760px;
+  }
+
+  .custom-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+  }
+
+  .custom-title {
+    margin-top: clamp(12px, 1vw, 20px);
+    text-transform: uppercase;
+  }
+
+  .custom-lead {
+    margin-top: clamp(20px, 2vw, 32px);
+    font-size: clamp(0.95rem, 1.1vw, 1.125rem);
+    line-height: 1.5;
+    max-width: 56ch;
+  }
+
+  .custom-list {
+    list-style: none;
+    margin: clamp(40px, 5vw, 80px) 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1px;
+    grid-template-columns: 1fr;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .custom-item {
+    background: var(--color-charcoal);
+    padding: clamp(24px, 2.5vw, 40px);
+  }
+
+  .custom-item-title {
+    text-transform: uppercase;
+  }
+
+  .custom-item-desc {
+    margin-top: clamp(10px, 1vw, 16px);
+    max-width: 38ch;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 640px) {
+    .custom-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 960px) {
+    .custom-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

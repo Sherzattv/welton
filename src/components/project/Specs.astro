@@ -1,0 +1,109 @@
+---
+// Плитки характеристик проекта. Рендерит только заполненные поля —
+// если опциональные данные не наполнены, плитка не появляется.
+import Container from "@components/Container.astro";
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+
+interface Props {
+  area: number;
+  width: number;
+  depth: number;
+  floors: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  wallMaterial?: string;
+  wallThickness?: string;
+  roof?: string;
+}
+const {
+  area,
+  width,
+  depth,
+  floors,
+  bedrooms,
+  bathrooms,
+  wallMaterial,
+  wallThickness,
+  roof,
+} = Astro.props;
+
+const fmt = (n: number): string =>
+  Number.isInteger(n) ? String(n) : n.toString().replace(".", ",");
+
+const specs: { label: string; value: string }[] = [
+  { label: "Площадь", value: `${fmt(area)} м²` },
+  { label: "Габариты", value: `${fmt(width)} × ${fmt(depth)} м` },
+  { label: "Этажность", value: `${floors} ${floors === 1 ? "этаж" : "этажа"}` },
+];
+
+if (bedrooms !== undefined)
+  specs.push({ label: "Спальни", value: String(bedrooms) });
+if (bathrooms !== undefined)
+  specs.push({ label: "Санузлы", value: String(bathrooms) });
+if (wallMaterial) specs.push({ label: "Материал стен", value: wallMaterial });
+if (wallThickness) specs.push({ label: "Толщина стен", value: wallThickness });
+if (roof) specs.push({ label: "Кровля", value: roof });
+---
+
+<section class="specs relative overflow-hidden bg-paper text-charcoal">
+  <GridLines />
+  <Container class="relative z-10">
+    <Heading as="h2" size="lg" class="specs-title" data-split>
+      Характеристики
+    </Heading>
+    <dl class="specs-grid">
+      {
+        specs.map((s) => (
+          <div class="specs-cell">
+            <dt class="specs-label text-grey-500">{s.label}</dt>
+            <dd class="specs-value">{s.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Container>
+</section>
+
+<style>
+  .specs {
+    padding-block: clamp(56px, 6vw, 96px);
+  }
+
+  .specs-title {
+    text-transform: uppercase;
+  }
+
+  .specs-grid {
+    margin-top: clamp(28px, 3vw, 48px);
+    display: grid;
+    gap: 1px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    background: var(--color-grey-200);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .specs-cell {
+    background: var(--color-paper);
+    padding: clamp(20px, 1.8vw, 28px);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .specs-label {
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0;
+  }
+
+  .specs-value {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 2.2vw, 2.25rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+</style>

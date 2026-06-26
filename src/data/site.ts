@@ -14,7 +14,7 @@ export const contact = {
 } satisfies ContactInfo;
 
 export const nav = [
-  { label: "Технологии", href: "#services" },
+  { label: "Проекты", href: "/projects/" },
   { label: "О компании", href: "#about" },
   { label: "Партнеры", href: "#partners" },
   { label: "Этапы работы", href: "#stages" },

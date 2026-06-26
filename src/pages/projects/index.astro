@@ -1,0 +1,136 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@layouts/Layout.astro";
+import Motion from "@components/Motion.astro";
+import Header from "@layout/Header.astro";
+import Footer from "@layout/Footer.astro";
+import Container from "@components/Container.astro";
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import ProjectCard from "@components/ProjectCard.astro";
+import { projectFile, projectTitle } from "@lib/projectAsset";
+
+const projects = (await getCollection("projects")).sort((a, b) =>
+  a.data.folder.localeCompare(b.data.folder),
+);
+const total = projects.length;
+const totalLabel =
+  total % 10 === 1 && total % 100 !== 11
+    ? "проект"
+    : total % 10 >= 2 &&
+        total % 10 <= 4 &&
+        (total % 100 < 10 || total % 100 >= 20)
+      ? "проекта"
+      : "проектов";
+---
+
+<Layout
+  title="Проекты welton — каталог готовых решений"
+  description="Каталог проектов welton: 82 готовых проекта частных домов разных площадей и этажности. Адаптируем под ваш участок."
+>
+  <Motion />
+  <Header />
+  <main>
+    <section
+      class="catalog-hero relative overflow-hidden bg-charcoal text-paper"
+    >
+      <GridLines />
+      <Container class="relative z-10">
+        <div class="catalog-hero-inner">
+          <p class="catalog-hero-eyebrow text-grey-400" data-reveal>
+            Каталог · {total}
+            {totalLabel}
+          </p>
+          <Heading as="h1" size="hero" class="catalog-hero-title" data-split>
+            Проекты домов
+          </Heading>
+          <p class="catalog-hero-lead text-grey-300" data-reveal>
+            Готовые проекты разных площадей и технологий. Адаптируем под ваш
+            участок, бюджет и сценарий жизни — без переделки с нуля.
+          </p>
+        </div>
+      </Container>
+    </section>
+
+    <section class="catalog-grid-section bg-paper text-charcoal">
+      <Container>
+        <ul class="catalog-grid">
+          {
+            projects.map((p) => (
+              <li>
+                <ProjectCard
+                  number={p.data.folder}
+                  title={projectTitle(p.data)}
+                  image={projectFile(p.data.folder, p.data.facade, true)}
+                  href={`/projects/${p.id}/`}
+                  area={p.data.area}
+                  width={p.data.width}
+                  depth={p.data.depth}
+                  floors={p.data.floors}
+                />
+              </li>
+            ))
+          }
+        </ul>
+      </Container>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .catalog-hero-inner {
+    padding-top: clamp(120px, 14vw, 220px);
+    padding-bottom: clamp(56px, 6vw, 120px);
+    max-width: 920px;
+  }
+
+  .catalog-hero-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+  }
+
+  .catalog-hero-title {
+    margin-top: clamp(16px, 1.5vw, 28px);
+    text-transform: uppercase;
+  }
+
+  .catalog-hero-lead {
+    margin-top: clamp(20px, 2vw, 32px);
+    max-width: 56ch;
+    font-size: clamp(0.95rem, 1.1vw, 1.125rem);
+    line-height: 1.5;
+  }
+
+  .catalog-grid-section {
+    padding-block: clamp(48px, 6vw, 96px);
+  }
+
+  .catalog-grid {
+    display: grid;
+    gap: clamp(16px, 1.5vw, 28px);
+    grid-template-columns: 1fr;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (min-width: 640px) {
+    .catalog-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 960px) {
+    .catalog-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .catalog-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

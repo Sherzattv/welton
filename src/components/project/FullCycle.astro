@@ -1,0 +1,115 @@
+---
+// Сквозной блок «Полный цикл работ» — одинаковый на всех проектах.
+// Контент в src/data/projectPage.ts → fullCycle.
+import Container from "@components/Container.astro";
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import { fullCycle } from "@data/projectPage";
+---
+
+<section class="cycle relative overflow-hidden bg-paper text-charcoal">
+  <GridLines />
+  <Container class="relative z-10">
+    <header class="cycle-header">
+      <p class="cycle-eyebrow text-grey-500" data-reveal>Что мы делаем</p>
+      <Heading as="h2" size="lg" class="cycle-title" data-split>
+        Полный цикл работ
+      </Heading>
+      <p class="cycle-lead text-grey-500" data-reveal>
+        Берём проект под ключ — от первой консультации до сдачи дома. Без
+        переключений на подрядчиков и потери качества на стыках.
+      </p>
+    </header>
+
+    <ol class="cycle-list">
+      {
+        fullCycle.map((step) => (
+          <li class="cycle-item">
+            <span class="cycle-num text-grey-400">{step.num}</span>
+            <Heading as="h3" size="md" class="cycle-step-title">
+              {step.title}
+            </Heading>
+            <p class="cycle-desc">{step.desc}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </Container>
+</section>
+
+<style>
+  .cycle {
+    padding-block: clamp(72px, 8vw, 128px);
+  }
+
+  .cycle-header {
+    max-width: 760px;
+  }
+
+  .cycle-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+  }
+
+  .cycle-title {
+    margin-top: clamp(12px, 1vw, 20px);
+    text-transform: uppercase;
+  }
+
+  .cycle-lead {
+    margin-top: clamp(20px, 2vw, 32px);
+    font-size: clamp(0.95rem, 1.1vw, 1.125rem);
+    line-height: 1.5;
+    max-width: 56ch;
+  }
+
+  .cycle-list {
+    list-style: none;
+    margin: clamp(40px, 5vw, 80px) 0 0;
+    padding: 0;
+    display: grid;
+    gap: clamp(24px, 2.5vw, 40px);
+    grid-template-columns: 1fr;
+  }
+
+  .cycle-item {
+    border-top: 1px solid var(--color-grey-200);
+    padding-top: clamp(20px, 1.8vw, 28px);
+  }
+
+  .cycle-num {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .cycle-step-title {
+    margin-top: clamp(12px, 1vw, 20px);
+    text-transform: uppercase;
+  }
+
+  .cycle-desc {
+    margin-top: clamp(8px, 0.8vw, 14px);
+    max-width: 48ch;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 640px) {
+    .cycle-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 960px) {
+    .cycle-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .cycle-list {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+</style>

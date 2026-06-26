@@ -1,0 +1,157 @@
+---
+// Первый экран детальной: слева — eyebrow с кодом + заголовок + краткая мета,
+// справа — фасад во весь блок. На мобиле фасад уходит вниз.
+import Container from "@components/Container.astro";
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import Button from "@components/Button.astro";
+import { projectFile } from "@lib/projectAsset";
+
+interface Props {
+  folder: string;
+  title: string;
+  description?: string;
+  facade: string;
+  area: number;
+  floors: number;
+}
+const { folder, title, description, facade, area, floors } = Astro.props;
+
+const fmt = (n: number): string =>
+  Number.isInteger(n) ? String(n) : n.toString().replace(".", ",");
+---
+
+<section class="hero relative overflow-hidden bg-charcoal text-paper">
+  <GridLines />
+  <Container class="relative z-10">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <p class="hero-eyebrow text-grey-400" data-reveal>
+          Проект · WLT-{folder}
+        </p>
+        <Heading as="h1" size="hero" class="hero-title" data-split>
+          {title}
+        </Heading>
+        {
+          description && (
+            <p class="hero-lead text-grey-300" data-reveal>
+              {description}
+            </p>
+          )
+        }
+        <ul class="hero-meta" data-reveal>
+          <li>
+            <span class="hero-meta-value">{fmt(area)} м²</span>
+            <span class="hero-meta-label text-grey-400">площадь</span>
+          </li>
+          <li>
+            <span class="hero-meta-value">{floors}</span>
+            <span class="hero-meta-label text-grey-400"
+              >{floors === 1 ? "этаж" : "этажа"}</span
+            >
+          </li>
+        </ul>
+        <div class="hero-cta" data-reveal>
+          <Button href="#invoice" variant="accent">
+            Рассчитать стоимость
+          </Button>
+        </div>
+      </div>
+
+      <figure class="hero-figure">
+        <img
+          src={projectFile(folder, facade)}
+          alt={`Фасад проекта ${title}`}
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+          class="hero-image"
+        />
+      </figure>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .hero-inner {
+    display: grid;
+    gap: clamp(32px, 4vw, 64px);
+    grid-template-columns: 1fr;
+    padding-top: clamp(120px, 14vw, 200px);
+    padding-bottom: clamp(56px, 7vw, 120px);
+    align-items: end;
+  }
+
+  .hero-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+  }
+
+  .hero-title {
+    margin-top: clamp(16px, 1.5vw, 28px);
+    text-transform: uppercase;
+  }
+
+  .hero-lead {
+    margin-top: clamp(20px, 2vw, 32px);
+    max-width: 52ch;
+    font-size: clamp(0.95rem, 1.1vw, 1.125rem);
+    line-height: 1.5;
+  }
+
+  .hero-meta {
+    margin-top: clamp(32px, 3.5vw, 56px);
+    display: flex;
+    gap: clamp(32px, 4vw, 64px);
+    list-style: none;
+    padding: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: clamp(24px, 2.5vw, 36px);
+  }
+
+  .hero-meta li {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .hero-meta-value {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-meta-label {
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .hero-cta {
+    margin-top: clamp(28px, 3vw, 48px);
+  }
+
+  .hero-figure {
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--color-ink);
+    aspect-ratio: 16 / 11;
+  }
+
+  .hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (min-width: 960px) {
+    .hero-inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: clamp(48px, 5vw, 96px);
+      align-items: center;
+    }
+  }
+</style>
