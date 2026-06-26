@@ -8,7 +8,7 @@
 > Текущее наполнение — компания «Велес Групп» (остекление объектов). Это базовая
 > версия: контент, бренд и набор секций предполагается менять и расширять.
 
-**Прод:** https://sherzattv.github.io/welton/
+**Прод:** https://welton.kz
 
 ---
 
@@ -27,7 +27,7 @@
 
 ```bash
 npm install      # установить зависимости
-npm run dev      # дев-сервер на http://localhost:4321/welton/
+npm run dev      # дев-сервер на http://localhost:4321/
 ```
 
 Прочие команды:
@@ -36,9 +36,6 @@ npm run dev      # дев-сервер на http://localhost:4321/welton/
 npm run build    # сборка в dist/
 npm run preview  # локальный предпросмотр собранного сайта
 ```
-
-> Сайт публикуется по под-пути `/welton/`, поэтому в дев-режиме открывайте
-> именно `http://localhost:4321/welton/`, а не корень.
 
 ## Структура
 
@@ -73,5 +70,6 @@ public/                статические файлы: img/, video/, fonts/, 
 
 ## Деплой
 
-Сайт хостится на **GitHub Pages** по адресу https://sherzattv.github.io/welton/.
-Подробности и пошаговый процесс обновления — в [docs/deployment.md](docs/deployment.md).
+Сайт хостится на **Cloudflare Workers** и привязан к домену https://welton.kz.
+Cloudflare сам пересобирает и публикует сайт при каждом пуше в `main` — отдельных
+шагов не требуется. Подробности — в [docs/deployment.md](docs/deployment.md).
