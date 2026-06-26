@@ -2,18 +2,24 @@
 import GridLines from "@components/GridLines.astro";
 import Heading from "@components/Heading.astro";
 import Button from "@components/Button.astro";
+import { Image } from "astro:assets";
 import { contact } from "@data/site";
-import { asset } from "@lib/asset";
+import ctaBg from "../../assets/dom-hero.jpg";
 ---
 
 <section
   id="invoice"
   class="cta-section relative overflow-hidden bg-paper text-paper"
 >
-  <img
-    src={asset("/img/high-rise-buildings-.jpg")}
+  <Image
+    src={ctaBg}
     alt=""
+    widths={[768, 1280, 1920]}
+    sizes="100vw"
+    format="webp"
+    quality={72}
     loading="lazy"
+    decoding="async"
     class="cta-bg absolute inset-x-0 top-0 h-full w-full object-cover"
   />
   <div
@@ -26,7 +32,7 @@ import { asset } from "@lib/asset";
     class="cta-inner relative z-10 mx-auto w-full max-w-[var(--content-max)] px-gutter"
   >
     <Heading as="h2" size="lg" class="cta-heading text-paper" data-split>
-      Предварительный расчёт остекления под ваш объект
+      Рассчитаем стоимость вашего дома
     </Heading>
 
     <div class="cta-button">
