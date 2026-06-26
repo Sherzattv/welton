@@ -14,3 +14,7 @@ export const projectFile = (
 /** Отображаемое имя проекта. Пока title не наполнен — показываем код "WLT-NN". */
 export const projectTitle = (p: { folder: string; title?: string }): string =>
   p.title ?? `WLT-${p.folder}`;
+
+/** Артикул проекта — всегда "WLT-NN" по номеру папки. */
+export const projectCode = (p: { folder: string }): string =>
+  `WLT-${p.folder}`;

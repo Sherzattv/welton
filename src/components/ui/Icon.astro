@@ -3,7 +3,14 @@
 // шевронов — заменяет инлайн-SVG по сайту. Цвет наследуется (currentColor).
 // Анимации/transition задаются на месте вызова через `class` (Tailwind-утилиты).
 interface Props {
-  name: "arrow-right" | "arrow-left" | "chevron-down" | "arrow-up";
+  name:
+    | "arrow-right"
+    | "arrow-left"
+    | "chevron-down"
+    | "arrow-up"
+    | "area"
+    | "dimensions"
+    | "floors";
   width?: number;
   height?: number;
   stroke?: number;
@@ -38,6 +45,30 @@ const REGISTRY = {
     w: 18,
     h: 18,
     d: "M9 17V1M1 9l8-8 8 8",
+    sw: 1.4,
+  },
+  // Квадрат с диагональю — символ площади
+  area: {
+    box: "0 0 18 18",
+    w: 18,
+    h: 18,
+    d: "M2 2h14v14H2zM2 16L16 2",
+    sw: 1.3,
+  },
+  // Линейка с делениями — символ габаритов (ширина × глубина)
+  dimensions: {
+    box: "0 0 22 10",
+    w: 22,
+    h: 10,
+    d: "M1 1h20v8H1zM5 1v3M9 1v4M13 1v3M17 1v4",
+    sw: 1.3,
+  },
+  // Стопка из горизонтальных линий — этажность
+  floors: {
+    box: "0 0 18 18",
+    w: 18,
+    h: 18,
+    d: "M2 4h14M2 9h14M2 14h14",
     sw: 1.4,
   },
 } as const;

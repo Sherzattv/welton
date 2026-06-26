@@ -9,6 +9,7 @@ import { defineCollection, z } from "astro:content";
 import { readdir, readFile } from "node:fs/promises";
 import type { Dirent } from "node:fs";
 import { join, resolve } from "node:path";
+import { projectOverrides } from "@data/projectOverrides";
 
 const projectsDir = resolve(process.cwd(), "public/projects");
 
@@ -45,8 +46,11 @@ const projects = defineCollection({
           await readFile(join(projectsDir, folder, "project.json"), "utf-8"),
         );
 
+        const id = `wlt-${folder}`;
+        const override = projectOverrides[id] ?? {};
+
         return {
-          id: `wlt-${folder}`,
+          id,
           folder,
           area: json.area,
           width: json.width,
@@ -57,6 +61,7 @@ const projects = defineCollection({
           facade: "facade.png",
           renders,
           floorplans,
+          ...override,
         };
       }),
     );
@@ -75,6 +80,7 @@ const projects = defineCollection({
 
     // ─── Опциональная мета: заполняется вручную/через API позже ───
     title: z.string().optional(),
+    tagline: z.string().optional(),
     description: z.string().optional(),
     category: category.optional(),
     technology: technology.optional(),

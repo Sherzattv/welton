@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
 import Layout from "@layouts/Layout.astro";
 import Motion from "@components/Motion.astro";
 import Header from "@layout/Header.astro";
@@ -8,20 +9,12 @@ import Container from "@components/Container.astro";
 import GridLines from "@components/GridLines.astro";
 import Heading from "@components/Heading.astro";
 import ProjectCard from "@components/ProjectCard.astro";
-import { projectFile, projectTitle } from "@lib/projectAsset";
+import { projectCode, projectFile, projectTitle } from "@lib/projectAsset";
+import heroBg from "../../assets/dom-hero.jpg";
 
 const projects = (await getCollection("projects")).sort((a, b) =>
   a.data.folder.localeCompare(b.data.folder),
 );
-const total = projects.length;
-const totalLabel =
-  total % 10 === 1 && total % 100 !== 11
-    ? "проект"
-    : total % 10 >= 2 &&
-        total % 10 <= 4 &&
-        (total % 100 < 10 || total % 100 >= 20)
-      ? "проекта"
-      : "проектов";
 ---
 
 <Layout
@@ -34,17 +27,29 @@ const totalLabel =
     <section
       class="catalog-hero relative overflow-hidden bg-charcoal text-paper"
     >
+      <Image
+        src={heroBg}
+        alt=""
+        widths={[768, 1280, 1920]}
+        sizes="100vw"
+        format="webp"
+        quality={72}
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        class="catalog-hero-bg absolute inset-0 h-full w-full object-cover"
+      />
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-charcoal/55 via-charcoal/45 to-charcoal/85"
+      >
+      </div>
       <GridLines />
       <Container class="relative z-10">
         <div class="catalog-hero-inner">
-          <p class="catalog-hero-eyebrow text-grey-400" data-reveal>
-            Каталог · {total}
-            {totalLabel}
-          </p>
           <Heading as="h1" size="hero" class="catalog-hero-title" data-split>
             Проекты домов
           </Heading>
-          <p class="catalog-hero-lead text-grey-300" data-reveal>
+          <p class="catalog-hero-lead text-grey-200" data-reveal>
             Готовые проекты разных площадей и технологий. Адаптируем под ваш
             участок, бюджет и сценарий жизни — без переделки с нуля.
           </p>
@@ -56,20 +61,24 @@ const totalLabel =
       <Container>
         <ul class="catalog-grid">
           {
-            projects.map((p) => (
-              <li>
-                <ProjectCard
-                  number={p.data.folder}
-                  title={projectTitle(p.data)}
-                  image={projectFile(p.data.folder, p.data.facade, true)}
-                  href={`/projects/${p.id}/`}
-                  area={p.data.area}
-                  width={p.data.width}
-                  depth={p.data.depth}
-                  floors={p.data.floors}
-                />
-              </li>
-            ))
+            projects.map((p) => {
+              const cover = p.data.renders[0] ?? p.data.facade;
+              return (
+                <li>
+                  <ProjectCard
+                    title={projectTitle(p.data)}
+                    code={projectCode(p.data)}
+                    tagline={p.data.tagline}
+                    image={projectFile(p.data.folder, cover, true)}
+                    href={`/projects/${p.id}/`}
+                    area={p.data.area}
+                    width={p.data.width}
+                    depth={p.data.depth}
+                    floors={p.data.floors}
+                  />
+                </li>
+              );
+            })
           }
         </ul>
       </Container>
@@ -85,14 +94,7 @@ const totalLabel =
     max-width: 920px;
   }
 
-  .catalog-hero-eyebrow {
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.75rem;
-  }
-
   .catalog-hero-title {
-    margin-top: clamp(16px, 1.5vw, 28px);
     text-transform: uppercase;
   }
 
