@@ -9,8 +9,9 @@ import imgKamen from "../../assets/tech-kamen.png";
 import imgMonolit from "../../assets/tech-monolit.png";
 import imgSip from "../../assets/tech-sip.png";
 
-// Фото по технологиям — порядок совпадает с services (монолит / камень / СИП).
-const serviceImages = [imgMonolit, imgKamen, imgSip];
+// Фото по технологиям — порядок совпадает с services.
+// TODO: фото для металлоконструкций и сэндвич-панелей (04, 05 — пока заглушки).
+const serviceImages = [imgMonolit, imgKamen, imgSip, imgKamen, imgMonolit];
 ---
 
 <section id="services" class="services-section relative bg-paper text-charcoal">
@@ -24,7 +25,7 @@ const serviceImages = [imgMonolit, imgKamen, imgSip];
       class="services-heading text-charcoal"
       data-split
     >
-      Строим дома под ключ по трём технологиям
+      Строим дома под ключ по пяти технологиям
     </Heading>
 
     <div class="services-list">
@@ -181,9 +182,9 @@ const serviceImages = [imgMonolit, imgKamen, imgSip];
 
   @media (min-width: 960px) {
     .services-inner {
-      /* 102.5vw артборда + ~3vw нижней «воздушной» зоны после последнего ряда
-         (ряды позиционированы абсолютно по --top, внутри ничего не смещается). */
-      min-height: 105.5vw;
+      /* 5 рядов: низ последнего ряда (i=4) на ~160.75vw + ~5vw «воздуха».
+         Ряды позиционированы абсолютно по --top = (144 + 361*i)/12 vw. */
+      min-height: 166vw;
       padding-block: 0;
     }
 
