@@ -45,16 +45,10 @@ import { asset } from "@lib/asset";
       >
     </div>
 
+    <!-- ТОО ещё не открыт — название в DOM есть, но закрашено в цвет футера. -->
     <div class="footer-company">
-      <p>{contact.company}</p>
+      <p style="color: var(--color-charcoal)">{contact.company}</p>
     </div>
-
-    <div class="footer-requisites">
-      <p>ИНН: {contact.inn}</p>
-      <p>КПП: {contact.kpp}</p>
-    </div>
-
-    <p class="footer-dev">Разработка сайта</p>
 
     <div class="footer-contacts">
       <SlideLink

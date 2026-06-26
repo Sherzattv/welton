@@ -9,8 +9,6 @@ export interface ContactInfo {
   address: string;
   instagram: string;
   company: string;
-  inn: string;
-  kpp: string;
 }
 
 export interface NavItem {
