@@ -3,8 +3,14 @@ import GridLines from "@components/GridLines.astro";
 import Heading from "@components/Heading.astro";
 import Button from "@components/Button.astro";
 import Hairline from "@ui/Hairline.astro";
+import { Image } from "astro:assets";
 import { services } from "@data/home";
-import { asset } from "@lib/asset";
+import imgKamen from "../../assets/tech-kamen.png";
+import imgMonolit from "../../assets/tech-monolit.png";
+import imgSip from "../../assets/tech-sip.png";
+
+// Фото по технологиям — порядок совпадает с services (камень / монолит / СИП).
+const serviceImages = [imgKamen, imgMonolit, imgSip];
 ---
 
 <section id="services" class="services-section relative bg-paper text-charcoal">
@@ -37,9 +43,13 @@ import { asset } from "@lib/asset";
               <p class="service-desc text-charcoal">{s.desc}</p>
             </div>
             <div class="service-image-wrap">
-              <img
-                src={asset(s.img)}
+              <Image
+                src={serviceImages[i]}
                 alt={s.title}
+                widths={[480, 768, 1024]}
+                sizes="(min-width: 960px) 48vw, 100vw"
+                format="webp"
+                quality={72}
                 loading="lazy"
                 decoding="async"
                 class="service-image"
