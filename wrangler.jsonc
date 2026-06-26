@@ -1,0 +1,9 @@
+{
+  // Cloudflare Workers: статический сайт welton отдаётся из готовой папки ./dist
+  // Сборка: npm run build  →  деплой: npx wrangler deploy
+  "name": "welton",
+  "compatibility_date": "2026-06-26",
+  "assets": {
+    "directory": "./dist"
+  }
+}
