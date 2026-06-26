@@ -3,14 +3,6 @@ import GridLines from "@components/GridLines.astro";
 import Heading from "@components/Heading.astro";
 import { advantages } from "@data/home";
 import { asset } from "@lib/asset";
-
-// Tilda orders cards visually as: control → teams → volume → geography.
-const orderedAdvantages = [
-  advantages[0],
-  advantages[3],
-  advantages[2],
-  advantages[1],
-];
 ---
 
 <section
@@ -20,6 +12,7 @@ const orderedAdvantages = [
   <video
     class="absolute inset-0 h-full w-full object-cover"
     src={asset("/video/advantages.mp4")}
+    poster={asset("/video/advantages-poster.jpg")}
     autoplay
     muted
     loop
@@ -38,7 +31,7 @@ const orderedAdvantages = [
 
     <div class="advantages-grid">
       {
-        orderedAdvantages.map((a, i) => (
+        advantages.map((a, i) => (
           <article
             class="advantage-card"
             style={`--left:${(24 + 291 * i) / 12}vw`}
@@ -54,6 +47,16 @@ const orderedAdvantages = [
     </div>
   </div>
 </section>
+
+<script>
+  // Уважаем prefers-reduced-motion: при «уменьшить движение» останавливаем
+  // фон-видео — остаётся статичный постер-кадр (как остальной моушн сайта).
+  const v = document.querySelector<HTMLVideoElement>("#advantages video");
+  if (v && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    v.removeAttribute("autoplay");
+    v.pause();
+  }
+</script>
 
 <style>
   .advantages-section {
