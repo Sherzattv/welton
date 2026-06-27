@@ -2,7 +2,6 @@
 // Сквозной блок «Дополнения в проект» — одинаковый на всех проектах.
 // Фото-карусель по паттерну Objects: заголовок слева, управление и горизонтальная
 // лента карточек справа/ниже.
-import Container from "@components/Container.astro";
 import GridLines from "@components/GridLines.astro";
 import Heading from "@components/Heading.astro";
 import Icon from "@ui/Icon.astro";
@@ -24,7 +23,9 @@ const images = [
   class="custom relative overflow-hidden bg-paper text-charcoal"
 >
   <GridLines />
-  <Container class="custom-inner relative z-10">
+  <div
+    class="custom-inner relative z-10 mx-auto w-full max-w-[var(--content-max)] px-gutter"
+  >
     <header class="custom-header">
       <Heading as="h2" size="lg" class="custom-title" data-split>
         Дополнения в проект
@@ -84,7 +85,7 @@ const images = [
         ))
       }
     </div>
-  </Container>
+  </div>
 </section>
 
 <style>
@@ -272,9 +273,9 @@ const images = [
 
   @media (min-width: 960px) {
     .custom-inner {
-      --custom-top-gap: clamp(112px, 9vw, 150px);
-      --custom-bottom-gap: clamp(112px, 8vw, 150px);
-      min-height: calc(var(--custom-top-gap) + 40vw + var(--custom-bottom-gap));
+      --custom-top-gap: clamp(80px, 7vw, 120px);
+      --custom-bottom-gap: clamp(80px, 6vw, 112px);
+      min-height: calc(var(--custom-top-gap) + 30vw + var(--custom-bottom-gap));
       padding: 0;
     }
 
@@ -309,7 +310,7 @@ const images = [
 
     .custom-card {
       width: 31.333vw;
-      height: 40vw;
+      height: 30vw;
       min-height: 0;
     }
 
@@ -317,17 +318,17 @@ const images = [
       top: 1.333vw;
       left: 1.333vw;
       right: 1.333vw;
-      height: 17.5vw;
+      height: 14vw;
     }
 
     .custom-num {
-      top: 21vw;
+      top: 16.667vw;
       left: 1.333vw;
       font-size: 0.9vw;
     }
 
     .custom-card-title {
-      top: 23.5vw;
+      top: 18.5vw;
       left: 1.333vw;
       right: 1.333vw;
     }
