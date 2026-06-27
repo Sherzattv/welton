@@ -4,12 +4,12 @@
 // синхронизирует URL через replaceState (?q=&floors=1&beds=2&area=80-120&sort=area-asc).
 //
 // UX:
-//   • Поиск по title (полнотекст, lowercase, includes); debounce 180ms.
+//   • Поиск по title, tagline и коду проекта (WLT-NN); debounce 180ms.
 //   • Сортировка: default | area-asc | area-desc | beds-desc.
 //   • Чипы площади: фиксированные диапазоны (all/0-80/80-120/120-180/180+).
 //   • Счётчики на чипах: показывают сколько проектов в каждом варианте
 //     при остальных АКТИВНЫХ фильтрах (превентивная обратная связь).
-//   • Активные фильтры — pill-ы под группами (клик снимает).
+//   • Reset-кнопка снимает все активные фильтры разом.
 //   • Мобильный bottom-sheet + FAB.
 
 export type FloorsValue = "all" | "1" | "2";
@@ -23,12 +23,6 @@ export interface FilterState {
   beds: BedsValue;
   area: AreaValue;
   sort: SortValue;
-}
-
-export interface FilterConfig {
-  // Зарезервировано на случай возврата к ползунку или динамическим диапазонам.
-  areaMin: number;
-  areaMax: number;
 }
 
 const debounce = <T extends (...a: never[]) => void>(fn: T, ms: number) => {
@@ -48,13 +42,6 @@ interface CardInfo {
   defaultIndex: number;
 }
 
-const AREA_LABELS: Record<Exclude<AreaValue, "all">, string> = {
-  "0-80": "до 80 м²",
-  "80-120": "80–120 м²",
-  "120-180": "120–180 м²",
-  "180+": "180+ м²",
-};
-
 function inAreaRange(area: number, range: AreaValue): boolean {
   switch (range) {
     case "all":
@@ -70,7 +57,7 @@ function inAreaRange(area: number, range: AreaValue): boolean {
   }
 }
 
-export function initCatalogFilters(root: HTMLElement, _cfg: FilterConfig) {
+export function initCatalogFilters(root: HTMLElement) {
   const cardEls = Array.from(
     document.querySelectorAll<HTMLElement>("[data-catalog-item]"),
   );
@@ -78,11 +65,13 @@ export function initCatalogFilters(root: HTMLElement, _cfg: FilterConfig) {
   const emptyEl = document.querySelector<HTMLElement>("[data-catalog-empty]");
 
   const countEl = root.querySelector<HTMLElement>("[data-filter-count]");
-  const totalEl = root.querySelector<HTMLElement>("[data-filter-total]");
-  const resetBtn = root.querySelector<HTMLButtonElement>(
-    "[data-filters-reset]",
+  const countMobileEl = root.querySelector<HTMLElement>(
+    "[data-filter-count-mobile]",
   );
-  const activeBox = root.querySelector<HTMLElement>("[data-filters-active]");
+  const totalEl = root.querySelector<HTMLElement>("[data-filter-total]");
+  const resetBtns = Array.from(
+    root.querySelectorAll<HTMLButtonElement>("[data-filters-reset]"),
+  );
 
   const searchInput = root.querySelector<HTMLInputElement>(
     "[data-search-input]",
@@ -104,12 +93,13 @@ export function initCatalogFilters(root: HTMLElement, _cfg: FilterConfig) {
   const cards: CardInfo[] = cardEls.map((el, i) => {
     const title = el.querySelector("h3")?.textContent ?? "";
     const tagline = el.querySelector("p")?.textContent ?? "";
+    const code = el.dataset.code ?? "";
     return {
       el,
       floors: el.dataset.floors ?? "",
       area: Number(el.dataset.area ?? 0),
       bedrooms: Number(el.dataset.bedrooms ?? 0),
-      searchHaystack: `${title} ${tagline}`.toLowerCase(),
+      searchHaystack: `${title} ${tagline} ${code}`.toLowerCase(),
       defaultIndex: i,
     };
   });
@@ -224,57 +214,6 @@ export function initCatalogFilters(root: HTMLElement, _cfg: FilterConfig) {
       sortSelect.value = state.sort;
   }
 
-  function syncActivePills() {
-    if (!activeBox) return;
-    const pills: { label: string; action: () => void }[] = [];
-    if (state.q) {
-      pills.push({
-        label: `«${state.q}»`,
-        action: () => {
-          state.q = "";
-        },
-      });
-    }
-    if (state.floors !== "all") {
-      pills.push({
-        label: state.floors === "1" ? "1 этаж" : "2 этажа",
-        action: () => {
-          state.floors = "all";
-        },
-      });
-    }
-    if (state.beds !== "all") {
-      pills.push({
-        label: `${state.beds} спал.`,
-        action: () => {
-          state.beds = "all";
-        },
-      });
-    }
-    if (state.area !== "all") {
-      pills.push({
-        label: AREA_LABELS[state.area],
-        action: () => {
-          state.area = "all";
-        },
-      });
-    }
-    activeBox.innerHTML = "";
-    for (const { label, action } of pills) {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "active-pill";
-      btn.innerHTML = `<span>${label}</span><span aria-hidden="true">×</span>`;
-      btn.setAttribute("aria-label", `Снять фильтр: ${label}`);
-      btn.addEventListener("click", () => {
-        action();
-        syncAll();
-      });
-      activeBox.appendChild(btn);
-    }
-    activeBox.classList.toggle("is-empty", pills.length === 0);
-  }
-
   // ─── Сортировка: переставляем DOM-узлы внутри grid ────────────────
   function applySort() {
     const sorted = [...cards];
@@ -309,25 +248,49 @@ export function initCatalogFilters(root: HTMLElement, _cfg: FilterConfig) {
     return n;
   }
 
+  // Сохраняем scroll-позицию: фиксируем body жёстко, чтобы не дёргался.
+  let savedScroll = 0;
+
   function openSheet() {
+    savedScroll = window.scrollY;
     root.classList.add("is-open");
     backdrop?.classList.add("is-open");
     backdrop?.setAttribute("aria-hidden", "false");
     fab?.setAttribute("aria-expanded", "true");
+    fab?.classList.add("is-hidden");
     document.documentElement.classList.add("cf-locked");
+    document.body.style.top = `-${savedScroll}px`;
   }
 
-  function closeSheet() {
+  function closeSheet(opts?: { scrollToCatalog?: boolean }) {
     root.classList.remove("is-open");
     backdrop?.classList.remove("is-open");
     backdrop?.setAttribute("aria-hidden", "true");
     fab?.setAttribute("aria-expanded", "false");
+    fab?.classList.remove("is-hidden");
     document.documentElement.classList.remove("cf-locked");
+    document.body.style.top = "";
+
+    if (opts?.scrollToCatalog) {
+      // Прокручиваем к началу каталога (после hero) — плавно.
+      const catalog = document.querySelector<HTMLElement>(".catalog-shell");
+      const top = catalog
+        ? catalog.getBoundingClientRect().top + window.scrollY
+        : 0;
+      window.scrollTo({ top, behavior: "smooth" });
+    } else {
+      window.scrollTo(0, savedScroll);
+    }
   }
 
   fab?.addEventListener("click", openSheet);
-  backdrop?.addEventListener("click", closeSheet);
-  for (const b of closeButtons) b.addEventListener("click", closeSheet);
+  backdrop?.addEventListener("click", () => closeSheet());
+  for (const b of closeButtons) {
+    const scrollOnClose = b.classList.contains("cf-sheet-btn--solid");
+    b.addEventListener("click", () =>
+      closeSheet({ scrollToCatalog: scrollOnClose }),
+    );
+  }
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && root.classList.contains("is-open")) closeSheet();
   });
@@ -340,9 +303,10 @@ export function initCatalogFilters(root: HTMLElement, _cfg: FilterConfig) {
       if (ok) visible++;
     }
     if (countEl) countEl.textContent = String(visible);
+    if (countMobileEl) countMobileEl.textContent = String(visible);
     if (sheetCount) sheetCount.textContent = String(visible);
     if (emptyEl) emptyEl.classList.toggle("is-visible", visible === 0);
-    if (resetBtn) resetBtn.toggleAttribute("disabled", isDefault());
+    for (const b of resetBtns) b.toggleAttribute("disabled", isDefault());
 
     if (fabCount) {
       const n = activeFilterCount();
@@ -360,7 +324,6 @@ export function initCatalogFilters(root: HTMLElement, _cfg: FilterConfig) {
     apply();
     syncChips();
     syncSearchSort();
-    syncActivePills();
     writeUrl();
   }
 
@@ -389,7 +352,6 @@ export function initCatalogFilters(root: HTMLElement, _cfg: FilterConfig) {
       state.q = searchInput.value.trim();
       apply();
       syncChips();
-      syncActivePills();
       writeUrl();
     }, 180);
     searchInput.addEventListener("input", onSearch);
@@ -402,8 +364,8 @@ export function initCatalogFilters(root: HTMLElement, _cfg: FilterConfig) {
     });
   }
 
-  if (resetBtn) {
-    resetBtn.addEventListener("click", () => {
+  for (const b of resetBtns) {
+    b.addEventListener("click", () => {
       state.q = "";
       state.floors = "all";
       state.beds = "all";

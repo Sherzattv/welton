@@ -5,7 +5,8 @@
 // id записи = "wlt-NN" — он же slug URL (/projects/wlt-01/).
 // Папка на диске сохраняет короткое имя "01" — это технический ключ к файлам.
 
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
+import { z } from "astro/zod";
 import { readdir, readFile } from "node:fs/promises";
 import type { Dirent } from "node:fs";
 import { join, resolve } from "node:path";

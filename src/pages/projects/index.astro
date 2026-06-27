@@ -10,16 +10,13 @@ import GridLines from "@components/GridLines.astro";
 import Heading from "@components/Heading.astro";
 import ProjectCard from "@components/ProjectCard.astro";
 import CatalogFilters from "@components/projects/CatalogFilters.astro";
+import { asset } from "@lib/asset";
 import { projectCode, projectFile, projectTitle } from "@lib/projectAsset";
 import heroBg from "../../assets/dom-hero.jpg";
 
 const projects = (await getCollection("projects")).sort((a, b) =>
   a.data.folder.localeCompare(b.data.folder),
 );
-
-const areas = projects.map((p) => p.data.area);
-const areaMin = Math.floor(Math.min(...areas));
-const areaMax = Math.ceil(Math.max(...areas));
 ---
 
 <Layout
@@ -67,11 +64,7 @@ const areaMax = Math.ceil(Math.max(...areas));
       style="overflow-x: clip"
     >
       <GridLines />
-      <CatalogFilters
-        areaMin={areaMin}
-        areaMax={areaMax}
-        total={projects.length}
-      />
+      <CatalogFilters total={projects.length} />
 
       <div class="catalog-main">
         <ul class="catalog-grid">
@@ -84,13 +77,14 @@ const areaMax = Math.ceil(Math.max(...areas));
                   data-floors={p.data.floors}
                   data-area={p.data.area}
                   data-bedrooms={p.data.bedrooms ?? 0}
+                  data-code={projectCode(p.data)}
                 >
                   <ProjectCard
                     title={projectTitle(p.data)}
                     code={projectCode(p.data)}
                     tagline={p.data.tagline}
                     image={projectFile(p.data.folder, cover, true)}
-                    href={`/projects/${p.id}/`}
+                    href={asset(`/projects/${p.id}/`)}
                     area={p.data.area}
                     width={p.data.width}
                     depth={p.data.depth}

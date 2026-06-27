@@ -7,11 +7,9 @@
 // Логика — в @scripts/catalog-filters (debounce, URL state, счётчики).
 
 interface Props {
-  areaMin: number;
-  areaMax: number;
   total: number;
 }
-const { areaMin, areaMax, total } = Astro.props;
+const { total } = Astro.props;
 ---
 
 <!-- FAB только на мобиле -->
@@ -48,10 +46,8 @@ const { areaMin, areaMax, total } = Astro.props;
   class="cf"
   aria-label="Фильтры каталога"
   data-catalog-filters
-  data-area-min={areaMin}
-  data-area-max={areaMax}
 >
-  <!-- Шапка bottom-sheet — видна только на мобиле -->
+  <!-- Шапка bottom-sheet — видна только на мобиле: заголовок + крестик. -->
   <div class="cf-sheet-head">
     <span class="cf-handle" aria-hidden="true"></span>
     <p class="cf-sheet-title">Фильтры</p>
@@ -272,9 +268,6 @@ const { areaMin, areaMax, total } = Astro.props;
       </fieldset>
     </div>
 
-    <!-- Активные фильтры — accent pill-ы, появляются по мере выбора -->
-    <div class="cf-active is-empty" data-filters-active></div>
-
     <!-- Reset — text-link под фильтрами -->
     <button
       type="button"
@@ -285,10 +278,20 @@ const { areaMin, areaMax, total } = Astro.props;
     >
   </div>
 
-  <!-- Footer bottom-sheet — видна только на мобиле -->
+  <!-- Footer bottom-sheet — видна только на мобиле; две равные кнопки -->
   <div class="cf-sheet-foot">
-    <button type="button" class="cf-apply" data-cf-close>
-      Показать <span data-sheet-count>{total}</span> проектов
+    <button
+      type="button"
+      class="cf-sheet-btn cf-sheet-btn--outline"
+      data-filters-reset
+      disabled>Сбросить</button
+    >
+    <button
+      type="button"
+      class="cf-sheet-btn cf-sheet-btn--solid"
+      data-cf-close
+    >
+      Показать <span data-sheet-count>{total}</span>
     </button>
   </div>
 </aside>
@@ -355,90 +358,185 @@ const { areaMin, areaMax, total } = Astro.props;
     }
 
     .cf-sheet-head {
+      padding: 18px 16px 14px;
+      position: relative;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 14px 16px 12px;
-      border-bottom: 1px solid var(--color-grey-200);
-      position: relative;
-      flex-shrink: 0;
-    }
-    .cf-handle {
-      position: absolute;
-      top: 6px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 36px;
-      height: 4px;
-      border-radius: 2px;
-      background: var(--color-grey-300);
     }
     .cf-sheet-title {
-      margin: 4px 0 0;
+      margin: 0;
       font-family: var(--font-display);
       font-size: 22px;
+      line-height: 1;
       letter-spacing: -0.02em;
       text-transform: uppercase;
       color: var(--color-charcoal);
     }
+    .cf-handle {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--color-grey-300);
+    }
     .cf-close {
       appearance: none;
-      border: 0;
+      border: 1px solid var(--color-grey-300);
       background: transparent;
       color: var(--color-charcoal);
-      padding: 8px;
-      margin: -8px;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
+    }
+    .cf-close:hover {
+      border-color: var(--color-charcoal);
     }
 
     .cf-sticky {
       position: static;
       max-height: none;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       flex: 1 1 auto;
-      padding: 18px 16px 16px;
+      padding: 18px 18px 20px;
     }
 
-    /* На мобиле «Фильтры» уже в шапке bottom-sheet — внутренний заголовок прячем */
-    .cf-header-title {
-      display: none;
+    /* На мобиле header (со счётчиком) и reset в теле — скрываем,
+       всё что нужно есть в sheet-head/foot */
+    .cf-header,
+    .cf-sticky > .cf-reset {
+      display: none !important;
     }
-    .cf-header {
-      justify-content: flex-end;
+
+    /* Утилиты: поиск + сортировка слитной парой */
+    .cf-utils {
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+
+    /* Поиск — облегчённый (без жирной charcoal-рамки) */
+    .cf-search-input {
+      background: var(--color-grey-200);
+      border-color: transparent;
+      padding: 12px 14px 12px 40px;
+      font-size: 14px;
+      font-weight: 400;
+    }
+    .cf-search-input:focus {
+      background: var(--color-grey-200);
+      border-color: var(--color-charcoal);
+    }
+    .cf-search-icon {
+      color: var(--color-grey-500);
+      left: 14px;
+    }
+
+    /* Sort — облегчённая, серая рамка */
+    .cf-sort {
+      width: 46px;
+      border-color: var(--color-grey-300);
+    }
+
+    /* Группы — разделены spacing'ом, БЕЗ линий, как iOS Settings */
+    .cf-groups {
+      gap: 22px;
+    }
+    .cf-groups .cf-field {
+      padding: 0;
+      border: 0;
+    }
+
+    /* Лейблы — более заметные, тёмные */
+    .cf-label {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      color: var(--color-charcoal);
+      padding-bottom: 10px;
+      font-weight: 600;
+    }
+
+    /* Чипы — пилюли, плотные */
+    .cf-chip {
+      padding: 10px 14px;
+      font-size: 13px;
+      gap: 5px;
+    }
+
+    /* Footer-кнопки скромнее, не доминируют */
+    .cf-sheet-btn {
+      padding: 14px 16px;
+      font-size: 14px;
+    }
+
+    /* Шапка sheet — компактнее, ровный baseline */
+    .cf-sheet-head {
+      padding: 16px 18px 12px;
+    }
+    .cf-sheet-title {
+      font-size: 20px;
+    }
+    .cf-close {
+      width: 32px;
+      height: 32px;
+    }
+
+    /* Тело sheet — стандартный 18px паддинг */
+    .cf-sticky {
+      padding: 16px 18px 22px;
     }
 
     .cf-sheet-foot {
-      display: block;
-      padding: 12px 16px 16px;
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 10px;
+      padding: 14px 18px 16px;
       border-top: 1px solid var(--color-grey-200);
       background: var(--color-paper);
       flex-shrink: 0;
     }
-    .cf-apply {
-      width: 100%;
+    .cf-sheet-btn {
       appearance: none;
-      border: 0;
-      background: var(--color-charcoal);
-      color: var(--color-paper);
-      padding: 14px 18px;
-      font-size: 14px;
+      padding: 16px 18px;
+      font-size: 15px;
       line-height: 1;
       letter-spacing: -0.2px;
       border-radius: var(--radius-sm);
       cursor: pointer;
-      transition: background 160ms ease;
+      font-weight: 500;
+      transition:
+        background 160ms ease,
+        color 160ms ease,
+        border-color 160ms ease;
     }
-    .cf-apply:hover {
+    .cf-sheet-btn--outline {
+      border: 1px solid var(--color-charcoal);
+      background: transparent;
+      color: var(--color-charcoal);
+    }
+    .cf-sheet-btn--outline[disabled] {
+      border-color: var(--color-grey-300);
+      color: var(--color-grey-400);
+      cursor: default;
+    }
+    .cf-sheet-btn--solid {
+      border: 1px solid var(--color-charcoal);
+      background: var(--color-charcoal);
+      color: var(--color-paper);
+    }
+    .cf-sheet-btn--solid:hover {
       background: var(--color-accent);
-    }
-
-    /* На мобиле сброс кнопка занимает полную ширину под секцией контролов */
-    .cf-reset {
-      width: 100%;
+      border-color: var(--color-accent);
     }
   }
 
@@ -476,6 +574,14 @@ const { areaMin, areaMax, total } = Astro.props;
     background: var(--color-charcoal);
     color: var(--color-paper);
   }
+  .cf-fab.is-hidden {
+    display: none;
+  }
+
+  /* Скрываем FAB когда открыто меню сайта (Header выставляет html.lenis-stopped) */
+  :global(html.lenis-stopped) .cf-fab {
+    display: none;
+  }
   .cf-fab-icon {
     color: currentColor;
   }
@@ -509,9 +615,16 @@ const { areaMin, areaMax, total } = Astro.props;
     pointer-events: auto;
   }
 
-  /* Когда sheet открыт — body не скроллится (через class на html) */
-  :global(html.cf-locked),
+  /* Когда sheet открыт — body фиксируется, чтобы фон не дёргался при свайпе */
+  :global(html.cf-locked) {
+    overflow: hidden;
+    overscroll-behavior: contain;
+  }
   :global(html.cf-locked body) {
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 100%;
     overflow: hidden;
   }
 
@@ -580,8 +693,7 @@ const { areaMin, areaMax, total } = Astro.props;
 
   .cf-label {
     display: flex;
-    align-items: baseline;
-    justify-content: space-between;
+    align-items: center;
     gap: 10px;
     padding: 0 0 12px;
     font-size: 12px;
@@ -589,6 +701,11 @@ const { areaMin, areaMax, total } = Astro.props;
     text-transform: uppercase;
     color: var(--color-charcoal);
     font-weight: 500;
+  }
+
+  .cf-label :global(svg) {
+    flex-shrink: 0;
+    color: var(--color-grey-500);
   }
 
   /* ─── Поиск ─────────────────────────────────────────────────── */
@@ -736,47 +853,6 @@ const { areaMin, areaMax, total } = Astro.props;
     color: rgba(238, 238, 238, 0.65);
   }
 
-  /* ─── Активные фильтры (pills) ──────────────────────────────── */
-  .cf-active {
-    margin-top: clamp(20px, 1.8vw, 28px);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .cf-active.is-empty {
-    display: none;
-  }
-
-  .cf-active :global(.active-pill) {
-    appearance: none;
-    border: 1px solid var(--color-accent);
-    background: var(--color-accent);
-    color: var(--color-paper);
-    padding: 10px 14px;
-    font-size: 13px;
-    line-height: 1;
-    letter-spacing: -0.2px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 500;
-    transition: background 160ms ease;
-  }
-
-  .cf-active :global(.active-pill :nth-child(2)) {
-    font-size: 16px;
-    line-height: 0.8;
-    opacity: 0.75;
-  }
-
-  .cf-active :global(.active-pill:hover) {
-    background: var(--color-accent-hover);
-    border-color: var(--color-accent-hover);
-  }
-
   .sr-only {
     position: absolute;
     width: 1px;
@@ -826,10 +902,5 @@ const { areaMin, areaMax, total } = Astro.props;
   import { initCatalogFilters } from "@/scripts/catalog-filters";
 
   const root = document.querySelector<HTMLElement>("[data-catalog-filters]");
-  if (root) {
-    initCatalogFilters(root, {
-      areaMin: Number(root.dataset.areaMin ?? 0),
-      areaMax: Number(root.dataset.areaMax ?? 1000),
-    });
-  }
+  if (root) initCatalogFilters(root);
 </script>
