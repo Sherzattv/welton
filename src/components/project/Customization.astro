@@ -1,104 +1,382 @@
 ---
 // Сквозной блок «Дополнения в проект» — одинаковый на всех проектах.
-// Контент в src/data/projectPage.ts → customization.
+// Фото-карусель по паттерну Objects: заголовок слева, управление и горизонтальная
+// лента карточек справа/ниже.
 import Container from "@components/Container.astro";
 import GridLines from "@components/GridLines.astro";
 import Heading from "@components/Heading.astro";
+import Icon from "@ui/Icon.astro";
 import { customization } from "@data/projectPage";
+import { asset } from "@lib/asset";
+
+const images = [
+  "/img/omni-d219cd7c-1042-4.jpg",
+  "/img/omni-f833fc64-7c5e-4.jpg",
+  "/img/396_1_1.jpg",
+  "/img/2149661403_1_1.jpg",
+  "/img/omni-763ffd21-8af8-4.jpg",
+  "/img/1773685489011-019cf7.jpg",
+];
 ---
 
-<section class="custom relative overflow-hidden bg-charcoal text-paper">
+<section
+  id="customization"
+  class="custom relative overflow-hidden bg-paper text-charcoal"
+>
   <GridLines />
-  <Container class="relative z-10">
+  <Container class="custom-inner relative z-10">
     <header class="custom-header">
-      <p class="custom-eyebrow text-grey-400" data-reveal>Адаптируем под вас</p>
       <Heading as="h2" size="lg" class="custom-title" data-split>
         Дополнения в проект
       </Heading>
-      <p class="custom-lead text-grey-300" data-reveal>
-        Любой проект из каталога — отправная точка. Подстраиваем его под ваш
-        участок, образ жизни и бюджет до начала работ.
+      <p class="custom-lead text-grey-500" data-reveal>
+        Любой проект из каталога — отправная точка. Подстраиваем планировку,
+        фасад и состав помещений под участок, образ жизни и бюджет.
       </p>
     </header>
 
-    <ul class="custom-list">
+    <div class="custom-controls" aria-label="Навигация по дополнениям">
+      <button
+        type="button"
+        data-custom-prev
+        aria-label="Назад"
+        class="custom-arrow group"
+      >
+        <Icon
+          name="arrow-left"
+          class="transition-transform duration-200 ease-in-out group-hover:-translate-x-1 group-focus-visible:-translate-x-1"
+        />
+      </button>
+      <button
+        type="button"
+        data-custom-next
+        aria-label="Вперёд"
+        class="custom-arrow group"
+      >
+        <Icon
+          name="arrow-right"
+          class="transition-transform duration-200 ease-in-out group-hover:translate-x-1 group-focus-visible:translate-x-1"
+        />
+      </button>
+    </div>
+
+    <div class="custom-track" data-custom-track>
       {
-        customization.map((item) => (
-          <li class="custom-item">
-            <Heading as="h3" size="md" class="custom-item-title">
+        customization.map((item, index) => (
+          <article class="custom-card group" data-reveal>
+            <div class="custom-image-wrap">
+              <img
+                src={asset(images[index % images.length])}
+                alt={item.title}
+                loading="lazy"
+                decoding="async"
+                class="custom-image"
+              />
+            </div>
+            <span class="custom-num text-grey-400">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <Heading as="h3" size="md" class="custom-card-title">
               {item.title}
             </Heading>
-            <p class="custom-item-desc text-grey-300">{item.desc}</p>
-          </li>
+            <p class="custom-card-desc text-grey-500">{item.desc}</p>
+          </article>
         ))
       }
-    </ul>
+    </div>
   </Container>
 </section>
 
 <style>
-  .custom {
-    padding-block: clamp(72px, 8vw, 128px);
+  .custom-inner {
+    min-height: calc(var(--s) * 720);
+    padding-top: calc(var(--s) * 72);
+    padding-bottom: calc(var(--s) * 72);
   }
 
   .custom-header {
-    max-width: 760px;
-  }
-
-  .custom-eyebrow {
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.75rem;
+    max-width: calc(var(--s) * 320);
   }
 
   .custom-title {
-    margin-top: clamp(12px, 1vw, 20px);
     text-transform: uppercase;
   }
 
   .custom-lead {
-    margin-top: clamp(20px, 2vw, 32px);
-    font-size: clamp(0.95rem, 1.1vw, 1.125rem);
-    line-height: 1.5;
-    max-width: 56ch;
+    margin-top: calc(var(--s) * 20);
+    line-height: 1.45;
   }
 
-  .custom-list {
-    list-style: none;
-    margin: clamp(40px, 5vw, 80px) 0 0;
-    padding: 0;
+  .custom-controls {
+    display: flex;
+    gap: calc(var(--s) * 10);
+    margin-top: calc(var(--s) * 32);
+  }
+
+  .custom-arrow {
     display: grid;
-    gap: 1px;
-    grid-template-columns: 1fr;
-    background: rgba(255, 255, 255, 0.08);
+    width: calc(var(--s) * 40);
+    height: calc(var(--s) * 40);
+    place-items: center;
+    border: 1px solid currentColor;
     border-radius: var(--radius-sm);
+    background: transparent;
+    transition:
+      color 200ms ease,
+      border-color 200ms ease,
+      background-color 200ms ease;
+  }
+
+  .custom-arrow:hover,
+  .custom-arrow:focus-visible {
+    color: var(--color-paper);
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    outline: none;
+  }
+
+  .custom-track {
+    display: flex;
+    gap: calc(var(--s) * 12);
+    margin-top: calc(var(--s) * 32);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .custom-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .custom-card {
+    position: relative;
+    width: calc(var(--s) * 310);
+    min-height: calc(var(--s) * 460);
+    flex: 0 0 auto;
+    scroll-snap-align: start;
     overflow: hidden;
+    border: 1px solid rgb(27 27 27 / 0.08);
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
   }
 
-  .custom-item {
-    background: var(--color-charcoal);
-    padding: clamp(24px, 2.5vw, 40px);
+  .custom-image-wrap {
+    position: absolute;
+    top: calc(var(--s) * 16);
+    left: calc(var(--s) * 16);
+    right: calc(var(--s) * 16);
+    height: calc(var(--s) * 190);
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--color-grey-200);
   }
 
-  .custom-item-title {
+  .custom-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 700ms ease-out;
+  }
+
+  .custom-card:hover .custom-image {
+    transform: scale(1.04);
+  }
+
+  .custom-num {
+    position: absolute;
+    top: calc(var(--s) * 230);
+    left: calc(var(--s) * 16);
+    font-size: calc(var(--s) * 12);
+    line-height: 1;
+    letter-spacing: 0.12em;
+  }
+
+  .custom-card-title {
+    position: absolute;
+    top: calc(var(--s) * 260);
+    left: calc(var(--s) * 16);
+    right: calc(var(--s) * 16);
     text-transform: uppercase;
   }
 
-  .custom-item-desc {
-    margin-top: clamp(10px, 1vw, 16px);
-    max-width: 38ch;
-    line-height: 1.5;
+  .custom-card-desc {
+    position: absolute;
+    right: calc(var(--s) * 16);
+    bottom: calc(var(--s) * 18);
+    left: calc(var(--s) * 16);
+    line-height: 1.45;
   }
 
   @media (min-width: 640px) {
-    .custom-list {
-      grid-template-columns: repeat(2, 1fr);
+    .custom-inner {
+      min-height: 680px;
+      padding-top: 96px;
+      padding-bottom: 96px;
+    }
+
+    .custom-header {
+      max-width: 620px;
+    }
+
+    .custom-lead {
+      max-width: 560px;
+      margin-top: 20px;
+    }
+
+    .custom-controls {
+      gap: 10px;
+      margin-top: 42px;
+    }
+
+    .custom-arrow {
+      width: 40px;
+      height: 40px;
+    }
+
+    .custom-track {
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .custom-card {
+      width: 376px;
+      min-height: 486px;
+    }
+
+    .custom-image-wrap {
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      height: 220px;
+    }
+
+    .custom-num {
+      top: 260px;
+      left: 16px;
+      font-size: 12px;
+    }
+
+    .custom-card-title {
+      top: 292px;
+      left: 16px;
+      right: 16px;
+    }
+
+    .custom-card-desc {
+      right: 16px;
+      bottom: 18px;
+      left: 16px;
+      max-width: 310px;
     }
   }
 
   @media (min-width: 960px) {
-    .custom-list {
-      grid-template-columns: repeat(3, 1fr);
+    .custom-inner {
+      --custom-top-gap: clamp(112px, 9vw, 150px);
+      --custom-bottom-gap: clamp(112px, 8vw, 150px);
+      min-height: calc(var(--custom-top-gap) + 40vw + var(--custom-bottom-gap));
+      padding: 0;
+    }
+
+    .custom-header {
+      position: absolute;
+      top: var(--custom-top-gap);
+      left: 0;
+      width: 31.9vw;
+      max-width: none;
+    }
+
+    .custom-lead {
+      max-width: 31vw;
+      font-size: clamp(16px, 1.25vw, 20px);
+    }
+
+    .custom-controls {
+      position: absolute;
+      left: 0;
+      bottom: var(--custom-bottom-gap);
+      margin: 0;
+    }
+
+    .custom-track {
+      position: absolute;
+      top: var(--custom-top-gap);
+      left: calc(var(--guide-b) - var(--spacing-gutter) + 0.583vw);
+      right: calc(-1 * var(--spacing-gutter));
+      gap: 1vw;
+      margin: 0;
+    }
+
+    .custom-card {
+      width: 31.333vw;
+      height: 40vw;
+      min-height: 0;
+    }
+
+    .custom-image-wrap {
+      top: 1.333vw;
+      left: 1.333vw;
+      right: 1.333vw;
+      height: 17.5vw;
+    }
+
+    .custom-num {
+      top: 21vw;
+      left: 1.333vw;
+      font-size: 0.9vw;
+    }
+
+    .custom-card-title {
+      top: 23.5vw;
+      left: 1.333vw;
+      right: 1.333vw;
+    }
+
+    .custom-card-desc {
+      right: 1.333vw;
+      bottom: 1.5vw;
+      left: 1.333vw;
+      max-width: 23vw;
     }
   }
 </style>
+
+<script>
+  const track = document.querySelector<HTMLElement>("[data-custom-track]");
+  const step = () => {
+    if (!track) return 388;
+    const card = track.querySelector<HTMLElement>(".custom-card");
+    const styles = getComputedStyle(track);
+    const rawGap =
+      styles.columnGap === "normal" ? styles.gap : styles.columnGap;
+    const gap = parseFloat(rawGap || "0") || 0;
+    return card ? card.offsetWidth + gap : Math.min(track.clientWidth, 388);
+  };
+
+  const goNext = () => {
+    if (!track) return;
+    const max = track.scrollWidth - track.clientWidth;
+    if (track.scrollLeft + step() >= max - 2) {
+      track.scrollTo({ left: 0, behavior: "smooth" });
+    } else {
+      track.scrollBy({ left: step(), behavior: "smooth" });
+    }
+  };
+
+  const goPrev = () => {
+    if (!track) return;
+    const max = track.scrollWidth - track.clientWidth;
+    if (track.scrollLeft <= 2) {
+      track.scrollTo({ left: max, behavior: "smooth" });
+    } else {
+      track.scrollBy({ left: -step(), behavior: "smooth" });
+    }
+  };
+
+  document
+    .querySelector("[data-custom-prev]")
+    ?.addEventListener("click", goPrev);
+  document
+    .querySelector("[data-custom-next]")
+    ?.addEventListener("click", goNext);
+</script>

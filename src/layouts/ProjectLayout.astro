@@ -1,20 +1,14 @@
 ---
 // Шаблон детальной страницы проекта.
 // Все 82 проекта рендерятся по этому шаблону — повторяемые блоки в фиксированном порядке.
-// Контент сквозных блоков (FullCycle, Customization, Partners, CtaCalc, Advantages)
+// Контент сквозных блоков (FullCycle, Customization, CtaCalc)
 // одинаков на всех страницах: единый источник правды.
 import Layout from "@layouts/Layout.astro";
 import Motion from "@components/Motion.astro";
 import Header from "@layout/Header.astro";
 import Footer from "@layout/Footer.astro";
-import Partners from "@sections/Partners.astro";
 import CtaCalc from "@sections/CtaCalc.astro";
-import Advantages from "@sections/Advantages.astro";
-import Hero from "@components/project/Hero.astro";
-import Specs from "@components/project/Specs.astro";
-import Renders from "@components/project/Renders.astro";
-import Floorplans from "@components/project/Floorplans.astro";
-import Facade from "@components/project/Facade.astro";
+import Showcase from "@components/project/Showcase.astro";
 import FullCycle from "@components/project/FullCycle.astro";
 import Customization from "@components/project/Customization.astro";
 import { projectTitle } from "@lib/projectAsset";
@@ -30,6 +24,7 @@ interface Props {
     renders: string[];
     floorplans: string[];
     title?: string;
+    tagline?: string;
     description?: string;
     bedrooms?: number;
     bathrooms?: number;
@@ -50,33 +45,27 @@ const title = projectTitle(data);
   <Motion />
   <Header />
   <main>
-    <Hero
+    <Showcase
       folder={data.folder}
       title={title}
+      tagline={data.tagline}
       description={data.description}
-      facade={data.facade}
-      area={data.area}
-      floors={data.floors}
-    />
-    <Specs
       area={data.area}
       width={data.width}
       depth={data.depth}
       floors={data.floors}
+      facade={data.facade}
+      renders={data.renders}
+      floorplans={data.floorplans}
       bedrooms={data.bedrooms}
       bathrooms={data.bathrooms}
       wallMaterial={data.wallMaterial}
       wallThickness={data.wallThickness}
       roof={data.roof}
     />
-    <Renders folder={data.folder} renders={data.renders} />
-    <Floorplans folder={data.folder} floorplans={data.floorplans} />
-    <Facade folder={data.folder} facade={data.facade} />
-    <FullCycle />
+    <CtaCalc flush />
     <Customization />
-    <Partners />
-    <CtaCalc />
-    <Advantages />
+    <FullCycle />
   </main>
   <Footer />
 </Layout>

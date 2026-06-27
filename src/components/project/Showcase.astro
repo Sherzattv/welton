@@ -1,0 +1,420 @@
+---
+// Детальная проекта в духе референса etalonmechty, но в визуальном языке welton:
+// слева — sticky-информация о проекте, справа — вертикальная лента визуалов.
+import Container from "@components/Container.astro";
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import Button from "@components/Button.astro";
+import { asset } from "@lib/asset";
+import { projectFile } from "@lib/projectAsset";
+
+interface Props {
+  folder: string;
+  title: string;
+  tagline?: string;
+  description?: string;
+  area: number;
+  width: number;
+  depth: number;
+  floors: number;
+  facade: string;
+  renders: string[];
+  floorplans: string[];
+  bedrooms?: number;
+  bathrooms?: number;
+  wallMaterial?: string;
+  wallThickness?: string;
+  roof?: string;
+}
+
+const {
+  folder,
+  title,
+  tagline,
+  description,
+  area,
+  width,
+  depth,
+  floors,
+  facade,
+  renders,
+  floorplans,
+  bedrooms,
+  bathrooms,
+  wallMaterial,
+  wallThickness,
+  roof,
+} = Astro.props;
+
+const fmt = (n: number): string =>
+  Number.isInteger(n) ? String(n) : n.toString().replace(".", ",");
+
+const specs: { label: string; value: string }[] = [
+  { label: "Площадь", value: `${fmt(area)} м²` },
+  { label: "Габариты", value: `${fmt(width)} × ${fmt(depth)} м` },
+  { label: "Этажность", value: `${floors} ${floors === 1 ? "этаж" : "этажа"}` },
+];
+
+if (bedrooms !== undefined)
+  specs.push({ label: "Спальни", value: String(bedrooms) });
+if (bathrooms !== undefined)
+  specs.push({ label: "Санузлы", value: String(bathrooms) });
+if (wallMaterial) specs.push({ label: "Материал", value: wallMaterial });
+if (wallThickness) specs.push({ label: "Толщина стен", value: wallThickness });
+if (roof) specs.push({ label: "Кровля", value: roof });
+
+const lead =
+  tagline ??
+  description ??
+  "Готовый проект частного дома, который можно адаптировать под участок, бюджет и сценарий жизни вашей семьи.";
+
+const visualItems: {
+  file: string;
+  label: string;
+  kind: "render" | "facade" | "plan";
+}[] = [
+  ...renders.map((file, index) => ({
+    file,
+    label: index === 0 ? "Главный ракурс" : `Ракурс ${index + 1}`,
+    kind: "render" as const,
+  })),
+  { file: facade, label: "Фасад", kind: "facade" as const },
+  ...floorplans.map((file, index) => ({
+    file,
+    label: floorplans.length === 1 ? "Планировка" : `${index + 1}-й этаж`,
+    kind: "plan" as const,
+  })),
+];
+---
+
+<section class="project-showcase relative bg-paper text-charcoal">
+  <GridLines />
+  <Container class="relative z-10">
+    <div class="project-showcase-inner">
+      <aside class="project-info">
+        <div class="project-info-sticky">
+          <nav
+            class="project-breadcrumbs text-grey-500"
+            aria-label="Хлебные крошки"
+          >
+            <a href={asset("/projects/")}>Проекты</a>
+            <span aria-hidden="true">/</span>
+            <span>{title}</span>
+          </nav>
+
+          <p class="project-code text-grey-500" data-reveal>
+            Проект · WLT-{folder}
+          </p>
+
+          <Heading as="h1" size="xl" class="project-title" data-split>
+            {title}
+          </Heading>
+
+          <p class="project-lead text-grey-500" data-reveal>{lead}</p>
+
+          <dl class="project-specs" data-reveal>
+            {
+              specs.map((item) => (
+                <div class="project-spec-row">
+                  <dt class="text-grey-500">{item.label}</dt>
+                  <dd>{item.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+
+          <div class="project-actions" data-reveal>
+            <Button href="#invoice" variant="accent">Обсудить проект</Button>
+          </div>
+        </div>
+      </aside>
+
+      <div class="project-visuals" aria-label="Материалы проекта">
+        {
+          visualItems.map((item, index) => (
+            <figure
+              class={`project-visual project-visual--${item.kind} ${index === 0 ? "is-main" : ""}`}
+              data-reveal
+            >
+              <img
+                src={projectFile(folder, item.file)}
+                alt={`${item.label} проекта ${title}`}
+                loading={index === 0 ? "eager" : "lazy"}
+                decoding="async"
+                fetchpriority={index === 0 ? "high" : undefined}
+                class="project-visual-image"
+              />
+              <figcaption class="project-visual-caption text-grey-500">
+                {item.label}
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  :global(header.top-header[data-header-top]) {
+    color: var(--color-charcoal);
+  }
+
+  .project-showcase-inner {
+    display: grid;
+    gap: calc(var(--s) * 32);
+    padding-top: calc(var(--s) * 104);
+    padding-bottom: calc(var(--s) * 72);
+  }
+
+  .project-breadcrumbs {
+    display: none;
+  }
+
+  .project-code {
+    font-size: calc(var(--s) * 11);
+    line-height: 1;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .project-title {
+    margin-top: calc(var(--s) * 18);
+    text-transform: uppercase;
+  }
+
+  .project-lead {
+    margin-top: calc(var(--s) * 18);
+    max-width: calc(var(--s) * 320);
+    font-size: calc(var(--s) * 20);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+  }
+
+  .project-specs {
+    margin: calc(var(--s) * 34) 0 0;
+  }
+
+  .project-spec-row {
+    display: block;
+    border-top: 1px solid rgb(27 27 27 / 0.14);
+    padding-block: calc(var(--s) * 13);
+  }
+
+  .project-spec-row:last-child {
+    border-bottom: 1px solid rgb(27 27 27 / 0.14);
+  }
+
+  .project-spec-row dt,
+  .project-spec-row dd {
+    margin: 0;
+  }
+
+  .project-spec-row dd {
+    margin-top: calc(var(--s) * 6);
+    color: var(--color-charcoal);
+    font-size: calc(var(--s) * 18);
+    line-height: 1;
+  }
+
+  .project-actions {
+    margin-top: calc(var(--s) * 28);
+  }
+
+  .project-actions :global(a) {
+    width: calc(var(--s) * 220);
+    height: calc(var(--s) * 52);
+  }
+
+  .project-visuals {
+    display: grid;
+    gap: calc(var(--s) * 14);
+  }
+
+  .project-visual {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid rgb(27 27 27 / 0.1);
+    border-radius: var(--radius-sm);
+    background: var(--color-grey-200);
+  }
+
+  .project-visual--render {
+    aspect-ratio: 4 / 3;
+  }
+
+  .project-visual--facade,
+  .project-visual--plan {
+    background: var(--color-paper);
+  }
+
+  .project-visual-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 700ms ease-out;
+  }
+
+  .project-visual:hover .project-visual-image {
+    transform: scale(1.025);
+  }
+
+  .project-visual--facade .project-visual-image,
+  .project-visual--plan .project-visual-image {
+    height: auto;
+    object-fit: contain;
+  }
+
+  .project-visual--facade:hover .project-visual-image,
+  .project-visual--plan:hover .project-visual-image {
+    transform: none;
+  }
+
+  .project-visual-caption {
+    position: absolute;
+    left: calc(var(--s) * 14);
+    bottom: calc(var(--s) * 12);
+    z-index: 2;
+    font-size: calc(var(--s) * 10);
+    line-height: 1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .project-visual--facade .project-visual-caption,
+  .project-visual--plan .project-visual-caption {
+    color: var(--color-grey-500);
+  }
+
+  @media (min-width: 640px) {
+    .project-showcase-inner {
+      gap: 40px;
+      padding-top: 128px;
+      padding-bottom: 96px;
+    }
+
+    .project-code {
+      font-size: 11px;
+    }
+
+    .project-title {
+      max-width: 620px;
+      margin-top: 18px;
+    }
+
+    .project-lead {
+      max-width: 520px;
+      margin-top: 20px;
+      font-size: 34px;
+    }
+
+    .project-specs {
+      max-width: 560px;
+      margin-top: 42px;
+    }
+
+    .project-spec-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      padding-block: 14px;
+    }
+
+    .project-spec-row dd {
+      margin-top: 0;
+      text-align: right;
+      font-size: var(--text-body);
+    }
+
+    .project-actions {
+      margin-top: 30px;
+    }
+
+    .project-actions :global(a) {
+      width: 220px;
+      height: 52px;
+    }
+
+    .project-visuals {
+      gap: 16px;
+    }
+
+    .project-visual-caption {
+      left: 18px;
+      bottom: 16px;
+      font-size: 10px;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .project-showcase-inner {
+      grid-template-columns: minmax(360px, 33.5vw) minmax(0, 1fr);
+      gap: clamp(28px, 2.5vw, 42px);
+      align-items: stretch;
+      padding-top: clamp(112px, 8vw, 140px);
+      padding-bottom: clamp(96px, 7vw, 130px);
+    }
+
+    .project-info {
+      align-self: stretch;
+    }
+
+    .project-info-sticky {
+      position: sticky;
+      top: 96px;
+      padding-right: clamp(12px, 1vw, 18px);
+    }
+
+    .project-breadcrumbs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: clamp(36px, 4vw, 64px);
+      font-size: 12px;
+    }
+
+    .project-breadcrumbs a {
+      transition: color 160ms ease;
+    }
+
+    .project-breadcrumbs a:hover,
+    .project-breadcrumbs a:focus-visible {
+      color: var(--color-accent);
+      outline: none;
+    }
+
+    .project-title {
+      max-width: none;
+      font-size: clamp(54px, 5vw, 76px);
+      line-height: 0.9;
+    }
+
+    .project-lead {
+      max-width: 31vw;
+      font-size: clamp(28px, 2.35vw, 38px);
+      line-height: 0.98;
+    }
+
+    .project-specs {
+      max-width: none;
+      margin-top: clamp(44px, 4vw, 64px);
+    }
+
+    .project-spec-row {
+      padding-block: clamp(12px, 1vw, 16px);
+    }
+
+    .project-visuals {
+      gap: clamp(16px, 1.2vw, 22px);
+    }
+
+    .project-visual.is-main {
+      aspect-ratio: 16 / 10;
+    }
+
+    .project-visual:not(.is-main).project-visual--render {
+      aspect-ratio: 16 / 9;
+    }
+  }
+</style>

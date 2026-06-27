@@ -1,35 +1,43 @@
 ---
 // Сквозной блок «Полный цикл работ» — одинаковый на всех проектах.
-// Контент в src/data/projectPage.ts → fullCycle.
+// На десктопе повторяет паттерн проекта/главной: слева sticky-текст,
+// справа — последовательность этапов без горизонтальных разделителей.
 import Container from "@components/Container.astro";
 import GridLines from "@components/GridLines.astro";
 import Heading from "@components/Heading.astro";
 import { fullCycle } from "@data/projectPage";
 ---
 
-<section class="cycle relative overflow-hidden bg-paper text-charcoal">
+<section
+  id="full-cycle"
+  class="cycle relative overflow-hidden bg-paper text-charcoal"
+>
   <GridLines />
-  <Container class="relative z-10">
-    <header class="cycle-header">
-      <p class="cycle-eyebrow text-grey-500" data-reveal>Что мы делаем</p>
-      <Heading as="h2" size="lg" class="cycle-title" data-split>
-        Полный цикл работ
-      </Heading>
-      <p class="cycle-lead text-grey-500" data-reveal>
-        Берём проект под ключ — от первой консультации до сдачи дома. Без
-        переключений на подрядчиков и потери качества на стыках.
-      </p>
-    </header>
+  <Container class="cycle-inner relative z-10">
+    <div class="cycle-rail">
+      <div class="cycle-rail-sticky">
+        <p class="cycle-eyebrow text-grey-500" data-reveal>Что мы делаем</p>
+        <Heading as="h2" size="lg" class="cycle-title" data-split>
+          Полный цикл работ
+        </Heading>
+        <p class="cycle-lead text-grey-500" data-reveal>
+          Берём проект под ключ — от первой консультации до сдачи дома. Без
+          переключений на подрядчиков и потери качества на стыках.
+        </p>
+      </div>
+    </div>
 
     <ol class="cycle-list">
       {
         fullCycle.map((step) => (
-          <li class="cycle-item">
-            <span class="cycle-num text-grey-400">{step.num}</span>
-            <Heading as="h3" size="md" class="cycle-step-title">
-              {step.title}
-            </Heading>
-            <p class="cycle-desc">{step.desc}</p>
+          <li class="cycle-item" data-reveal>
+            <span class="cycle-num display text-grey-400">{step.num}</span>
+            <div class="cycle-copy">
+              <Heading as="h3" size="md" class="cycle-step-title">
+                {step.title}
+              </Heading>
+              <p class="cycle-desc text-grey-500">{step.desc}</p>
+            </div>
           </li>
         ))
       }
@@ -38,78 +46,141 @@ import { fullCycle } from "@data/projectPage";
 </section>
 
 <style>
-  .cycle {
-    padding-block: clamp(72px, 8vw, 128px);
-  }
-
-  .cycle-header {
-    max-width: 760px;
+  .cycle-inner {
+    display: grid;
+    gap: calc(var(--s) * 42);
+    padding-top: calc(var(--s) * 72);
+    padding-bottom: calc(var(--s) * 88);
   }
 
   .cycle-eyebrow {
+    font-size: calc(var(--s) * 11);
+    line-height: 1;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.75rem;
   }
 
   .cycle-title {
-    margin-top: clamp(12px, 1vw, 20px);
+    margin-top: calc(var(--s) * 14);
+    max-width: calc(var(--s) * 320);
     text-transform: uppercase;
   }
 
   .cycle-lead {
-    margin-top: clamp(20px, 2vw, 32px);
-    font-size: clamp(0.95rem, 1.1vw, 1.125rem);
-    line-height: 1.5;
-    max-width: 56ch;
+    margin-top: calc(var(--s) * 20);
+    max-width: calc(var(--s) * 315);
+    line-height: 1.45;
   }
 
   .cycle-list {
-    list-style: none;
-    margin: clamp(40px, 5vw, 80px) 0 0;
-    padding: 0;
     display: grid;
-    gap: clamp(24px, 2.5vw, 40px);
-    grid-template-columns: 1fr;
+    gap: calc(var(--s) * 30);
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
   .cycle-item {
-    border-top: 1px solid var(--color-grey-200);
-    padding-top: clamp(20px, 1.8vw, 28px);
+    display: grid;
+    grid-template-columns: calc(var(--s) * 54) minmax(0, 1fr);
+    gap: calc(var(--s) * 18);
   }
 
   .cycle-num {
-    font-family: var(--font-display);
-    font-size: 1rem;
-    letter-spacing: -0.02em;
+    font-size: calc(var(--s) * 34);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
   }
 
   .cycle-step-title {
-    margin-top: clamp(12px, 1vw, 20px);
     text-transform: uppercase;
   }
 
   .cycle-desc {
-    margin-top: clamp(8px, 0.8vw, 14px);
-    max-width: 48ch;
-    line-height: 1.5;
+    margin-top: calc(var(--s) * 10);
+    max-width: calc(var(--s) * 300);
+    line-height: 1.45;
   }
 
   @media (min-width: 640px) {
+    .cycle-inner {
+      gap: 56px;
+      padding-top: 96px;
+      padding-bottom: 112px;
+    }
+
+    .cycle-eyebrow {
+      font-size: 11px;
+    }
+
+    .cycle-title {
+      margin-top: 14px;
+      max-width: 560px;
+    }
+
+    .cycle-lead {
+      margin-top: 20px;
+      max-width: 560px;
+    }
+
     .cycle-list {
-      grid-template-columns: repeat(2, 1fr);
+      gap: 36px;
+    }
+
+    .cycle-item {
+      grid-template-columns: 82px minmax(0, 1fr);
+      gap: 28px;
+    }
+
+    .cycle-num {
+      font-size: 48px;
+    }
+
+    .cycle-desc {
+      margin-top: 10px;
+      max-width: 560px;
     }
   }
 
   @media (min-width: 960px) {
-    .cycle-list {
-      grid-template-columns: repeat(3, 1fr);
+    .cycle-inner {
+      grid-template-columns: minmax(0, 37%) minmax(0, 1fr);
+      gap: clamp(48px, 6vw, 112px);
+      align-items: start;
+      padding-top: clamp(112px, 9vw, 150px);
+      padding-bottom: clamp(128px, 10vw, 180px);
     }
-  }
 
-  @media (min-width: 1200px) {
+    .cycle-rail {
+      min-height: 620px;
+    }
+
+    .cycle-rail-sticky {
+      position: sticky;
+      top: clamp(84px, 6vw, 104px);
+    }
+
+    .cycle-title,
+    .cycle-lead {
+      max-width: 31vw;
+    }
+
     .cycle-list {
-      grid-template-columns: repeat(5, 1fr);
+      gap: clamp(44px, 4vw, 72px);
+      padding-top: 0.25vw;
+    }
+
+    .cycle-item {
+      grid-template-columns: clamp(82px, 7vw, 112px) minmax(0, 1fr);
+      gap: clamp(28px, 3vw, 48px);
+    }
+
+    .cycle-num {
+      font-size: clamp(48px, 5vw, 76px);
+    }
+
+    .cycle-desc {
+      max-width: 44ch;
     }
   }
 </style>
