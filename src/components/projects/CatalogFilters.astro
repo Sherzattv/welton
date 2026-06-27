@@ -1,0 +1,835 @@
+---
+// Панель фильтров каталога.
+//   • Desktop (≥960px) — sticky сайдбар слева (paper, charcoal-текст).
+//   • Mobile (<960px) — bottom-sheet: скрыт по умолчанию, открывается из
+//     FAB-кнопки «Фильтры» снизу экрана. Backdrop + handle.
+//
+// Логика — в @scripts/catalog-filters (debounce, URL state, счётчики).
+
+interface Props {
+  areaMin: number;
+  areaMax: number;
+  total: number;
+}
+const { areaMin, areaMax, total } = Astro.props;
+---
+
+<!-- FAB только на мобиле -->
+<button
+  type="button"
+  class="cf-fab"
+  data-cf-fab
+  aria-expanded="false"
+  aria-controls="catalog-filters-sheet"
+>
+  <svg
+    class="cf-fab-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    aria-hidden="true"
+  >
+    <path
+      d="M2 4h12M4 8h8M6 12h4"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="square"></path>
+  </svg>
+  <span class="cf-fab-label">Фильтры</span>
+  <span class="cf-fab-count" data-fab-count hidden></span>
+</button>
+
+<!-- Backdrop под bottom-sheet (только на мобиле) -->
+<div class="cf-backdrop" data-cf-backdrop aria-hidden="true"></div>
+
+<aside
+  id="catalog-filters-sheet"
+  class="cf"
+  aria-label="Фильтры каталога"
+  data-catalog-filters
+  data-area-min={areaMin}
+  data-area-max={areaMax}
+>
+  <!-- Шапка bottom-sheet — видна только на мобиле -->
+  <div class="cf-sheet-head">
+    <span class="cf-handle" aria-hidden="true"></span>
+    <p class="cf-sheet-title">Фильтры</p>
+    <button
+      type="button"
+      class="cf-close"
+      data-cf-close
+      aria-label="Закрыть фильтры"
+    >
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 14 14"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M1 1l12 12M13 1L1 13"
+          stroke="currentColor"
+          stroke-width="1.4"
+          stroke-linecap="square"></path>
+      </svg>
+    </button>
+  </div>
+
+  <div class="cf-sticky">
+    <!-- Header: «Фильтры» слева, счётчик справа -->
+    <header class="cf-header">
+      <p class="cf-header-title">Фильтры</p>
+      <p class="cf-count" aria-live="polite">
+        <span class="cf-count-found" data-filter-count>{total}</span><span
+          class="cf-count-total">/<span data-filter-total>{total}</span></span
+        >
+      </p>
+    </header>
+
+    <!-- Утилиты: поиск + сортировка слитной парой, без hairlines между -->
+    <div class="cf-utils">
+      <div class="cf-search">
+        <svg
+          class="cf-search-icon"
+          width="14"
+          height="14"
+          viewBox="0 0 14 14"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.3"
+          ></circle>
+          <path
+            d="M9.5 9.5L13 13"
+            stroke="currentColor"
+            stroke-width="1.3"
+            stroke-linecap="square"></path>
+        </svg>
+        <input
+          type="search"
+          class="cf-search-input"
+          placeholder="Поиск по названию"
+          aria-label="Поиск по названию проекта"
+          data-search-input
+        />
+      </div>
+
+      <!-- Sort: квадратная иконка-кнопка с нативным <select> поверх -->
+      <div class="cf-sort" title="Сортировка">
+        <svg
+          class="cf-sort-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M5 3v10M5 13l-2.5-2.5M5 13l2.5-2.5M11 13V3M11 3l-2.5 2.5M11 3l2.5 2.5"
+            stroke="currentColor"
+            stroke-width="1.3"
+            stroke-linecap="square"></path>
+        </svg>
+        <label for="cf-sort" class="sr-only">Сортировка</label>
+        <select id="cf-sort" data-sort-select aria-label="Сортировка">
+          <option value="default">По умолчанию</option>
+          <option value="area-asc">Площадь — по возрастанию</option>
+          <option value="area-desc">Площадь — по убыванию</option>
+          <option value="beds-desc">Больше спален сначала</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Группы фильтров -->
+    <div class="cf-groups">
+      <fieldset class="cf-field">
+        <legend class="cf-label">Этажность</legend>
+        <div class="cf-chips" role="group">
+          <button
+            type="button"
+            class="cf-chip is-active"
+            data-floors-chip
+            data-floors-value="all"
+            aria-pressed="true"
+            >Все <span class="cf-chip-count" data-chip-count>{total}</span
+            ></button
+          >
+          <button
+            type="button"
+            class="cf-chip"
+            data-floors-chip
+            data-floors-value="1"
+            aria-pressed="false"
+            >1 этаж <span class="cf-chip-count" data-chip-count>0</span></button
+          >
+          <button
+            type="button"
+            class="cf-chip"
+            data-floors-chip
+            data-floors-value="2"
+            aria-pressed="false"
+            >2 этажа <span class="cf-chip-count" data-chip-count>0</span
+            ></button
+          >
+        </div>
+      </fieldset>
+
+      <fieldset class="cf-field">
+        <legend class="cf-label">Спальни</legend>
+        <div class="cf-chips" role="group">
+          <button
+            type="button"
+            class="cf-chip is-active"
+            data-beds-chip
+            data-beds-value="all"
+            aria-pressed="true"
+            >Все <span class="cf-chip-count" data-chip-count>{total}</span
+            ></button
+          >
+          <button
+            type="button"
+            class="cf-chip"
+            data-beds-chip
+            data-beds-value="1"
+            aria-pressed="false"
+            >1 <span class="cf-chip-count" data-chip-count>0</span></button
+          >
+          <button
+            type="button"
+            class="cf-chip"
+            data-beds-chip
+            data-beds-value="2"
+            aria-pressed="false"
+            >2 <span class="cf-chip-count" data-chip-count>0</span></button
+          >
+          <button
+            type="button"
+            class="cf-chip"
+            data-beds-chip
+            data-beds-value="3"
+            aria-pressed="false"
+            >3 <span class="cf-chip-count" data-chip-count>0</span></button
+          >
+          <button
+            type="button"
+            class="cf-chip"
+            data-beds-chip
+            data-beds-value="4+"
+            aria-pressed="false"
+            >4+ <span class="cf-chip-count" data-chip-count>0</span></button
+          >
+        </div>
+      </fieldset>
+
+      <fieldset class="cf-field">
+        <legend class="cf-label">Площадь, м²</legend>
+        <div class="cf-chips" role="group">
+          <button
+            type="button"
+            class="cf-chip is-active"
+            data-area-chip
+            data-area-value="all"
+            aria-pressed="true"
+            >Все <span class="cf-chip-count" data-chip-count>{total}</span
+            ></button
+          >
+          <button
+            type="button"
+            class="cf-chip"
+            data-area-chip
+            data-area-value="0-80"
+            aria-pressed="false"
+            >до 80 <span class="cf-chip-count" data-chip-count>0</span></button
+          >
+          <button
+            type="button"
+            class="cf-chip"
+            data-area-chip
+            data-area-value="80-120"
+            aria-pressed="false"
+            >80–120 <span class="cf-chip-count" data-chip-count>0</span></button
+          >
+          <button
+            type="button"
+            class="cf-chip"
+            data-area-chip
+            data-area-value="120-180"
+            aria-pressed="false"
+            >120–180 <span class="cf-chip-count" data-chip-count>0</span
+            ></button
+          >
+          <button
+            type="button"
+            class="cf-chip"
+            data-area-chip
+            data-area-value="180+"
+            aria-pressed="false"
+            >180+ <span class="cf-chip-count" data-chip-count>0</span></button
+          >
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- Активные фильтры — accent pill-ы, появляются по мере выбора -->
+    <div class="cf-active is-empty" data-filters-active></div>
+
+    <!-- Reset — text-link под фильтрами -->
+    <button
+      type="button"
+      class="cf-reset"
+      data-filters-reset
+      disabled
+      aria-label="Сбросить все фильтры">Сбросить все фильтры</button
+    >
+  </div>
+
+  <!-- Footer bottom-sheet — видна только на мобиле -->
+  <div class="cf-sheet-foot">
+    <button type="button" class="cf-apply" data-cf-close>
+      Показать <span data-sheet-count>{total}</span> проектов
+    </button>
+  </div>
+</aside>
+
+<style>
+  .cf {
+    background: var(--color-paper);
+    color: var(--color-charcoal);
+    align-self: stretch;
+  }
+
+  .cf-sticky {
+    padding: clamp(20px, 1.8vw, 28px) clamp(18px, 1.5vw, 24px);
+  }
+
+  /* ─── Шапка/футер sheet — скрыты на десктопе ──────────────── */
+  .cf-sheet-head,
+  .cf-sheet-foot {
+    display: none;
+  }
+
+  /* ═══════════ DESKTOP (≥960px) — sticky сайдбар ═══════════ */
+  @media (min-width: 960px) {
+    .cf-sticky {
+      position: sticky;
+      top: 0;
+      max-height: 100vh;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-grey-300) transparent;
+    }
+    .cf-sticky::-webkit-scrollbar {
+      width: 6px;
+    }
+    .cf-sticky::-webkit-scrollbar-thumb {
+      background: var(--color-grey-300);
+    }
+
+    /* FAB и backdrop — только мобила */
+    .cf-fab,
+    .cf-backdrop {
+      display: none !important;
+    }
+  }
+
+  /* ═══════════ MOBILE (<960px) — bottom-sheet ═══════════ */
+  @media (max-width: 959px) {
+    .cf {
+      position: fixed;
+      inset: auto 0 0 0;
+      z-index: 70;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 320ms cubic-bezier(0.32, 0.72, 0, 1);
+      box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.25);
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      overflow: hidden;
+    }
+    .cf.is-open {
+      transform: translateY(0);
+    }
+
+    .cf-sheet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid var(--color-grey-200);
+      position: relative;
+      flex-shrink: 0;
+    }
+    .cf-handle {
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--color-grey-300);
+    }
+    .cf-sheet-title {
+      margin: 4px 0 0;
+      font-family: var(--font-display);
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: var(--color-charcoal);
+    }
+    .cf-close {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--color-charcoal);
+      padding: 8px;
+      margin: -8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cf-sticky {
+      position: static;
+      max-height: none;
+      overflow-y: auto;
+      flex: 1 1 auto;
+      padding: 18px 16px 16px;
+    }
+
+    /* На мобиле «Фильтры» уже в шапке bottom-sheet — внутренний заголовок прячем */
+    .cf-header-title {
+      display: none;
+    }
+    .cf-header {
+      justify-content: flex-end;
+    }
+
+    .cf-sheet-foot {
+      display: block;
+      padding: 12px 16px 16px;
+      border-top: 1px solid var(--color-grey-200);
+      background: var(--color-paper);
+      flex-shrink: 0;
+    }
+    .cf-apply {
+      width: 100%;
+      appearance: none;
+      border: 0;
+      background: var(--color-charcoal);
+      color: var(--color-paper);
+      padding: 14px 18px;
+      font-size: 14px;
+      line-height: 1;
+      letter-spacing: -0.2px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 160ms ease;
+    }
+    .cf-apply:hover {
+      background: var(--color-accent);
+    }
+
+    /* На мобиле сброс кнопка занимает полную ширину под секцией контролов */
+    .cf-reset {
+      width: 100%;
+    }
+  }
+
+  /* ─── FAB-кнопка (мобила, fixed bottom) ──────────────────── */
+  .cf-fab {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    appearance: none;
+    border: 1px solid var(--color-charcoal);
+    background: var(--color-paper);
+    color: var(--color-charcoal);
+    padding: 16px 20px;
+    font-size: 14px;
+    line-height: 1;
+    letter-spacing: -0.2px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    box-shadow: 0 12px 32px rgba(14, 16, 15, 0.22);
+    transition:
+      background 160ms ease,
+      color 160ms ease,
+      transform 200ms ease;
+  }
+  .cf-fab:active {
+    transform: scale(0.98);
+  }
+  .cf-fab:hover {
+    background: var(--color-charcoal);
+    color: var(--color-paper);
+  }
+  .cf-fab-icon {
+    color: currentColor;
+  }
+  .cf-fab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    background: var(--color-accent);
+    color: var(--color-paper);
+    border-radius: 11px;
+    font-family: var(--font-display);
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  /* ─── Backdrop ─────────────────────────────────────────────── */
+  .cf-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(14, 16, 15, 0.55);
+    z-index: 65;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 320ms ease;
+  }
+  .cf-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Когда sheet открыт — body не скроллится (через class на html) */
+  :global(html.cf-locked),
+  :global(html.cf-locked body) {
+    overflow: hidden;
+  }
+
+  /* ─── Header (счётчик) ──────────────────────────────────────── */
+  /* ─── Header: счётчик + reset в одной строке ─────────────── */
+  .cf-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: clamp(20px, 1.8vw, 26px);
+  }
+
+  .cf-header-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(26px, 2.2vw, 32px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--color-charcoal);
+  }
+
+  .cf-count {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 2.2vw, 32px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin: 0;
+    display: inline-flex;
+    align-items: baseline;
+  }
+
+  .cf-count-total {
+    color: var(--color-grey-400);
+    font-size: 0.5em;
+    margin-left: 4px;
+  }
+
+  /* ─── Утилиты: поиск + сортировка в одной строке ─────────── */
+  .cf-utils {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+    margin-bottom: clamp(22px, 2vw, 30px);
+  }
+
+  .cf-utils .cf-search {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* ─── Группы фильтров — разделены spacing, не hairlines ─── */
+  .cf-groups {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(20px, 1.8vw, 28px);
+  }
+
+  /* ─── Группа фильтров ───────────────────────────────────────── */
+  .cf-field {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .cf-label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0 0 12px;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-charcoal);
+    font-weight: 500;
+  }
+
+  /* ─── Поиск ─────────────────────────────────────────────────── */
+  .cf-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .cf-search-icon {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .cf-search-input {
+    width: 100%;
+    appearance: none;
+    border: 1px solid var(--color-charcoal);
+    background: transparent;
+    color: var(--color-charcoal);
+    padding: 14px 16px 14px 44px;
+    font-size: var(--text-body);
+    line-height: 1.2;
+    letter-spacing: var(--text-body--letter-spacing);
+    border-radius: var(--radius-sm);
+    transition:
+      border-color 160ms ease,
+      background 160ms ease;
+    font-weight: 500;
+  }
+
+  .cf-search-icon {
+    color: var(--color-charcoal);
+    left: 18px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .cf-search-input::placeholder {
+    color: var(--color-grey-400);
+    font-weight: 400;
+  }
+
+  .cf-search-input:focus {
+    outline: none;
+    background: rgba(27, 27, 27, 0.04);
+  }
+
+  /* убираем нативный крестик в Chrome для type="search" */
+  .cf-search-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* ─── Sort (квадратная иконка-кнопка) ──────────────────── */
+  .cf-sort {
+    position: relative;
+    flex: 0 0 auto;
+    width: 52px;
+    border: 1px solid var(--color-charcoal);
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-charcoal);
+    background: transparent;
+    cursor: pointer;
+    transition: background 160ms ease;
+  }
+
+  .cf-sort:hover {
+    background: rgba(27, 27, 27, 0.06);
+  }
+
+  .cf-sort select {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    color: transparent;
+    cursor: pointer;
+    opacity: 0; /* нативный dropdown откроется при клике, но текст не видим */
+  }
+
+  .cf-sort-icon {
+    pointer-events: none;
+  }
+
+  /* ─── Чипы (charcoal outline) ──────────────────────────────── */
+  .cf-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .cf-chip {
+    appearance: none;
+    border: 1px solid var(--color-charcoal);
+    background: transparent;
+    color: var(--color-charcoal);
+    padding: 12px 18px;
+    font-size: var(--text-body);
+    line-height: 1;
+    letter-spacing: var(--text-body--letter-spacing);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition:
+      background 160ms ease,
+      color 160ms ease;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    font-weight: 500;
+  }
+
+  .cf-chip:hover:not(.is-active) {
+    background: rgba(27, 27, 27, 0.06);
+  }
+
+  .cf-chip.is-active {
+    background: var(--color-charcoal);
+    color: var(--color-paper);
+  }
+
+  .cf-chip-count {
+    font-size: 12px;
+    color: var(--color-grey-400);
+    letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .cf-chip-count::before {
+    content: "(";
+  }
+  .cf-chip-count::after {
+    content: ")";
+  }
+
+  .cf-chip.is-active .cf-chip-count {
+    color: rgba(238, 238, 238, 0.65);
+  }
+
+  /* ─── Активные фильтры (pills) ──────────────────────────────── */
+  .cf-active {
+    margin-top: clamp(20px, 1.8vw, 28px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .cf-active.is-empty {
+    display: none;
+  }
+
+  .cf-active :global(.active-pill) {
+    appearance: none;
+    border: 1px solid var(--color-accent);
+    background: var(--color-accent);
+    color: var(--color-paper);
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1;
+    letter-spacing: -0.2px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    transition: background 160ms ease;
+  }
+
+  .cf-active :global(.active-pill :nth-child(2)) {
+    font-size: 16px;
+    line-height: 0.8;
+    opacity: 0.75;
+  }
+
+  .cf-active :global(.active-pill:hover) {
+    background: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ─── Reset — фирменная outline-кнопка под фильтрами ────── */
+  .cf-reset {
+    width: 100%;
+    margin-top: clamp(24px, 2.4vw, 32px);
+    appearance: none;
+    border: 1px solid var(--color-charcoal);
+    background: transparent;
+    color: var(--color-charcoal);
+    padding: 14px 20px;
+    font-size: var(--text-body);
+    line-height: 1;
+    letter-spacing: var(--text-body--letter-spacing);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 500;
+    transition:
+      background 160ms ease,
+      color 160ms ease,
+      border-color 160ms ease;
+  }
+
+  .cf-reset:hover:not([disabled]) {
+    background: var(--color-charcoal);
+    color: var(--color-paper);
+  }
+
+  .cf-reset[disabled] {
+    border-color: var(--color-grey-300);
+    color: var(--color-grey-400);
+    cursor: default;
+  }
+</style>
+
+<script>
+  import { initCatalogFilters } from "@/scripts/catalog-filters";
+
+  const root = document.querySelector<HTMLElement>("[data-catalog-filters]");
+  if (root) {
+    initCatalogFilters(root, {
+      areaMin: Number(root.dataset.areaMin ?? 0),
+      areaMax: Number(root.dataset.areaMax ?? 1000),
+    });
+  }
+</script>

@@ -9,12 +9,17 @@ import Container from "@components/Container.astro";
 import GridLines from "@components/GridLines.astro";
 import Heading from "@components/Heading.astro";
 import ProjectCard from "@components/ProjectCard.astro";
+import CatalogFilters from "@components/projects/CatalogFilters.astro";
 import { projectCode, projectFile, projectTitle } from "@lib/projectAsset";
 import heroBg from "../../assets/dom-hero.jpg";
 
 const projects = (await getCollection("projects")).sort((a, b) =>
   a.data.folder.localeCompare(b.data.folder),
 );
+
+const areas = projects.map((p) => p.data.area);
+const areaMin = Math.floor(Math.min(...areas));
+const areaMax = Math.ceil(Math.max(...areas));
 ---
 
 <Layout
@@ -57,14 +62,29 @@ const projects = (await getCollection("projects")).sort((a, b) =>
       </Container>
     </section>
 
-    <section class="catalog-grid-section bg-paper text-charcoal">
-      <Container>
+    <section
+      class="catalog-shell relative bg-paper text-charcoal"
+      style="overflow-x: clip"
+    >
+      <GridLines />
+      <CatalogFilters
+        areaMin={areaMin}
+        areaMax={areaMax}
+        total={projects.length}
+      />
+
+      <div class="catalog-main">
         <ul class="catalog-grid">
           {
             projects.map((p) => {
               const cover = p.data.renders[0] ?? p.data.facade;
               return (
-                <li>
+                <li
+                  data-catalog-item
+                  data-floors={p.data.floors}
+                  data-area={p.data.area}
+                  data-bedrooms={p.data.bedrooms ?? 0}
+                >
                   <ProjectCard
                     title={projectTitle(p.data)}
                     code={projectCode(p.data)}
@@ -81,7 +101,14 @@ const projects = (await getCollection("projects")).sort((a, b) =>
             })
           }
         </ul>
-      </Container>
+
+        <div class="catalog-empty" data-catalog-empty>
+          <p class="catalog-empty-title">Ничего не нашли</p>
+          <p class="catalog-empty-hint">
+            Попробуйте увеличить диапазон площади или снять часть фильтров.
+          </p>
+        </div>
+      </div>
     </section>
   </main>
   <Footer />
@@ -105,8 +132,22 @@ const projects = (await getCollection("projects")).sort((a, b) =>
     line-height: 1.5;
   }
 
-  .catalog-grid-section {
-    padding-block: clamp(48px, 6vw, 96px);
+  /* ─── Shell: на десктопе фильтры слева (1/4), сетка справа (3/4) ─── */
+  .catalog-shell {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 960px) {
+    .catalog-shell {
+      grid-template-columns: minmax(280px, 25%) 1fr;
+      /* align-items оставляем default (stretch), чтобы aside растянулся
+         на всю высоту сетки и sticky внутри работал по всему скроллу */
+    }
+  }
+
+  .catalog-main {
+    padding: clamp(32px, 4vw, 64px) var(--spacing-gutter);
   }
 
   .catalog-grid {
@@ -118,21 +159,47 @@ const projects = (await getCollection("projects")).sort((a, b) =>
     padding: 0;
   }
 
+  .catalog-grid > .is-hidden {
+    display: none;
+  }
+
   @media (min-width: 640px) {
     .catalog-grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
-  @media (min-width: 960px) {
+  @media (min-width: 1200px) {
     .catalog-grid {
       grid-template-columns: repeat(3, 1fr);
     }
   }
 
-  @media (min-width: 1200px) {
-    .catalog-grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
+  /* Empty state — показываем JS-логикой через .is-visible */
+  .catalog-empty {
+    display: none;
+    padding-block: clamp(80px, 8vw, 140px);
+    text-align: center;
+  }
+
+  .catalog-empty.is-visible {
+    display: block;
+  }
+
+  .catalog-empty-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--color-charcoal);
+    text-transform: uppercase;
+  }
+
+  .catalog-empty-hint {
+    margin-top: 16px;
+    color: var(--color-grey-500);
+    max-width: 40ch;
+    margin-inline: auto;
+    line-height: 1.5;
   }
 </style>
