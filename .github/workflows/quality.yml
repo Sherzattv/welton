@@ -1,0 +1,42 @@
+name: Quality
+
+# CI-гейт качества: типы, линт, формат и защита от регрессий разметки.
+# Сборку и публикацию делает Cloudflare Workers Builds — отдельных шагов
+# деплоя здесь нет.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Typecheck (astro check)
+        run: npm run check
+      - name: Lint
+        run: npm run lint
+      - name: Format check
+        run: npm run format:check
+      - name: Guard — контейнер только через токен --content-max
+        run: |
+          if grep -rn 'max-w-\[1680px\]' src; then
+            echo "::error::Хардкод max-w-[1680px]. Используйте токен: max-w-[var(--content-max)] или <Container>."
+            exit 1
+          fi
