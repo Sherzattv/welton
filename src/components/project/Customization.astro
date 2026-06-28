@@ -282,7 +282,7 @@ const images = [
     .custom-header {
       position: absolute;
       top: var(--custom-top-gap);
-      left: 0;
+      left: var(--spacing-gutter);
       width: 31.9vw;
       max-width: none;
     }
@@ -294,7 +294,7 @@ const images = [
 
     .custom-controls {
       position: absolute;
-      left: 0;
+      left: var(--spacing-gutter);
       bottom: var(--custom-bottom-gap);
       margin: 0;
     }
@@ -302,8 +302,8 @@ const images = [
     .custom-track {
       position: absolute;
       top: var(--custom-top-gap);
-      left: calc(var(--guide-b) - var(--spacing-gutter) + 0.583vw);
-      right: calc(-1 * var(--spacing-gutter));
+      left: calc(var(--guide-b) + 0.583vw);
+      right: 0;
       gap: 1vw;
       margin: 0;
     }

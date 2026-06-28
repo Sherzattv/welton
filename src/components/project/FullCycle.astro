@@ -1,24 +1,22 @@
 ---
 // Сквозной блок «Полный цикл работ» — одинаковый на всех проектах.
-// На десктопе повторяет паттерн проекта/главной: слева sticky-текст,
-// справа — последовательность этапов без горизонтальных разделителей.
+// Структура и motion 1:1 с главной (Stages): слева sticky-заголовок,
+// справа — абсолютно позиционированные строки этапов с волосяными
+// разделителями. Так sticky-эффект совпадает с остальным сайтом.
 import GridLines from "@components/GridLines.astro";
 import Heading from "@components/Heading.astro";
+import Hairline from "@ui/Hairline.astro";
 import { fullCycle } from "@data/projectPage";
 ---
 
-<section
-  id="full-cycle"
-  class="cycle relative overflow-hidden bg-paper text-charcoal"
->
+<section id="full-cycle" class="cycle relative bg-paper text-charcoal">
   <GridLines />
   <div
     class="cycle-inner relative z-10 mx-auto w-full max-w-[var(--content-max)] px-gutter"
   >
-    <div class="cycle-rail">
-      <div class="cycle-rail-sticky">
-        <p class="cycle-eyebrow text-grey-500" data-reveal>Что мы делаем</p>
-        <Heading as="h2" size="lg" class="cycle-title" data-split>
+    <div class="cycle-heading-rail">
+      <div class="cycle-heading-wrap">
+        <Heading as="h2" size="lg" class="cycle-heading text-charcoal" data-split>
           Полный цикл работ
         </Heading>
         <p class="cycle-lead text-grey-500" data-reveal>
@@ -28,69 +26,66 @@ import { fullCycle } from "@data/projectPage";
       </div>
     </div>
 
-    <ol class="cycle-list">
+    <div class="cycle-list">
       {
-        fullCycle.map((step) => (
-          <li class="cycle-item" data-reveal>
-            <span class="cycle-num display text-grey-400">{step.num}</span>
-            <div class="cycle-copy">
-              <Heading as="h3" size="md" class="cycle-step-title">
+        fullCycle.map((step, i) => {
+          const tops = [0, 174, 348, 522, 677];
+          const tabletTops = [128, 300, 472, 644, 816];
+          return (
+            <article
+              class="cycle-row"
+              data-reveal
+              style={`--top:clamp(${tops[i]}px, ${tops[i] / 12}vw, ${tops[i] * 1.2}px);--tab-top:${tabletTops[i]}px`}
+            >
+              <Hairline />
+              <span class="cycle-num text-grey-400">{step.num}</span>
+              <Heading as="h3" size="md" class="cycle-step-title text-charcoal">
                 {step.title}
               </Heading>
-              <p class="cycle-desc text-grey-500">{step.desc}</p>
-            </div>
-          </li>
-        ))
+              <p class="cycle-desc text-charcoal">{step.desc}</p>
+            </article>
+          );
+        })
       }
-    </ol>
+    </div>
   </div>
 </section>
 
 <style>
   .cycle-inner {
-    display: grid;
-    gap: calc(var(--s) * 42);
+    min-height: calc(var(--s) * 1050);
     padding-top: calc(var(--s) * 72);
-    padding-bottom: calc(var(--s) * 88);
+    padding-bottom: calc(var(--s) * 64);
   }
 
-  .cycle-eyebrow {
-    font-size: calc(var(--s) * 11);
-    line-height: 1;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+  .cycle-heading-rail {
+    max-width: calc(var(--s) * 295);
   }
 
-  .cycle-title {
-    margin-top: calc(var(--s) * 14);
-    max-width: calc(var(--s) * 320);
+  .cycle-heading-wrap,
+  .cycle-heading {
+    width: 100%;
+  }
+
+  .cycle-heading {
     text-transform: uppercase;
   }
 
   .cycle-lead {
     margin-top: calc(var(--s) * 20);
-    max-width: calc(var(--s) * 315);
+    max-width: calc(var(--s) * 295);
     line-height: 1.45;
   }
 
   .cycle-list {
-    display: grid;
-    gap: calc(var(--s) * 30);
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    margin-top: calc(var(--s) * 56);
   }
 
-  .cycle-item {
+  .cycle-row {
+    position: relative;
     display: grid;
-    grid-template-columns: calc(var(--s) * 54) minmax(0, 1fr);
-    gap: calc(var(--s) * 18);
-  }
-
-  .cycle-num {
-    font-size: calc(var(--s) * 34);
-    line-height: 0.9;
-    letter-spacing: -0.03em;
+    gap: calc(var(--s) * 16);
+    padding-block: calc(var(--s) * 21) calc(var(--s) * 36);
   }
 
   .cycle-step-title {
@@ -98,90 +93,193 @@ import { fullCycle } from "@data/projectPage";
   }
 
   .cycle-desc {
-    margin-top: calc(var(--s) * 10);
-    max-width: calc(var(--s) * 300);
-    line-height: 1.45;
+    max-width: calc(var(--s) * 320);
   }
 
   @media (min-width: 640px) {
     .cycle-inner {
-      gap: 56px;
-      padding-top: 96px;
-      padding-bottom: 112px;
+      min-height: 780px;
+      padding-top: 0;
+      padding-bottom: 0;
     }
 
-    .cycle-eyebrow {
-      font-size: 11px;
-    }
-
-    .cycle-title {
-      margin-top: 14px;
-      max-width: 560px;
+    .cycle-heading-rail {
+      position: absolute;
+      top: 0;
+      left: var(--spacing-gutter);
+      width: 343px;
+      max-width: none;
     }
 
     .cycle-lead {
-      margin-top: 20px;
-      max-width: 560px;
+      max-width: 343px;
+      margin-top: 24px;
     }
 
     .cycle-list {
-      gap: 36px;
+      position: absolute;
+      top: 0;
+      left: calc(var(--guide-b) + 7px);
+      right: var(--spacing-gutter);
+      margin: 0;
     }
 
-    .cycle-item {
-      grid-template-columns: 82px minmax(0, 1fr);
-      gap: 28px;
+    .cycle-row {
+      min-height: 150px;
+      padding: 21px 0 32px;
+      grid-template-columns: 72px minmax(0, 1fr);
+      gap: 16px 29px;
+    }
+
+    .cycle-step-title,
+    .cycle-desc {
+      grid-column: 2;
     }
 
     .cycle-num {
+      grid-row: 1 / span 2;
+      font-family: var(--font-display);
+      font-weight: 500;
       font-size: 48px;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
     }
 
     .cycle-desc {
-      margin-top: 10px;
-      max-width: 560px;
+      max-width: 364px;
+    }
+  }
+
+  @media (min-width: 640px) and (max-width: 959px) {
+    .cycle-inner {
+      min-height: 1050px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .cycle-heading-rail {
+      position: absolute;
+      top: 0;
+      left: var(--guide-edge-left);
+      width: 291px;
+      max-width: none;
+    }
+
+    .cycle-list {
+      position: absolute;
+      top: 220px;
+      left: var(--guide-edge-left);
+      right: var(--guide-edge-right);
+      margin: 0;
+    }
+
+    .cycle-row {
+      position: absolute;
+      top: var(--tab-top);
+      left: 0;
+      right: 0;
+      min-height: 150px;
+      display: block;
+      padding: 0;
+    }
+
+    .cycle-num {
+      position: absolute;
+      top: 21px;
+      left: 0;
+    }
+
+    .cycle-step-title {
+      position: absolute;
+      top: 45px;
+      left: 0;
+      width: min(530px, calc(100vw - 48px));
+    }
+
+    .cycle-desc {
+      position: absolute;
+      top: 88px;
+      left: 0;
+      width: min(530px, calc(100vw - 48px));
+      max-width: none;
     }
   }
 
   @media (min-width: 960px) {
     .cycle-inner {
-      grid-template-columns: minmax(0, 37%) minmax(0, 1fr);
-      gap: clamp(48px, 6vw, 112px);
-      align-items: start;
-      padding-top: clamp(80px, 7vw, 120px);
-      padding-bottom: clamp(96px, 8vw, 140px);
+      --cycle-content-height: clamp(780px, 65vw, 936px);
+      --cycle-bottom-gap: clamp(160px, 10vw, 220px);
+      min-height: calc(var(--cycle-content-height) + var(--cycle-bottom-gap));
     }
 
-    .cycle-rail {
-      min-height: 620px;
+    .cycle-heading-rail {
+      position: absolute;
+      top: clamp(80px, 7vw, 120px);
+      left: var(--spacing-gutter);
+      width: clamp(343px, 28.583vw, 412px);
+      max-width: none;
+      height: var(--cycle-content-height);
     }
 
-    .cycle-rail-sticky {
+    .cycle-heading-wrap {
       position: sticky;
-      top: clamp(84px, 6vw, 104px);
+      top: clamp(96px, 8vw, 128px);
     }
 
-    .cycle-title,
     .cycle-lead {
-      max-width: 31vw;
+      max-width: clamp(343px, 28.583vw, 412px);
     }
 
     .cycle-list {
-      gap: clamp(44px, 4vw, 72px);
-      padding-top: 0.25vw;
+      top: clamp(80px, 7vw, 120px);
+      left: calc(var(--guide-b) + clamp(7px, 0.583vw, 8.4px));
+      width: clamp(570px, 47.5vw, 684px);
+      right: auto;
     }
 
-    .cycle-item {
-      grid-template-columns: clamp(82px, 7vw, 112px) minmax(0, 1fr);
-      gap: clamp(28px, 3vw, 48px);
+    .cycle-row {
+      position: absolute;
+      top: var(--top);
+      left: 0;
+      width: 100%;
+      height: clamp(103px, 8.583vw, 124px);
+      min-height: 0;
+      display: block;
+      padding: 0;
     }
 
     .cycle-num {
+      position: absolute;
+      top: clamp(21px, 1.75vw, 25px);
+      left: 0;
       font-size: clamp(48px, 5vw, 76px);
     }
 
+    .cycle-step-title {
+      position: absolute;
+      top: clamp(21px, 1.75vw, 25px);
+      left: clamp(101px, 8.417vw, 121px);
+      width: clamp(340px, 28.333vw, 408px);
+    }
+
     .cycle-desc {
-      max-width: 44ch;
+      position: absolute;
+      top: clamp(56px, 4.667vw, 67px);
+      left: clamp(101px, 8.417vw, 121px);
+      width: clamp(364px, 30.333vw, 437px);
+      max-width: none;
+    }
+  }
+
+  @media (min-width: 960px) and (max-width: 1199px) {
+    .cycle-list {
+      right: var(--spacing-gutter);
+      width: auto;
+    }
+
+    .cycle-step-title,
+    .cycle-desc {
+      width: calc(100% - 101px);
     }
   }
 </style>
