@@ -1,0 +1,135 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Motion from "@components/Motion.astro";
+import Header from "@layout/Header.astro";
+import Footer from "@layout/Footer.astro";
+import Container from "@components/Container.astro";
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import { contact } from "@data/site";
+---
+
+<Layout
+  title="Пользовательское соглашение — welton"
+  description="Пользовательское соглашение сайта welton: условия использования материалов сайта и отправки обращений."
+>
+  <Motion />
+  <Header />
+  <main>
+    <section class="legal-hero relative overflow-hidden bg-charcoal text-paper">
+      <GridLines />
+      <Container width="prose" class="legal-hero-inner relative z-10">
+        <p class="legal-kicker text-grey-400" data-reveal>
+          Правовая информация
+        </p>
+        <Heading as="h1" size="lg" class="legal-title" data-split>
+          Пользовательское соглашение
+        </Heading>
+        <p class="legal-lead text-grey-300" data-reveal>
+          Условия использования сайта, материалов, каталога проектов и форм
+          обратной связи welton.
+        </p>
+      </Container>
+    </section>
+
+    <section class="legal-body bg-paper text-charcoal">
+      <Container width="prose" class="legal-content">
+        <p>
+          Настоящее соглашение регулирует использование сайта welton. Продолжая
+          пользоваться сайтом, вы соглашаетесь с условиями, изложенными ниже.
+        </p>
+
+        <h2>Информация на сайте</h2>
+        <p>
+          Материалы сайта носят информационный характер. Описания проектов,
+          характеристики, изображения и предварительные расчёты не являются
+          публичной офертой. Итоговые условия, стоимость и состав работ
+          уточняются индивидуально.
+        </p>
+
+        <h2>Каталог проектов</h2>
+        <p>
+          Проекты и визуализации представлены как примеры решений. Мы можем
+          адаптировать планировки, материалы, комплектацию и инженерные решения
+          под участок, бюджет и сценарий жизни заказчика.
+        </p>
+
+        <h2>Обращения через сайт</h2>
+        <p>
+          Отправляя обращение или связываясь с нами по указанным контактам, вы
+          подтверждаете корректность переданных данных и соглашаетесь на
+          обратную связь для консультации, расчёта или обсуждения проекта.
+        </p>
+
+        <h2>Интеллектуальные права</h2>
+        <p>
+          Тексты, изображения, элементы интерфейса и иные материалы сайта не
+          могут использоваться в коммерческих целях без предварительного
+          согласия правообладателя.
+        </p>
+
+        <h2>Контакты</h2>
+        <p>
+          По вопросам работы сайта и условий использования можно обратиться по
+          email: <a href={contact.emailHref}>{contact.email}</a> или по телефону
+          <a href={contact.phoneHref}>{contact.phone}</a>.
+        </p>
+      </Container>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .legal-hero-inner {
+    padding-top: clamp(120px, 14vw, 220px);
+    padding-bottom: clamp(56px, 7vw, 120px);
+  }
+
+  .legal-kicker {
+    margin-bottom: calc(var(--s) * 18);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .legal-title {
+    text-transform: uppercase;
+  }
+
+  .legal-lead {
+    margin-top: calc(var(--s) * 24);
+    font-size: clamp(18px, 2vw, 24px);
+    line-height: 1.45;
+  }
+
+  .legal-content {
+    padding-top: clamp(56px, 7vw, 96px);
+    padding-bottom: clamp(72px, 8vw, 120px);
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  .legal-content h2 {
+    margin-top: 2.4em;
+    margin-bottom: 0.7em;
+    font-size: clamp(24px, 3vw, 34px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .legal-content h2:first-of-type {
+    margin-top: 0;
+  }
+
+  .legal-content p + p {
+    margin-top: 1em;
+  }
+
+  .legal-content a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+</style>
