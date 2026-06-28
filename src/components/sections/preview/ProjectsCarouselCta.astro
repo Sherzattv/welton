@@ -1,0 +1,482 @@
+---
+// Вариант C: горизонтальная карусель + CTA-кнопка «Весь каталог».
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import Button from "@components/Button.astro";
+import Icon from "@ui/Icon.astro";
+import { asset } from "@lib/asset";
+import { projectFile, projectTitle, projectCode } from "@lib/projectAsset";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  projects: CollectionEntry<"projects">[];
+}
+const { projects } = Astro.props;
+---
+
+<section
+  id="projects-preview-c"
+  class="projects2-section relative overflow-hidden bg-paper text-charcoal"
+>
+  <GridLines />
+  <div
+    class="projects2-inner relative z-10 mx-auto w-full max-w-[var(--content-max)] px-gutter"
+  >
+    <Heading
+      as="h2"
+      size="lg"
+      class="projects2-heading text-charcoal"
+      data-split
+    >
+      Готовые проекты домов
+    </Heading>
+
+    <div class="projects2-controls" aria-label="Навигация по проектам">
+      <button
+        type="button"
+        data-prj2-prev
+        aria-label="Назад"
+        class="projects2-arrow group"
+      >
+        <Icon
+          name="arrow-left"
+          class="transition-transform duration-200 ease-in-out group-hover:-translate-x-1 group-focus-visible:-translate-x-1"
+        />
+      </button>
+      <button
+        type="button"
+        data-prj2-next
+        aria-label="Вперёд"
+        class="projects2-arrow group"
+      >
+        <Icon
+          name="arrow-right"
+          class="transition-transform duration-200 ease-in-out group-hover:translate-x-1 group-focus-visible:translate-x-1"
+        />
+      </button>
+    </div>
+
+    <div class="projects2-cta">
+      <Button
+        href={asset("/projects/")}
+        variant="light"
+        class="projects2-button bg-white"
+      >
+        Весь каталог
+      </Button>
+    </div>
+
+    <div data-prj2-track class="projects2-track">
+      {
+        projects.map((p) => {
+          const cover = p.data.renders[0] ?? p.data.facade;
+          const href = asset(`/projects/${p.id}/`);
+          return (
+            <a class="project2-card group" href={href}>
+              <div class="project2-image-wrap">
+                <img
+                  src={projectFile(p.data.folder, cover, true)}
+                  alt={projectTitle(p.data)}
+                  loading="lazy"
+                  decoding="async"
+                  class="project2-image"
+                />
+              </div>
+              <span class="project2-code text-grey-400">
+                {projectCode(p.data)}
+              </span>
+              <Heading as="h3" size="md" class="project2-title text-charcoal">
+                {projectTitle(p.data)}
+              </Heading>
+              {p.data.tagline && (
+                <p class="project2-desc text-charcoal">{p.data.tagline}</p>
+              )}
+            </a>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .projects2-section {
+    min-height: calc(var(--s) * 760);
+  }
+
+  .projects2-inner {
+    min-height: inherit;
+    padding-top: calc(var(--s) * 72);
+    padding-bottom: calc(var(--s) * 48);
+  }
+
+  .projects2-heading {
+    max-width: calc(var(--s) * 320);
+    text-transform: uppercase;
+  }
+
+  .projects2-controls {
+    margin-top: calc(var(--s) * 32);
+    display: flex;
+    gap: calc(var(--s) * 10);
+  }
+
+  .projects2-arrow {
+    display: grid;
+    width: calc(var(--s) * 40);
+    height: calc(var(--s) * 40);
+    place-items: center;
+    border: 1px solid currentColor;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    transition:
+      color 200ms ease,
+      border-color 200ms ease,
+      background-color 200ms ease;
+  }
+
+  .projects2-arrow:hover,
+  .projects2-arrow:focus-visible {
+    color: var(--color-paper);
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    outline: none;
+  }
+
+  .projects2-cta {
+    margin-top: calc(var(--s) * 24);
+  }
+
+  .projects2-button {
+    width: calc(var(--s) * 199);
+    height: calc(var(--s) * 48);
+  }
+
+  .projects2-track {
+    margin-top: calc(var(--s) * 32);
+    display: flex;
+    gap: calc(var(--s) * 12);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .projects2-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .project2-card {
+    position: relative;
+    display: block;
+    width: calc(var(--s) * 310);
+    min-height: calc(var(--s) * 460);
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
+    color: inherit;
+  }
+
+  .project2-image-wrap {
+    position: absolute;
+    top: calc(var(--s) * 16);
+    left: calc(var(--s) * 16);
+    right: calc(var(--s) * 16);
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--color-grey-200);
+  }
+
+  .project2-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: transform 800ms ease-out;
+  }
+
+  .project2-card:hover .project2-image {
+    transform: scale(1.04);
+  }
+
+  .project2-code {
+    position: absolute;
+    top: calc(var(--s) * 16);
+    right: calc(var(--s) * 16);
+    background: rgba(255, 255, 255, 0.85);
+    padding: calc(var(--s) * 3) calc(var(--s) * 6);
+    border-radius: var(--radius-sm);
+    font-size: calc(var(--s) * 10);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    z-index: 1;
+  }
+
+  .project2-title {
+    position: absolute;
+    left: calc(var(--s) * 16);
+    right: calc(var(--s) * 16);
+    top: calc(var(--s) * 268);
+    text-transform: uppercase;
+    transition: color 200ms ease;
+  }
+
+  .project2-card:hover .project2-title {
+    color: var(--color-accent);
+  }
+
+  .project2-desc {
+    position: absolute;
+    left: calc(var(--s) * 16);
+    right: calc(var(--s) * 16);
+    top: calc(var(--s) * 340);
+    font-size: calc(var(--s) * 13);
+    line-height: 1.4;
+    color: var(--color-grey-500);
+  }
+
+  @media (min-width: 640px) {
+    .projects2-section {
+      min-height: 720px;
+    }
+
+    .projects2-inner {
+      padding-top: 80px;
+      padding-bottom: 80px;
+    }
+
+    .projects2-heading {
+      max-width: 360px;
+    }
+
+    .projects2-controls {
+      margin-top: 48px;
+      gap: 10px;
+    }
+
+    .projects2-arrow {
+      width: 40px;
+      height: 40px;
+    }
+
+    .projects2-cta {
+      margin-top: 24px;
+    }
+
+    .projects2-button {
+      width: 199px;
+      height: 48px;
+    }
+
+    .projects2-track {
+      margin-top: 32px;
+      gap: 12px;
+    }
+
+    .project2-card {
+      width: 376px;
+      min-height: 460px;
+    }
+
+    .project2-image-wrap {
+      top: 16px;
+      left: 16px;
+      right: 16px;
+    }
+
+    .project2-code {
+      top: 16px;
+      right: 16px;
+      font-size: 10px;
+      padding: 3px 6px;
+    }
+
+    .project2-title {
+      top: 282px;
+      left: 16px;
+      right: 16px;
+    }
+
+    .project2-desc {
+      top: 360px;
+      left: 16px;
+      right: 16px;
+      font-size: 13px;
+    }
+  }
+
+  @media (min-width: 640px) and (max-width: 959px) {
+    .projects2-section {
+      min-height: 820px;
+    }
+
+    .projects2-inner {
+      min-height: inherit;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .projects2-heading {
+      position: absolute;
+      top: 0;
+      left: var(--guide-edge-left);
+      width: 360px;
+      max-width: none;
+    }
+
+    .projects2-controls {
+      position: absolute;
+      top: 119px;
+      left: var(--guide-edge-left);
+      margin: 0;
+    }
+
+    .projects2-cta {
+      position: absolute;
+      top: 178px;
+      left: var(--guide-edge-left);
+      margin: 0;
+    }
+
+    .projects2-track {
+      position: absolute;
+      top: 252px;
+      left: var(--guide-edge-left);
+      right: 0;
+      margin: 0;
+      gap: 12px;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .projects2-section {
+      --proj2-top-gap: clamp(96px, 7vw, 150px);
+      --proj2-bottom-gap: clamp(72px, 6vw, 120px);
+      min-height: calc(38vw + var(--proj2-top-gap) + var(--proj2-bottom-gap));
+    }
+
+    .projects2-inner {
+      min-height: inherit;
+      padding: 0;
+    }
+
+    .projects2-heading {
+      position: absolute;
+      top: var(--proj2-top-gap);
+      left: var(--spacing-gutter);
+      width: 31.917vw;
+      max-width: none;
+    }
+
+    .projects2-controls {
+      position: absolute;
+      left: var(--spacing-gutter);
+      bottom: calc(var(--proj2-bottom-gap) + 80px);
+      margin: 0;
+    }
+
+    .projects2-cta {
+      position: absolute;
+      left: var(--spacing-gutter);
+      bottom: var(--proj2-bottom-gap);
+      margin: 0;
+    }
+
+    .projects2-button {
+      width: clamp(199px, 16.583vw, 239px);
+      height: clamp(48px, 4vw, 58px);
+    }
+
+    .projects2-track {
+      position: absolute;
+      top: var(--proj2-top-gap);
+      left: calc(var(--guide-b) + 0.583vw);
+      right: 0;
+      margin: 0;
+      gap: 1vw;
+      overflow-x: auto;
+    }
+
+    .project2-card {
+      width: 31.333vw;
+      height: 38vw;
+      min-height: 0;
+    }
+
+    .project2-image-wrap {
+      top: 1.333vw;
+      left: 1.333vw;
+      right: 1.333vw;
+    }
+
+    .project2-code {
+      top: 1.333vw;
+      right: 1.333vw;
+      font-size: 0.833vw;
+      padding: 0.25vw 0.5vw;
+    }
+
+    .project2-title {
+      top: 23vw;
+      left: 1.333vw;
+      right: 1.333vw;
+    }
+
+    .project2-desc {
+      top: 29vw;
+      left: 1.333vw;
+      right: 1.333vw;
+      font-size: 0.95vw;
+      width: 25.5vw;
+    }
+  }
+</style>
+
+<script>
+  const track = document.querySelector<HTMLElement>("[data-prj2-track]");
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+
+  const step = () => {
+    if (!track) return 388;
+    const card = track.querySelector<HTMLElement>(".project2-card");
+    const styles = getComputedStyle(track);
+    const rawGap =
+      styles.columnGap === "normal" ? styles.gap : styles.columnGap;
+    const gap = parseFloat(rawGap || "0") || 0;
+    return card ? card.offsetWidth + gap : Math.min(track.clientWidth, 388);
+  };
+
+  const goNext = () => {
+    if (!track) return;
+    const max = track.scrollWidth - track.clientWidth;
+    if (track.scrollLeft + step() >= max - 2) {
+      track.scrollTo({ left: 0, behavior: "smooth" });
+    } else {
+      track.scrollBy({ left: step(), behavior: "smooth" });
+    }
+  };
+
+  const goPrev = () => {
+    if (!track) return;
+    const max = track.scrollWidth - track.clientWidth;
+    if (track.scrollLeft <= 2) {
+      track.scrollTo({ left: max, behavior: "smooth" });
+    } else {
+      track.scrollBy({ left: -step(), behavior: "smooth" });
+    }
+  };
+
+  document.querySelector("[data-prj2-prev]")?.addEventListener("click", goPrev);
+  document.querySelector("[data-prj2-next]")?.addEventListener("click", goNext);
+
+  if (track && !reduceMotion) {
+    let timer = window.setInterval(goNext, 4000);
+    track.addEventListener("mouseenter", () => window.clearInterval(timer));
+    track.addEventListener("mouseleave", () => {
+      timer = window.setInterval(goNext, 4000);
+    });
+  }
+</script>

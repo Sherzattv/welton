@@ -1,45 +1,41 @@
 ---
+// Вариант A: горизонтальная карусель проектов в стиле Objects.
 import GridLines from "@components/GridLines.astro";
 import Heading from "@components/Heading.astro";
 import Icon from "@ui/Icon.astro";
-import { Image } from "astro:assets";
-import { objects } from "@data/home";
-import imgCountry from "../../assets/home-objects/country-houses.jpg";
-import imgVillages from "../../assets/home-objects/cottage-villages.jpg";
-import imgGlamping from "../../assets/home-objects/glampings.jpg";
-import imgBarn from "../../assets/home-objects/barnhouses.jpg";
-import imgBases from "../../assets/home-objects/recreation-bases.jpg";
-import imgRestaurants from "../../assets/home-objects/restaurants.jpg";
+import { asset } from "@lib/asset";
+import { projectFile, projectTitle, projectCode } from "@lib/projectAsset";
+import type { CollectionEntry } from "astro:content";
 
-// Порядок 1:1 с objects в @data/home (01..06).
-const objectImages = [
-  imgCountry,
-  imgVillages,
-  imgGlamping,
-  imgBarn,
-  imgBases,
-  imgRestaurants,
-];
+interface Props {
+  projects: CollectionEntry<"projects">[];
+}
+const { projects } = Astro.props;
 ---
 
 <section
-  id="objects"
-  class="objects-section relative overflow-hidden bg-paper text-charcoal"
+  id="projects-preview-a"
+  class="projects-section relative overflow-hidden bg-paper text-charcoal"
 >
   <GridLines />
   <div
-    class="objects-inner relative z-10 mx-auto w-full max-w-[var(--content-max)] px-gutter"
+    class="projects-inner relative z-10 mx-auto w-full max-w-[var(--content-max)] px-gutter"
   >
-    <Heading as="h2" size="lg" class="objects-heading text-charcoal" data-split>
-      Объекты, с которыми мы работаем
+    <Heading
+      as="h2"
+      size="lg"
+      class="projects-heading text-charcoal"
+      data-split
+    >
+      Готовые проекты домов
     </Heading>
 
-    <div class="objects-controls" aria-label="Навигация по объектам">
+    <div class="projects-controls" aria-label="Навигация по проектам">
       <button
         type="button"
-        data-obj-prev
+        data-prj-prev
         aria-label="Назад"
-        class="objects-arrow objects-arrow--prev group"
+        class="projects-arrow group"
       >
         <Icon
           name="arrow-left"
@@ -48,9 +44,9 @@ const objectImages = [
       </button>
       <button
         type="button"
-        data-obj-next
+        data-prj-next
         aria-label="Вперёд"
-        class="objects-arrow objects-arrow--next group"
+        class="projects-arrow group"
       >
         <Icon
           name="arrow-right"
@@ -59,58 +55,62 @@ const objectImages = [
       </button>
     </div>
 
-    <div data-obj-track class="objects-track">
+    <div data-prj-track class="projects-track">
       {
-        objects.map((o, i) => (
-          <article class="object-card group">
-            <div class="object-image-wrap">
-              <Image
-                src={objectImages[i]}
-                alt={o.title}
-                widths={[320, 480, 640]}
-                sizes="(min-width: 960px) 31vw, (min-width: 640px) 376px, 310px"
-                format="webp"
-                quality={72}
-                loading="lazy"
-                decoding="async"
-                class="object-image"
-              />
-            </div>
-            <span class="object-num text-grey-400">{o.num}</span>
-            <Heading as="h3" size="md" class="object-title text-charcoal">
-              {o.title}
-            </Heading>
-            <p class="object-desc text-charcoal">{o.desc}</p>
-          </article>
-        ))
+        projects.map((p) => {
+          const cover = p.data.renders[0] ?? p.data.facade;
+          const href = asset(`/projects/${p.id}/`);
+          return (
+            <a class="project-card group" href={href}>
+              <div class="project-image-wrap">
+                <img
+                  src={projectFile(p.data.folder, cover, true)}
+                  alt={projectTitle(p.data)}
+                  loading="lazy"
+                  decoding="async"
+                  class="project-image"
+                />
+              </div>
+              <span class="project-code text-grey-400">
+                {projectCode(p.data)}
+              </span>
+              <Heading as="h3" size="md" class="project-title text-charcoal">
+                {projectTitle(p.data)}
+              </Heading>
+              {p.data.tagline && (
+                <p class="project-desc text-charcoal">{p.data.tagline}</p>
+              )}
+            </a>
+          );
+        })
       }
     </div>
   </div>
 </section>
 
 <style>
-  .objects-section {
-    min-height: calc(var(--s) * 690);
+  .projects-section {
+    min-height: calc(var(--s) * 720);
   }
 
-  .objects-inner {
+  .projects-inner {
     min-height: inherit;
     padding-top: calc(var(--s) * 72);
     padding-bottom: calc(var(--s) * 48);
   }
 
-  .objects-heading {
-    max-width: calc(var(--s) * 300);
+  .projects-heading {
+    max-width: calc(var(--s) * 320);
     text-transform: uppercase;
   }
 
-  .objects-controls {
+  .projects-controls {
     margin-top: calc(var(--s) * 32);
     display: flex;
     gap: calc(var(--s) * 10);
   }
 
-  .objects-arrow {
+  .projects-arrow {
     display: grid;
     width: calc(var(--s) * 40);
     height: calc(var(--s) * 40);
@@ -124,15 +124,15 @@ const objectImages = [
       background-color 200ms ease;
   }
 
-  .objects-arrow:hover,
-  .objects-arrow:focus-visible {
+  .projects-arrow:hover,
+  .projects-arrow:focus-visible {
     color: var(--color-paper);
     background: var(--color-accent);
     border-color: var(--color-accent);
     outline: none;
   }
 
-  .objects-track {
+  .projects-track {
     margin-top: calc(var(--s) * 32);
     display: flex;
     gap: calc(var(--s) * 12);
@@ -141,151 +141,169 @@ const objectImages = [
     scrollbar-width: none;
   }
 
-  .objects-track::-webkit-scrollbar {
+  .projects-track::-webkit-scrollbar {
     display: none;
   }
 
-  .object-card {
+  .project-card {
     position: relative;
+    display: block;
     width: calc(var(--s) * 310);
-    min-height: calc(var(--s) * 442);
+    min-height: calc(var(--s) * 460);
     flex: 0 0 auto;
     scroll-snap-align: start;
     overflow: hidden;
     border-radius: var(--radius-sm);
     background: var(--color-white);
+    color: inherit;
   }
 
-  .object-image-wrap {
+  .project-image-wrap {
     position: absolute;
     top: calc(var(--s) * 16);
     left: calc(var(--s) * 16);
-    width: calc(var(--s) * 246);
-    height: calc(var(--s) * 184.5);
+    right: calc(var(--s) * 16);
+    aspect-ratio: 4 / 3;
     overflow: hidden;
     border-radius: var(--radius-sm);
     background: var(--color-grey-200);
   }
 
-  .object-image {
+  .project-image {
     height: 100%;
     width: 100%;
     object-fit: cover;
-    transition: transform 200ms ease-in-out;
+    transition: transform 800ms ease-out;
   }
 
-  .object-card:hover .object-image {
-    transform: scale(1.05);
+  .project-card:hover .project-image {
+    transform: scale(1.04);
   }
 
-  .object-num {
+  .project-code {
     position: absolute;
     top: calc(var(--s) * 16);
     right: calc(var(--s) * 16);
-  }
-
-  .object-title {
-    position: absolute;
-    left: calc(var(--s) * 16);
-    right: calc(var(--s) * 16);
-    top: calc(var(--s) * 250);
+    background: rgba(255, 255, 255, 0.85);
+    padding: calc(var(--s) * 3) calc(var(--s) * 6);
+    border-radius: var(--radius-sm);
+    font-size: calc(var(--s) * 10);
+    letter-spacing: 0.08em;
     text-transform: uppercase;
+    z-index: 1;
   }
 
-  .object-desc {
+  .project-title {
     position: absolute;
     left: calc(var(--s) * 16);
     right: calc(var(--s) * 16);
-    top: calc(var(--s) * 318);
+    top: calc(var(--s) * 268);
+    text-transform: uppercase;
+    transition: color 200ms ease;
+  }
+
+  .project-card:hover .project-title {
+    color: var(--color-accent);
+  }
+
+  .project-desc {
+    position: absolute;
+    left: calc(var(--s) * 16);
+    right: calc(var(--s) * 16);
+    top: calc(var(--s) * 340);
+    font-size: calc(var(--s) * 13);
+    line-height: 1.4;
+    color: var(--color-grey-500);
   }
 
   @media (min-width: 640px) {
-    .objects-section {
-      min-height: 620px;
+    .projects-section {
+      min-height: 660px;
     }
 
-    .objects-inner {
+    .projects-inner {
       padding-top: 80px;
       padding-bottom: 80px;
     }
 
-    .objects-heading {
-      max-width: 327px;
+    .projects-heading {
+      max-width: 360px;
     }
 
-    .objects-controls {
+    .projects-controls {
       margin-top: 64px;
       gap: 10px;
     }
 
-    .objects-arrow {
+    .projects-arrow {
       width: 40px;
       height: 40px;
     }
 
-    .objects-track {
+    .projects-track {
       margin-top: 32px;
       gap: 12px;
     }
 
-    .object-card {
+    .project-card {
       width: 376px;
-      min-height: 440px;
+      min-height: 460px;
     }
 
-    .object-image-wrap {
+    .project-image-wrap {
       top: 16px;
       left: 16px;
-      width: 246px;
-      height: 185px;
+      right: 16px;
     }
 
-    .object-num {
+    .project-code {
       top: 16px;
       right: 16px;
+      font-size: 10px;
+      padding: 3px 6px;
     }
 
-    .object-title {
-      top: 250px;
+    .project-title {
+      top: 282px;
       left: 16px;
       right: 16px;
     }
 
-    .object-desc {
-      top: 318px;
+    .project-desc {
+      top: 360px;
       left: 16px;
       right: 16px;
-      width: 318px;
+      font-size: 13px;
     }
   }
 
   @media (min-width: 640px) and (max-width: 959px) {
-    .objects-section {
-      min-height: 680px;
+    .projects-section {
+      min-height: 760px;
     }
 
-    .objects-inner {
+    .projects-inner {
       min-height: inherit;
       padding-top: 0;
       padding-bottom: 0;
     }
 
-    .objects-heading {
+    .projects-heading {
       position: absolute;
       top: 0;
       left: var(--guide-edge-left);
-      width: 327px;
+      width: 360px;
       max-width: none;
     }
 
-    .objects-controls {
+    .projects-controls {
       position: absolute;
       top: 119px;
       left: var(--guide-edge-left);
       margin: 0;
     }
 
-    .objects-track {
+    .projects-track {
       position: absolute;
       top: 191px;
       left: var(--guide-edge-left);
@@ -296,37 +314,35 @@ const objectImages = [
   }
 
   @media (min-width: 960px) {
-    .objects-section {
-      --objects-top-gap: clamp(96px, 7vw, 150px);
-      --objects-bottom-gap: clamp(48px, 4vw, 72px);
-      min-height: calc(
-        36.667vw + var(--objects-top-gap) + var(--objects-bottom-gap)
-      );
+    .projects-section {
+      --proj-top-gap: clamp(96px, 7vw, 150px);
+      --proj-bottom-gap: clamp(72px, 6vw, 120px);
+      min-height: calc(38vw + var(--proj-top-gap) + var(--proj-bottom-gap));
     }
 
-    .objects-inner {
+    .projects-inner {
       min-height: inherit;
       padding: 0;
     }
 
-    .objects-heading {
+    .projects-heading {
       position: absolute;
-      top: var(--objects-top-gap);
+      top: var(--proj-top-gap);
       left: var(--spacing-gutter);
       width: 31.917vw;
       max-width: none;
     }
 
-    .objects-controls {
+    .projects-controls {
       position: absolute;
       left: var(--spacing-gutter);
-      bottom: var(--objects-bottom-gap);
+      bottom: var(--proj-bottom-gap);
       margin: 0;
     }
 
-    .objects-track {
+    .projects-track {
       position: absolute;
-      top: var(--objects-top-gap);
+      top: var(--proj-top-gap);
       left: calc(var(--guide-b) + 0.583vw);
       right: 0;
       margin: 0;
@@ -334,48 +350,50 @@ const objectImages = [
       overflow-x: auto;
     }
 
-    .object-card {
+    .project-card {
       width: 31.333vw;
-      height: 36.667vw;
+      height: 38vw;
       min-height: 0;
     }
 
-    .object-image-wrap {
+    .project-image-wrap {
       top: 1.333vw;
-      left: 1.333vw;
-      width: 20.5vw;
-      height: 15.375vw;
-    }
-
-    .object-num {
-      top: 1.333vw;
-      right: 1.333vw;
-    }
-
-    .object-title {
-      top: 21vw;
       left: 1.333vw;
       right: 1.333vw;
     }
 
-    .object-desc {
-      top: 27.167vw;
+    .project-code {
+      top: 1.333vw;
+      right: 1.333vw;
+      font-size: 0.833vw;
+      padding: 0.25vw 0.5vw;
+    }
+
+    .project-title {
+      top: 23vw;
       left: 1.333vw;
-      right: auto;
+      right: 1.333vw;
+    }
+
+    .project-desc {
+      top: 29vw;
+      left: 1.333vw;
+      right: 1.333vw;
+      font-size: 0.95vw;
       width: 25.5vw;
     }
   }
 </style>
 
 <script>
-  const track = document.querySelector<HTMLElement>("[data-obj-track]");
+  const track = document.querySelector<HTMLElement>("[data-prj-track]");
   const reduceMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)",
   ).matches;
 
   const step = () => {
     if (!track) return 388;
-    const card = track.querySelector<HTMLElement>(".object-card");
+    const card = track.querySelector<HTMLElement>(".project-card");
     const styles = getComputedStyle(track);
     const rawGap =
       styles.columnGap === "normal" ? styles.gap : styles.columnGap;
@@ -403,10 +421,14 @@ const objectImages = [
     }
   };
 
-  document.querySelector("[data-obj-prev]")?.addEventListener("click", goPrev);
-  document.querySelector("[data-obj-next]")?.addEventListener("click", goNext);
+  document.querySelector("[data-prj-prev]")?.addEventListener("click", goPrev);
+  document.querySelector("[data-prj-next]")?.addEventListener("click", goNext);
 
   if (track && !reduceMotion) {
-    window.setInterval(goNext, 3000);
+    let timer = window.setInterval(goNext, 4000);
+    track.addEventListener("mouseenter", () => window.clearInterval(timer));
+    track.addEventListener("mouseleave", () => {
+      timer = window.setInterval(goNext, 4000);
+    });
   }
 </script>

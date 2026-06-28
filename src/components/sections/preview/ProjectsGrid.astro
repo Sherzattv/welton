@@ -1,0 +1,142 @@
+---
+// Вариант B: сетка 3 карточки + CTA «Все проекты».
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import Button from "@components/Button.astro";
+import ProjectCard from "@components/ProjectCard.astro";
+import { asset } from "@lib/asset";
+import { projectFile, projectTitle, projectCode } from "@lib/projectAsset";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  projects: CollectionEntry<"projects">[];
+}
+const { projects } = Astro.props;
+---
+
+<section
+  id="projects-preview-b"
+  class="projects-grid-section relative overflow-hidden bg-paper text-charcoal"
+>
+  <GridLines />
+  <div
+    class="projects-grid-inner relative z-10 mx-auto w-full max-w-[var(--content-max)] px-gutter"
+  >
+    <header class="projects-grid-header">
+      <Heading
+        as="h2"
+        size="lg"
+        class="projects-grid-heading text-charcoal"
+        data-split
+      >
+        Готовые проекты домов
+      </Heading>
+      <p class="projects-grid-lead text-grey-500">
+        Адаптируем под ваш участок, бюджет и сценарий жизни — без переделки с
+        нуля.
+      </p>
+    </header>
+
+    <ul class="projects-grid">
+      {
+        projects.map((p) => {
+          const cover = p.data.renders[0] ?? p.data.facade;
+          return (
+            <li>
+              <ProjectCard
+                title={projectTitle(p.data)}
+                code={projectCode(p.data)}
+                tagline={p.data.tagline}
+                image={projectFile(p.data.folder, cover, true)}
+                href={asset(`/projects/${p.id}/`)}
+                area={p.data.area}
+                width={p.data.width}
+                depth={p.data.depth}
+                floors={p.data.floors}
+              />
+            </li>
+          );
+        })
+      }
+    </ul>
+
+    <div class="projects-grid-cta">
+      <Button
+        href={asset("/projects/")}
+        variant="light"
+        class="projects-grid-button bg-white"
+      >
+        Весь каталог
+      </Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .projects-grid-section {
+    padding-top: clamp(40px, 4vw, 72px);
+    padding-bottom: clamp(72px, 7vw, 140px);
+  }
+
+  .projects-grid-header {
+    display: grid;
+    gap: 16px;
+    max-width: 640px;
+  }
+
+  .projects-grid-heading {
+    text-transform: uppercase;
+  }
+
+  .projects-grid-lead {
+    font-size: clamp(0.95rem, 1.05vw, 1.05rem);
+    line-height: 1.5;
+    max-width: 50ch;
+  }
+
+  .projects-grid {
+    margin-top: clamp(40px, 4vw, 64px);
+    display: grid;
+    gap: clamp(20px, 2vw, 32px);
+    grid-template-columns: 1fr;
+    list-style: none;
+    padding: 0;
+  }
+
+  @media (min-width: 640px) {
+    .projects-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 960px) {
+    .projects-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .projects-grid-cta {
+    margin-top: clamp(40px, 4vw, 64px);
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .projects-grid-button {
+    width: calc(var(--s) * 199);
+    height: calc(var(--s) * 48);
+  }
+
+  @media (min-width: 640px) {
+    .projects-grid-button {
+      width: 199px;
+      height: 48px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .projects-grid-button {
+      width: clamp(199px, 16.583vw, 239px);
+      height: clamp(48px, 4vw, 58px);
+    }
+  }
+</style>

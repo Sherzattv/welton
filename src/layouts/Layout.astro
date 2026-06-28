@@ -7,11 +7,13 @@ import { asset } from "@lib/asset";
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean;
 }
 
 const {
   title = "welton — строительство частных домов в Казахстане",
   description = "Строим частные дома под ключ по разным технологиям — камень, монолит, СИП — по всему Казахстану.",
+  noindex = false,
 } = Astro.props;
 ---
 
@@ -21,6 +23,7 @@ const {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href={asset("/favicon.svg")} />
     <title>{title}</title>

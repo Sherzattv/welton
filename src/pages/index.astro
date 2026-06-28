@@ -1,4 +1,5 @@
 ---
+import { getCollection } from "astro:content";
 import Layout from "@layouts/Layout.astro";
 import Motion from "@components/Motion.astro";
 import Header from "@layout/Header.astro";
@@ -8,10 +9,16 @@ import Stats from "@sections/Stats.astro";
 import Services from "@sections/Services.astro";
 import Advantages from "@sections/Advantages.astro";
 import Objects from "@sections/Objects.astro";
-import Partners from "@sections/Partners.astro";
+import ProjectsGrid from "@components/sections/preview/ProjectsGrid.astro";
 import Stages from "@sections/Stages.astro";
 import CtaCalc from "@sections/CtaCalc.astro";
 import Faq from "@sections/Faq.astro";
+
+const all = (await getCollection("projects")).sort((a, b) =>
+  a.data.folder.localeCompare(b.data.folder),
+);
+const featured = all.filter((p) => p.data.featured);
+const showcase = (featured.length ? featured : all).slice(0, 3);
 ---
 
 <Layout>
@@ -23,7 +30,7 @@ import Faq from "@sections/Faq.astro";
     <Services />
     <Advantages />
     <Objects />
-    <Partners />
+    <ProjectsGrid projects={showcase} />
     <Stages />
     <CtaCalc />
     <Faq />

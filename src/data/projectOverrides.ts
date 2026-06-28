@@ -88,6 +88,7 @@ export const projectOverrides: Record<string, ProjectOverride> = {
       "Двухэтажный 260 м² с вальмовой кровлей и широкой террасой вдоль главного фасада.",
     bedrooms: 3,
     bathrooms: 2,
+    featured: true,
   },
   "wlt-10": {
     title: "Кирпичный модерн",
@@ -123,6 +124,7 @@ export const projectOverrides: Record<string, ProjectOverride> = {
       "Двухэтажный 217 м² с вальмовой кровлей и сплошной лентой панорамного остекления второго этажа.",
     bedrooms: 3,
     bathrooms: 2,
+    featured: true,
   },
   "wlt-15": {
     title: "Симметрия",
@@ -207,6 +209,7 @@ export const projectOverrides: Record<string, ProjectOverride> = {
       "А-фрейм 125 м² с панорамным остеклением во весь фронтон и видовой террасой.",
     bedrooms: 2,
     bathrooms: 2,
+    featured: true,
   },
   "wlt-27": {
     title: "Терраса юга",
@@ -326,6 +329,7 @@ export const projectOverrides: Record<string, ProjectOverride> = {
       "Барнхаус с панорамным остеклением во всю высоту фронтона и тёплыми вставками.",
     bedrooms: 2,
     bathrooms: 3,
+    featured: true,
   },
   "wlt-44": {
     title: "Бирюза",
@@ -361,6 +365,7 @@ export const projectOverrides: Record<string, ProjectOverride> = {
       "Двухэтажный с плоской кровлей, большой террасой второго этажа и панорамой, 272 м².",
     bedrooms: 4,
     bathrooms: 3,
+    featured: true,
   },
   "wlt-49": {
     title: "Излом",
@@ -560,6 +565,7 @@ export const projectOverrides: Record<string, ProjectOverride> = {
       "Двухэтажный 128 м² с А-образным фронтоном из дерева и панорамой во всю высоту.",
     bedrooms: 3,
     bathrooms: 2,
+    featured: true,
   },
   "wlt-78": {
     title: "Длинный фронтон",

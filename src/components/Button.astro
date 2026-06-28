@@ -48,6 +48,7 @@ const variants = {
 
 <style>
   .btn {
+    min-height: clamp(48px, 4vw, 58px);
     font-size: clamp(14px, 1.1667vw, 16.8px);
   }
 
@@ -75,6 +76,7 @@ const variants = {
 
   @media (max-width: 639px) {
     .btn {
+      min-height: calc(100vw * 48 / 360);
       font-size: calc(100vw * 14 / 360);
     }
 

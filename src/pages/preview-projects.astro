@@ -1,0 +1,119 @@
+---
+// Тестовая страница: три варианта превью каталога проектов.
+// Не индексируется (noindex). Удалить после выбора финального варианта.
+import { getCollection } from "astro:content";
+import Layout from "@layouts/Layout.astro";
+import Motion from "@components/Motion.astro";
+import Header from "@layout/Header.astro";
+import Footer from "@layout/Footer.astro";
+import ProjectsCarousel from "@components/sections/preview/ProjectsCarousel.astro";
+import ProjectsGrid from "@components/sections/preview/ProjectsGrid.astro";
+import ProjectsCarouselCta from "@components/sections/preview/ProjectsCarouselCta.astro";
+
+const all = (await getCollection("projects")).sort((a, b) =>
+  a.data.folder.localeCompare(b.data.folder),
+);
+const featured = all.filter((p) => p.data.featured);
+const pool = featured.length ? featured : all.slice(0, 6);
+const six = pool.slice(0, 6);
+const three = pool.slice(0, 3);
+---
+
+<Layout
+  title="Превью каталога — тестовая страница welton"
+  description="Локальная тестовая страница для выбора варианта превью каталога проектов."
+  noindex
+>
+  <Motion />
+  <Header />
+  <main>
+    <section class="preview-hero bg-charcoal text-paper">
+      <div class="mx-auto w-full max-w-[var(--content-max)] px-gutter">
+        <p class="preview-eyebrow text-grey-300">тестовая страница</p>
+        <h1 class="preview-title display">Три варианта превью каталога</h1>
+        <p class="preview-lead text-grey-200">
+          Один и тот же набор проектов — три раскладки. Выбираем какая пойдёт на
+          главную вместо старого блока партнёров.
+        </p>
+      </div>
+    </section>
+
+    <div class="variant-label bg-ink text-paper">
+      <div class="mx-auto w-full max-w-[var(--content-max)] px-gutter">
+        <span class="variant-tag">Вариант A</span>
+        <span class="variant-name">Карусель в стиле «Объекты»</span>
+      </div>
+    </div>
+    <ProjectsCarousel projects={six} />
+
+    <div class="variant-label bg-ink text-paper">
+      <div class="mx-auto w-full max-w-[var(--content-max)] px-gutter">
+        <span class="variant-tag">Вариант B</span>
+        <span class="variant-name">Сетка 3 карточки + «Все проекты»</span>
+      </div>
+    </div>
+    <ProjectsGrid projects={three} />
+
+    <div class="variant-label bg-ink text-paper">
+      <div class="mx-auto w-full max-w-[var(--content-max)] px-gutter">
+        <span class="variant-tag">Вариант C</span>
+        <span class="variant-name">Карусель + кнопка «Весь каталог»</span>
+      </div>
+    </div>
+    <ProjectsCarouselCta projects={six} />
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .preview-hero {
+    padding-top: clamp(120px, 14vw, 200px);
+    padding-bottom: clamp(56px, 6vw, 96px);
+  }
+
+  .preview-eyebrow {
+    font-size: clamp(11px, 0.85vw, 13px);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .preview-title {
+    margin-top: 16px;
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  .preview-lead {
+    margin-top: clamp(20px, 2vw, 32px);
+    max-width: 60ch;
+    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+    line-height: 1.5;
+  }
+
+  .variant-label {
+    padding-block: 14px;
+    border-block: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .variant-label > div {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .variant-tag {
+    font-family: var(--font-display);
+    font-size: clamp(14px, 1.1vw, 18px);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .variant-name {
+    font-size: clamp(12px, 0.95vw, 14px);
+    letter-spacing: -0.2px;
+    color: var(--color-grey-300);
+  }
+</style>
