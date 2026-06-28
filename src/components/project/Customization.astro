@@ -5,16 +5,23 @@
 import GridLines from "@components/GridLines.astro";
 import Heading from "@components/Heading.astro";
 import Icon from "@ui/Icon.astro";
+import { Image } from "astro:assets";
 import { customization } from "@data/projectPage";
-import { asset } from "@lib/asset";
+import imgPlanning from "../../assets/project-customization/planning.jpg";
+import imgZoning from "../../assets/project-customization/zoning.jpg";
+import imgFacade from "../../assets/project-customization/facade.jpg";
+import imgFloors from "../../assets/project-customization/floors.jpg";
+import imgExtensions from "../../assets/project-customization/extensions.jpg";
+import imgTechnology from "../../assets/project-customization/technology.jpg";
 
+// Порядок 1:1 с customization в @data/projectPage.
 const images = [
-  "/img/project-customization/planning.jpg",
-  "/img/project-customization/zoning.jpg",
-  "/img/project-customization/facade.jpg",
-  "/img/project-customization/floors.jpg",
-  "/img/project-customization/extensions.jpg",
-  "/img/project-customization/technology.jpg",
+  imgPlanning,
+  imgZoning,
+  imgFacade,
+  imgFloors,
+  imgExtensions,
+  imgTechnology,
 ];
 ---
 
@@ -66,9 +73,13 @@ const images = [
         customization.map((item, index) => (
           <article class="custom-card group" data-reveal>
             <div class="custom-image-wrap">
-              <img
-                src={asset(images[index % images.length])}
+              <Image
+                src={images[index % images.length]}
                 alt={item.title}
+                widths={[320, 480, 640]}
+                sizes="(min-width: 960px) 31vw, (min-width: 640px) 376px, 310px"
+                format="webp"
+                quality={72}
                 loading="lazy"
                 decoding="async"
                 class="custom-image"

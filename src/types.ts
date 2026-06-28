@@ -26,7 +26,6 @@ export interface Service {
   num: string;
   title: string;
   desc: string;
-  img: string;
 }
 
 export interface Advantage {
@@ -40,7 +39,6 @@ export interface ProjectObject {
   num: string;
   title: string;
   desc: string;
-  img: string;
 }
 
 export interface Partner {

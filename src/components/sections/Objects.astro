@@ -2,8 +2,24 @@
 import GridLines from "@components/GridLines.astro";
 import Heading from "@components/Heading.astro";
 import Icon from "@ui/Icon.astro";
+import { Image } from "astro:assets";
 import { objects } from "@data/home";
-import { asset } from "@lib/asset";
+import imgCountry from "../../assets/home-objects/country-houses.jpg";
+import imgVillages from "../../assets/home-objects/cottage-villages.jpg";
+import imgGlamping from "../../assets/home-objects/glampings.jpg";
+import imgBarn from "../../assets/home-objects/barnhouses.jpg";
+import imgBases from "../../assets/home-objects/recreation-bases.jpg";
+import imgRestaurants from "../../assets/home-objects/restaurants.jpg";
+
+// Порядок 1:1 с objects в @data/home (01..06).
+const objectImages = [
+  imgCountry,
+  imgVillages,
+  imgGlamping,
+  imgBarn,
+  imgBases,
+  imgRestaurants,
+];
 ---
 
 <section
@@ -45,12 +61,16 @@ import { asset } from "@lib/asset";
 
     <div data-obj-track class="objects-track">
       {
-        objects.map((o) => (
+        objects.map((o, i) => (
           <article class="object-card group">
             <div class="object-image-wrap">
-              <img
-                src={asset(o.img)}
+              <Image
+                src={objectImages[i]}
                 alt={o.title}
+                widths={[320, 480, 640]}
+                sizes="(min-width: 960px) 31vw, (min-width: 640px) 376px, 310px"
+                format="webp"
+                quality={72}
                 loading="lazy"
                 decoding="async"
                 class="object-image"
@@ -140,8 +160,8 @@ import { asset } from "@lib/asset";
     position: absolute;
     top: calc(var(--s) * 16);
     left: calc(var(--s) * 16);
-    width: calc(var(--s) * 172);
-    height: calc(var(--s) * 220);
+    width: calc(var(--s) * 246);
+    height: calc(var(--s) * 184.5);
     overflow: hidden;
     border-radius: var(--radius-sm);
     background: var(--color-grey-200);
@@ -168,7 +188,7 @@ import { asset } from "@lib/asset";
     position: absolute;
     left: calc(var(--s) * 16);
     right: calc(var(--s) * 16);
-    top: calc(var(--s) * 290);
+    top: calc(var(--s) * 250);
     text-transform: uppercase;
   }
 
@@ -176,7 +196,7 @@ import { asset } from "@lib/asset";
     position: absolute;
     left: calc(var(--s) * 16);
     right: calc(var(--s) * 16);
-    top: calc(var(--s) * 354);
+    top: calc(var(--s) * 318);
   }
 
   @media (min-width: 640px) {
@@ -216,8 +236,8 @@ import { asset } from "@lib/asset";
     .object-image-wrap {
       top: 16px;
       left: 16px;
-      width: 172px;
-      height: 220px;
+      width: 246px;
+      height: 185px;
     }
 
     .object-num {
@@ -226,16 +246,16 @@ import { asset } from "@lib/asset";
     }
 
     .object-title {
-      top: 290px;
+      top: 250px;
       left: 16px;
       right: 16px;
     }
 
     .object-desc {
-      top: 354px;
+      top: 318px;
       left: 16px;
       right: 16px;
-      width: 278px;
+      width: 318px;
     }
   }
 
@@ -323,8 +343,8 @@ import { asset } from "@lib/asset";
     .object-image-wrap {
       top: 1.333vw;
       left: 1.333vw;
-      width: 14.333vw;
-      height: 18.333vw;
+      width: 20.5vw;
+      height: 15.375vw;
     }
 
     .object-num {
@@ -333,16 +353,16 @@ import { asset } from "@lib/asset";
     }
 
     .object-title {
-      top: 24.167vw;
+      top: 21vw;
       left: 1.333vw;
       right: 1.333vw;
     }
 
     .object-desc {
-      top: 29.5vw;
+      top: 27.167vw;
       left: 1.333vw;
       right: auto;
-      width: 23.167vw;
+      width: 25.5vw;
     }
   }
 </style>
