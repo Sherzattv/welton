@@ -5,6 +5,19 @@ import Icon from "@ui/Icon.astro";
 import SlideLink from "@ui/SlideLink.astro";
 import { nav, contact } from "@data/site";
 import { asset } from "@lib/asset";
+
+const homePath = asset("/");
+const currentPath = Astro.url.pathname.replace(/\/index\.html$/, "/");
+const isHomePage =
+  currentPath === homePath ||
+  currentPath === homePath.replace(/\/$/, "") ||
+  `${currentPath}/` === homePath;
+
+const navHref = (href: string) => {
+  if (href.startsWith("#")) return isHomePage ? href : asset(`/${href}`);
+  if (href.startsWith("/")) return asset(href);
+  return href;
+};
 ---
 
 <header
@@ -40,7 +53,7 @@ import { asset } from "@lib/asset";
             ];
             return (
               <SlideLink
-                href={item.href}
+                href={navHref(item.href)}
                 text={item.label}
                 style={`left:${left}`}
                 class="nav-link absolute top-1/2 -translate-y-1/2 text-[12px] leading-[1.55] font-medium tracking-[-0.3px] xl:text-[14px]"
@@ -133,7 +146,7 @@ import { asset } from "@lib/asset";
         nav.map((item, i) => (
           <li class="menu-item" style={`--i:${i}`}>
             <a
-              href={item.href}
+              href={navHref(item.href)}
               data-menu-link
               class="menu-link group flex items-center justify-between gap-4 border-b border-paper/10 py-[clamp(18px,4.5vw,30px)] text-paper transition-colors duration-200 hover:text-accent focus-visible:text-accent focus-visible:outline-none"
             >
