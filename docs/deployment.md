@@ -50,9 +50,24 @@
 - **SSL-сертификат выпускается и продлевается автоматически** — отдельно покупать
   не нужно. Это закрывает требование зоны .kz по обязательному SSL.
 
+## CI-гейт качества
+
+Параллельно с деплоем работает GitHub Actions workflow
+[`.github/workflows/quality.yml`](../.github/workflows/quality.yml) — он
+запускается на каждый push в `main` и на каждый PR, и гоняет те же проверки,
+что и локально:
+
+- `npm run check` — типы (`astro check`);
+- `npm run lint` — ESLint;
+- `npm run format:check` — Prettier;
+- guard на хардкод `max-w-[1680px]` (вместо токена `--content-max`).
+
+Сборку и публикацию делает Cloudflare Workers Builds — этот workflow ничего
+не деплоит, только сигнализирует о регрессиях.
+
 ## Локальная проверка перед пушем
 
-Перед тем как пушить в `main`, прогоните те же проверки, что гоняются локально:
+Перед тем как пушить в `main`, прогоните те же проверки локально:
 
 ```bash
 npm run check && npm run lint && npm run format:check
@@ -60,13 +75,3 @@ npm run build
 ```
 
 Визуальную часть проверяйте глазами в браузере (`npm run dev`).
-
-## История: GitHub Pages (устарело)
-
-Раньше сайт публиковался на **GitHub Pages** (`sherzattv.github.io/welton/`) через
-ветку `gh-pages` (туда вручную выкладывался собранный `dist/`). Автодеплой через
-`.github/workflows/deploy.yml` не работал из-за блокировки GitHub Actions по
-биллингу.
-
-Сейчас это всё **не используется** — деплой целиком переехал на Cloudflare с
-бесплатным автодеплоем. Ветку `gh-pages` и workflow `deploy.yml` можно удалить.
