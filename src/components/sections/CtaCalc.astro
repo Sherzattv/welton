@@ -118,6 +118,10 @@ const { flush = false } = Astro.props;
       height: 640px;
     }
 
+    .cta-section--flush .cta-bg {
+      height: 100%;
+    }
+
     .cta-inner {
       padding-top: 32px;
       padding-bottom: 32px;
@@ -163,6 +167,10 @@ const { flush = false } = Astro.props;
 
     .cta-bg {
       height: clamp(600px, 47vw, 680px);
+    }
+
+    .cta-section--flush .cta-bg {
+      height: 100%;
     }
 
     .cta-inner {
