@@ -3,7 +3,7 @@
 import GridLines from "@components/GridLines.astro";
 import Heading from "@components/Heading.astro";
 import Button from "@components/Button.astro";
-import Icon from "@ui/Icon.astro";
+import IconButton from "@ui/IconButton.astro";
 import { asset } from "@lib/asset";
 import { projectFile, projectTitle, projectCode } from "@lib/projectAsset";
 import type { CollectionEntry } from "astro:content";
@@ -32,35 +32,16 @@ const { projects } = Astro.props;
     </Heading>
 
     <div class="projects2-controls" aria-label="Навигация по проектам">
-      <button
-        type="button"
-        data-prj2-prev
-        aria-label="Назад"
-        class="projects2-arrow group"
-      >
-        <Icon
-          name="arrow-left"
-          class="transition-transform duration-200 ease-in-out group-hover:-translate-x-1 group-focus-visible:-translate-x-1"
-        />
-      </button>
-      <button
-        type="button"
-        data-prj2-next
-        aria-label="Вперёд"
-        class="projects2-arrow group"
-      >
-        <Icon
-          name="arrow-right"
-          class="transition-transform duration-200 ease-in-out group-hover:translate-x-1 group-focus-visible:translate-x-1"
-        />
-      </button>
+      <IconButton icon="arrow-left" label="Назад" data-prj2-prev />
+      <IconButton icon="arrow-right" label="Вперёд" data-prj2-next />
     </div>
 
     <div class="projects2-cta">
       <Button
         href={asset("/projects/")}
         variant="light"
-        class="projects2-button bg-white"
+        size="cta"
+        class="bg-white"
       >
         Весь каталог
       </Button>
@@ -121,35 +102,8 @@ const { projects } = Astro.props;
     gap: calc(var(--s) * 10);
   }
 
-  .projects2-arrow {
-    display: grid;
-    width: calc(var(--s) * 40);
-    height: calc(var(--s) * 40);
-    place-items: center;
-    border: 1px solid currentColor;
-    border-radius: var(--radius-sm);
-    background: transparent;
-    transition:
-      color 200ms ease,
-      border-color 200ms ease,
-      background-color 200ms ease;
-  }
-
-  .projects2-arrow:hover,
-  .projects2-arrow:focus-visible {
-    color: var(--color-paper);
-    background: var(--color-accent);
-    border-color: var(--color-accent);
-    outline: none;
-  }
-
   .projects2-cta {
     margin-top: calc(var(--s) * 24);
-  }
-
-  .projects2-button {
-    width: calc(var(--s) * 199);
-    height: calc(var(--s) * 48);
   }
 
   .projects2-track {
@@ -255,18 +209,8 @@ const { projects } = Astro.props;
       gap: 10px;
     }
 
-    .projects2-arrow {
-      width: 40px;
-      height: 40px;
-    }
-
     .projects2-cta {
       margin-top: 24px;
-    }
-
-    .projects2-button {
-      width: 199px;
-      height: 48px;
     }
 
     .projects2-track {
@@ -381,11 +325,6 @@ const { projects } = Astro.props;
       left: var(--spacing-gutter);
       bottom: var(--proj2-bottom-gap);
       margin: 0;
-    }
-
-    .projects2-button {
-      width: clamp(199px, 16.583vw, 239px);
-      height: clamp(48px, 4vw, 58px);
     }
 
     .projects2-track {

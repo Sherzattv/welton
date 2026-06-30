@@ -37,11 +37,6 @@ export const services = [
   },
   {
     num: "04",
-    title: "Металлоконструкции",
-    desc: "Стальной каркас для домов и коммерческих объектов: большие пролёты, скорость монтажа и точная геометрия.",
-  },
-  {
-    num: "05",
     title: "Сэндвич-панели",
     desc: "Быстровозводимые тёплые здания — для баз отдыха, кафе и хозпостроек. Готовый утеплённый контур, монтаж в любой сезон.",
   },
@@ -100,15 +95,15 @@ export const objects = [
 ] satisfies ProjectObject[];
 
 export const partners = [
-  { name: "Maco", logo: "/img/Group_6743.svg" },
-  { name: "Schüco", logo: "/img/Group_6740.svg" },
-  { name: "NOGEL", logo: "/img/Group_6729.png" },
-  { name: "АЛЮТЕХ", logo: "/img/Group_6735.svg" },
-  { name: "Möller", logo: "/img/Group_6732.svg" },
-  { name: "VEKA", logo: "/img/Group_6738.svg" },
-  { name: "Siegenia", logo: "/img/Group_6728.svg" },
-  { name: "Roto", logo: "/img/Group_6725.svg" },
-  { name: "Рехау", logo: "/img/Group_6723.svg" },
+  { name: "Maco", logo: "img/Group_6743.svg" },
+  { name: "Schüco", logo: "img/Group_6740.svg" },
+  { name: "NOGEL", logo: "img/Group_6729.png" },
+  { name: "АЛЮТЕХ", logo: "img/Group_6735.svg" },
+  { name: "Möller", logo: "img/Group_6732.svg" },
+  { name: "VEKA", logo: "img/Group_6738.svg" },
+  { name: "Siegenia", logo: "img/Group_6728.svg" },
+  { name: "Roto", logo: "img/Group_6725.svg" },
+  { name: "Рехау", logo: "img/Group_6723.svg" },
 ] satisfies Partner[];
 
 export const stages = [

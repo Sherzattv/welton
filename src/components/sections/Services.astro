@@ -5,14 +5,13 @@ import Button from "@components/Button.astro";
 import Hairline from "@ui/Hairline.astro";
 import { Image } from "astro:assets";
 import { services } from "@data/home";
-import imgKamen from "../../assets/tech-kamen.png";
-import imgMonolit from "../../assets/tech-monolit.png";
-import imgSip from "../../assets/tech-sip.png";
-import imgMetall from "../../assets/tech-metall.png";
-import imgSandwich from "../../assets/tech-sandwich.png";
+import imgKamen from "@assets/tech-kamen.png";
+import imgMonolit from "@assets/tech-monolit.png";
+import imgSip from "@assets/tech-sip.png";
+import imgSandwich from "@assets/tech-sandwich.png";
 
-// Фото по технологиям — порядок совпадает с services (монолит/камень/СИП/металл/сэндвич).
-const serviceImages = [imgMonolit, imgKamen, imgSip, imgMetall, imgSandwich];
+// Фото по технологиям — порядок совпадает с services (монолит/камень/СИП/сэндвич).
+const serviceImages = [imgMonolit, imgKamen, imgSip, imgSandwich];
 ---
 
 <section id="services" class="services-section relative bg-paper text-charcoal">
@@ -26,7 +25,7 @@ const serviceImages = [imgMonolit, imgKamen, imgSip, imgMetall, imgSandwich];
       class="services-heading text-charcoal"
       data-split
     >
-      Строим дома под ключ по пяти технологиям
+      Строим дома под ключ по четырём технологиям
     </Heading>
 
     <div class="services-list">
@@ -59,6 +58,7 @@ const serviceImages = [imgMonolit, imgKamen, imgSip, imgMetall, imgSandwich];
             </div>
             <Button
               variant="light"
+              size="cta"
               href="#invoice"
               class="service-button bg-white"
             >
@@ -73,7 +73,6 @@ const serviceImages = [imgMonolit, imgKamen, imgSip, imgMetall, imgSandwich];
 
 <style>
   .services-inner {
-    min-height: calc(var(--s) * 1510);
     padding-top: calc(var(--s) * 72);
     padding-bottom: calc(var(--s) * 80);
   }
@@ -139,14 +138,8 @@ const serviceImages = [imgMonolit, imgKamen, imgSip, imgMetall, imgSandwich];
     transform: scale(calc(var(--img-zoom, 1) * 1.04));
   }
 
-  .service-button {
-    width: calc(var(--s) * 199);
-    height: calc(var(--s) * 48);
-  }
-
   @media (min-width: 640px) {
     .services-inner {
-      min-height: 1320px;
       padding-top: 96px;
       padding-bottom: 96px;
     }
@@ -174,18 +167,13 @@ const serviceImages = [imgMonolit, imgKamen, imgSip, imgMetall, imgSandwich];
     .service-button {
       grid-column: 2;
     }
-
-    .service-button {
-      width: 199px;
-      height: 48px;
-    }
   }
 
   @media (min-width: 960px) {
     .services-inner {
-      /* 5 рядов: низ последнего ряда (i=4) на ~160.75vw + ~5vw «воздуха».
+      /* 4 ряда: низ последнего ряда (i=3) на ~130.67vw + ~5vw «воздуха».
          Ряды позиционированы абсолютно по --top = (144 + 361*i)/12 vw. */
-      min-height: 166vw;
+      min-height: 135.7vw;
       padding-block: 0;
     }
 
@@ -248,8 +236,6 @@ const serviceImages = [imgMonolit, imgKamen, imgSip, imgMetall, imgSandwich];
       position: absolute;
       left: 8.333vw;
       bottom: 0;
-      width: 16.583vw;
-      height: 4vw;
     }
   }
 </style>

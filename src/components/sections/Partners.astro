@@ -32,7 +32,7 @@ const loop = [...ordered, ...ordered];
         loop.map((p) => (
           <div class="partner-card">
             <img
-              src={asset(p.logo)}
+              src={asset(`/${p.logo}`)}
               alt={p.name}
               loading="lazy"
               class="partner-logo"

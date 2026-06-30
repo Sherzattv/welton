@@ -32,11 +32,7 @@ jobs:
         run: npm run check
       - name: Lint
         run: npm run lint
+      - name: Design audit
+        run: npm run design:audit
       - name: Format check
         run: npm run format:check
-      - name: Guard — контейнер только через токен --content-max
-        run: |
-          if grep -rn 'max-w-\[1680px\]' src; then
-            echo "::error::Хардкод max-w-[1680px]. Используйте токен: max-w-[var(--content-max)] или <Container>."
-            exit 1
-          fi

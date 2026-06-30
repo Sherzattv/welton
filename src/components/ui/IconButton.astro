@@ -1,0 +1,105 @@
+---
+// Единая квадратная икон-кнопка для стрелок каруселей, footer top и похожих UI.
+import Icon from "@ui/Icon.astro";
+
+type IconName = "arrow-left" | "arrow-right" | "arrow-up";
+
+interface Props {
+  icon: IconName;
+  label: string;
+  href?: string;
+  class?: string;
+  type?: "button" | "submit";
+  tone?: "dark" | "light";
+  [key: `data-${string}`]: string | boolean | undefined;
+}
+
+const {
+  icon,
+  label,
+  href,
+  class: className = "",
+  type = "button",
+  tone = "dark",
+  ...rest
+} = Astro.props;
+const Tag = href ? "a" : "button";
+
+const base = "icon-button group";
+const tones = {
+  dark: "icon-button--dark",
+  light: "icon-button--light",
+};
+---
+
+<Tag
+  href={href}
+  type={href ? undefined : type}
+  aria-label={label}
+  class={`${base} ${tones[tone]} ${className}`}
+  data-icon={icon}
+  {...rest}
+>
+  <Icon name={icon} />
+</Tag>
+
+<style>
+  .icon-button {
+    display: grid;
+    width: calc(var(--s) * 40);
+    height: calc(var(--s) * 40);
+    place-items: center;
+    border: 1px solid currentColor;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    transition:
+      color 200ms ease,
+      border-color 200ms ease,
+      background-color 200ms ease;
+  }
+
+  .icon-button--light {
+    border-color: rgb(238 238 238 / 0.35);
+  }
+
+  .icon-button:hover,
+  .icon-button:focus-visible {
+    color: var(--color-paper);
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    outline: none;
+  }
+
+  .icon-button :global(svg) {
+    transition: transform 200ms ease-in-out;
+  }
+
+  .icon-button[data-icon="arrow-left"]:hover :global(svg),
+  .icon-button[data-icon="arrow-left"]:focus-visible :global(svg) {
+    transform: translateX(-4px);
+  }
+
+  .icon-button[data-icon="arrow-right"]:hover :global(svg),
+  .icon-button[data-icon="arrow-right"]:focus-visible :global(svg) {
+    transform: translateX(4px);
+  }
+
+  .icon-button[data-icon="arrow-up"]:hover :global(svg),
+  .icon-button[data-icon="arrow-up"]:focus-visible :global(svg) {
+    transform: translateY(-4px);
+  }
+
+  @media (min-width: 640px) {
+    .icon-button {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .icon-button--scale {
+      width: clamp(40px, 3.333vw, 48px);
+      height: clamp(40px, 3.333vw, 48px);
+    }
+  }
+</style>

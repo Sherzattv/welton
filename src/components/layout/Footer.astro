@@ -1,7 +1,7 @@
 ---
 import GridLines from "@components/GridLines.astro";
 import Logo from "@components/Logo.astro";
-import Icon from "@ui/Icon.astro";
+import IconButton from "@ui/IconButton.astro";
 import SlideLink from "@ui/SlideLink.astro";
 import { contact } from "@data/site";
 import { asset } from "@lib/asset";
@@ -16,9 +16,13 @@ import { asset } from "@lib/asset";
       <Logo class="h-[30px] w-auto" />
     </a>
 
-    <a href="#top" aria-label="Наверх" class="footer-top">
-      <Icon name="arrow-up" />
-    </a>
+    <IconButton
+      icon="arrow-up"
+      label="Наверх"
+      href="#top"
+      tone="light"
+      class="footer-top icon-button--scale"
+    />
 
     <div class="footer-address">
       <p class="footer-label">Адрес</p>
@@ -80,21 +84,6 @@ import { asset } from "@lib/asset";
     position: absolute;
     top: calc(var(--s) * 32);
     right: var(--spacing-gutter);
-    display: grid;
-    width: calc(var(--s) * 40);
-    height: calc(var(--s) * 40);
-    place-items: center;
-    border: 1px solid rgb(238 238 238 / 0.35);
-    border-radius: var(--radius-sm);
-    transition:
-      color 200ms ease,
-      border-color 200ms ease;
-  }
-
-  .footer-top:hover,
-  .footer-top:focus-visible {
-    color: var(--color-accent);
-    outline: none;
   }
 
   .footer-link:hover,
@@ -189,8 +178,6 @@ import { asset } from "@lib/asset";
 
     .footer-top {
       top: 32px;
-      width: 40px;
-      height: 40px;
     }
 
     .footer-address {
@@ -257,8 +244,6 @@ import { asset } from "@lib/asset";
     .footer-top {
       top: 32px;
       right: var(--guide-edge-right);
-      width: 40px;
-      height: 40px;
     }
 
     .footer-address {
@@ -325,8 +310,6 @@ import { asset } from "@lib/asset";
 
     .footer-top {
       top: clamp(32px, 2.667vw, 38px);
-      width: clamp(40px, 3.333vw, 48px);
-      height: clamp(40px, 3.333vw, 48px);
     }
 
     .footer-address,

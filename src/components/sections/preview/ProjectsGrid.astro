@@ -64,7 +64,8 @@ const { projects } = Astro.props;
       <Button
         href={asset("/projects/")}
         variant="light"
-        class="projects-grid-button bg-white"
+        size="cta"
+        class="bg-white"
       >
         Весь каталог
       </Button>
@@ -119,24 +120,5 @@ const { projects } = Astro.props;
     margin-top: clamp(40px, 4vw, 64px);
     display: flex;
     justify-content: flex-start;
-  }
-
-  .projects-grid-button {
-    width: calc(var(--s) * 199);
-    height: calc(var(--s) * 48);
-  }
-
-  @media (min-width: 640px) {
-    .projects-grid-button {
-      width: 199px;
-      height: 48px;
-    }
-  }
-
-  @media (min-width: 1200px) {
-    .projects-grid-button {
-      width: clamp(199px, 16.583vw, 239px);
-      height: clamp(48px, 4vw, 58px);
-    }
   }
 </style>

@@ -4,7 +4,7 @@ import Heading from "@components/Heading.astro";
 import Button from "@components/Button.astro";
 import { Image } from "astro:assets";
 import { contact } from "@data/site";
-import ctaBg from "../../assets/cta.png";
+import ctaBg from "@assets/cta.png";
 
 interface Props {
   /** Убрать светлый бумажный хвост после CTA (нужно на детальных проектах перед футером). */
@@ -43,7 +43,7 @@ const { flush = false } = Astro.props;
     </Heading>
 
     <div class="cta-button">
-      <Button variant="light" href="#contacts" class="bg-white"
+      <Button variant="light" size="cta" href="#contacts" class="bg-white"
         >Оставить заявку</Button
       >
     </div>
@@ -82,11 +82,6 @@ const { flush = false } = Astro.props;
 
   .cta-button {
     margin-top: calc(var(--s) * 36);
-  }
-
-  .cta-button :global(a) {
-    width: calc(var(--s) * 199);
-    height: calc(var(--s) * 48);
   }
 
   .cta-note {
@@ -135,11 +130,6 @@ const { flush = false } = Astro.props;
       margin-top: 36px;
     }
 
-    .cta-button :global(a) {
-      width: 199px;
-      height: 48px;
-    }
-
     .cta-note {
       display: none;
       bottom: 75px;
@@ -185,11 +175,6 @@ const { flush = false } = Astro.props;
 
     .cta-button {
       margin-top: clamp(24px, 2vw, 29px);
-    }
-
-    .cta-button :global(a) {
-      width: clamp(199px, 16.583vw, 239px);
-      height: clamp(48px, 4vw, 58px);
     }
 
     .cta-note {

@@ -12,7 +12,7 @@ import ProjectCard from "@components/ProjectCard.astro";
 import CatalogFilters from "@components/projects/CatalogFilters.astro";
 import { asset } from "@lib/asset";
 import { projectCode, projectFile, projectTitle } from "@lib/projectAsset";
-import heroBg from "../../assets/dom-hero.jpg";
+import heroBg from "@assets/dom-hero.jpg";
 
 const projects = (await getCollection("projects")).sort((a, b) =>
   a.data.folder.localeCompare(b.data.folder),

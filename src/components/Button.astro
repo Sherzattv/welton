@@ -1,11 +1,12 @@
 ---
 // Фирменная кнопка: подпись + вертикальный разделитель + стрелка.
-// Острые углы, ховер уводит в зелёный акцент, стрелка едет вправо.
+// Острые углы, ховер уводит в красный акцент, стрелка едет вправо.
 import Icon from "@ui/Icon.astro";
 
 interface Props {
   href?: string;
   variant?: "light" | "accent" | "outline";
+  size?: "auto" | "cta" | "full";
   class?: string;
   type?: "button" | "submit";
   [key: `data-${string}`]: string | boolean | undefined;
@@ -13,6 +14,7 @@ interface Props {
 const {
   href,
   variant = "light",
+  size = "auto",
   class: className = "",
   type = "button",
   ...rest
@@ -27,17 +29,22 @@ const variants = {
   outline:
     "border border-paper/30 text-paper hover:border-accent hover:bg-accent hover:text-paper",
 };
+const sizes = {
+  auto: "",
+  cta: "btn--cta",
+  full: "btn--full",
+};
 ---
 
 <Tag
   href={href}
   type={href ? undefined : type}
-  class={`${base} ${variants[variant]} ${className}`}
+  class={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
   {...rest}
 >
-  <span class="btn-label flex h-full items-center"><slot /></span>
+  <span class="btn-label flex items-center"><slot /></span>
   <span
-    class="btn-icon relative flex h-full items-center justify-center transition-colors duration-300"
+    class="btn-icon relative flex items-center justify-center transition-colors duration-300"
   >
     <Icon
       name="arrow-right"
@@ -50,6 +57,14 @@ const variants = {
   .btn {
     min-height: clamp(48px, 4vw, 58px);
     font-size: clamp(14px, 1.1667vw, 16.8px);
+  }
+
+  .btn--cta {
+    width: clamp(199px, 16.583vw, 239px);
+  }
+
+  .btn--full {
+    width: 100%;
   }
 
   .btn-label {
@@ -78,6 +93,10 @@ const variants = {
     .btn {
       min-height: calc(100vw * 48 / 360);
       font-size: calc(100vw * 14 / 360);
+    }
+
+    .btn--cta {
+      width: calc(100vw * 199 / 360);
     }
 
     .btn-label {

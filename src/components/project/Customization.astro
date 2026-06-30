@@ -4,15 +4,15 @@
 // лента карточек справа/ниже.
 import GridLines from "@components/GridLines.astro";
 import Heading from "@components/Heading.astro";
-import Icon from "@ui/Icon.astro";
+import IconButton from "@ui/IconButton.astro";
 import { Image } from "astro:assets";
 import { customization } from "@data/projectPage";
-import imgPlanning from "../../assets/project-customization/planning.jpg";
-import imgZoning from "../../assets/project-customization/zoning.jpg";
-import imgFacade from "../../assets/project-customization/facade.jpg";
-import imgFloors from "../../assets/project-customization/floors.jpg";
-import imgExtensions from "../../assets/project-customization/extensions.jpg";
-import imgTechnology from "../../assets/project-customization/technology.jpg";
+import imgPlanning from "@assets/project-customization/planning.jpg";
+import imgZoning from "@assets/project-customization/zoning.jpg";
+import imgFacade from "@assets/project-customization/facade.jpg";
+import imgFloors from "@assets/project-customization/floors.jpg";
+import imgExtensions from "@assets/project-customization/extensions.jpg";
+import imgTechnology from "@assets/project-customization/technology.jpg";
 
 // Порядок 1:1 с customization в @data/projectPage.
 const images = [
@@ -44,28 +44,8 @@ const images = [
     </header>
 
     <div class="custom-controls" aria-label="Навигация по дополнениям">
-      <button
-        type="button"
-        data-custom-prev
-        aria-label="Назад"
-        class="custom-arrow group"
-      >
-        <Icon
-          name="arrow-left"
-          class="transition-transform duration-200 ease-in-out group-hover:-translate-x-1 group-focus-visible:-translate-x-1"
-        />
-      </button>
-      <button
-        type="button"
-        data-custom-next
-        aria-label="Вперёд"
-        class="custom-arrow group"
-      >
-        <Icon
-          name="arrow-right"
-          class="transition-transform duration-200 ease-in-out group-hover:translate-x-1 group-focus-visible:translate-x-1"
-        />
-      </button>
+      <IconButton icon="arrow-left" label="Назад" data-custom-prev />
+      <IconButton icon="arrow-right" label="Вперёд" data-custom-next />
     </div>
 
     <div class="custom-track" data-custom-track>
@@ -123,28 +103,6 @@ const images = [
     display: flex;
     gap: calc(var(--s) * 10);
     margin-top: calc(var(--s) * 32);
-  }
-
-  .custom-arrow {
-    display: grid;
-    width: calc(var(--s) * 40);
-    height: calc(var(--s) * 40);
-    place-items: center;
-    border: 1px solid currentColor;
-    border-radius: var(--radius-sm);
-    background: transparent;
-    transition:
-      color 200ms ease,
-      border-color 200ms ease,
-      background-color 200ms ease;
-  }
-
-  .custom-arrow:hover,
-  .custom-arrow:focus-visible {
-    color: var(--color-paper);
-    background: var(--color-accent);
-    border-color: var(--color-accent);
-    outline: none;
   }
 
   .custom-track {
@@ -238,11 +196,6 @@ const images = [
     .custom-controls {
       gap: 10px;
       margin-top: 42px;
-    }
-
-    .custom-arrow {
-      width: 40px;
-      height: 40px;
     }
 
     .custom-track {

@@ -1,15 +1,15 @@
 ---
 import GridLines from "@components/GridLines.astro";
 import Heading from "@components/Heading.astro";
-import Icon from "@ui/Icon.astro";
+import IconButton from "@ui/IconButton.astro";
 import { Image } from "astro:assets";
 import { objects } from "@data/home";
-import imgCountry from "../../assets/home-objects/country-houses.jpg";
-import imgVillages from "../../assets/home-objects/cottage-villages.jpg";
-import imgGlamping from "../../assets/home-objects/glampings.jpg";
-import imgBarn from "../../assets/home-objects/barnhouses.jpg";
-import imgBases from "../../assets/home-objects/recreation-bases.jpg";
-import imgRestaurants from "../../assets/home-objects/restaurants.jpg";
+import imgCountry from "@assets/home-objects/country-houses.jpg";
+import imgVillages from "@assets/home-objects/cottage-villages.jpg";
+import imgGlamping from "@assets/home-objects/glampings.jpg";
+import imgBarn from "@assets/home-objects/barnhouses.jpg";
+import imgBases from "@assets/home-objects/recreation-bases.jpg";
+import imgRestaurants from "@assets/home-objects/restaurants.jpg";
 
 // Порядок 1:1 с objects в @data/home (01..06).
 const objectImages = [
@@ -35,28 +35,8 @@ const objectImages = [
     </Heading>
 
     <div class="objects-controls" aria-label="Навигация по объектам">
-      <button
-        type="button"
-        data-obj-prev
-        aria-label="Назад"
-        class="objects-arrow objects-arrow--prev group"
-      >
-        <Icon
-          name="arrow-left"
-          class="transition-transform duration-200 ease-in-out group-hover:-translate-x-1 group-focus-visible:-translate-x-1"
-        />
-      </button>
-      <button
-        type="button"
-        data-obj-next
-        aria-label="Вперёд"
-        class="objects-arrow objects-arrow--next group"
-      >
-        <Icon
-          name="arrow-right"
-          class="transition-transform duration-200 ease-in-out group-hover:translate-x-1 group-focus-visible:translate-x-1"
-        />
-      </button>
+      <IconButton icon="arrow-left" label="Назад" data-obj-prev />
+      <IconButton icon="arrow-right" label="Вперёд" data-obj-next />
     </div>
 
     <div data-obj-track class="objects-track">
@@ -108,28 +88,6 @@ const objectImages = [
     margin-top: calc(var(--s) * 32);
     display: flex;
     gap: calc(var(--s) * 10);
-  }
-
-  .objects-arrow {
-    display: grid;
-    width: calc(var(--s) * 40);
-    height: calc(var(--s) * 40);
-    place-items: center;
-    border: 1px solid currentColor;
-    border-radius: var(--radius-sm);
-    background: transparent;
-    transition:
-      color 200ms ease,
-      border-color 200ms ease,
-      background-color 200ms ease;
-  }
-
-  .objects-arrow:hover,
-  .objects-arrow:focus-visible {
-    color: var(--color-paper);
-    background: var(--color-accent);
-    border-color: var(--color-accent);
-    outline: none;
   }
 
   .objects-track {
@@ -216,11 +174,6 @@ const objectImages = [
     .objects-controls {
       margin-top: 64px;
       gap: 10px;
-    }
-
-    .objects-arrow {
-      width: 40px;
-      height: 40px;
     }
 
     .objects-track {
