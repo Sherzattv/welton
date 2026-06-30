@@ -18,5 +18,5 @@ export const nav = [
   { label: "О компании", href: "#about" },
   { label: "Партнеры", href: "#partners" },
   { label: "Этапы работы", href: "#stages" },
-  { label: "Контакты", href: "#contacts" },
+  { label: "Контакты", href: "/contacts/" },
 ] satisfies NavItem[];

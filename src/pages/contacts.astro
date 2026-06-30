@@ -1,0 +1,306 @@
+---
+// Страница-визитка («link in bio» / tap-link для Instagram): минимум текста,
+// крупные тап-цели, ничего лишнего. Сознательно без общей шапки и тяжёлого
+// футера — это самостоятельный лендинг-визитка, который кидают в директ/био.
+// Фирменный стиль держим палитрой, шрифтом Adderley, сеткой-направляющими
+// и фирменным hover (SlideLink) — поэтому страница «своя».
+import Layout from "@layouts/Layout.astro";
+import Motion from "@components/Motion.astro";
+import Container from "@components/Container.astro";
+import GridLines from "@components/GridLines.astro";
+import Heading from "@components/Heading.astro";
+import Logo from "@components/Logo.astro";
+import Icon from "@ui/Icon.astro";
+import { contact } from "@data/site";
+import { asset } from "@lib/asset";
+
+// Ссылка «построить маршрут»: универсальная схема Google Maps по адресу.
+const mapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  contact.address,
+)}`;
+
+// Хэндл из URL инстаграма: ".../welton.kz" → "@welton.kz".
+const igHandle = `@${contact.instagram.replace(/\/+$/, "").split("/").pop()}`;
+---
+
+<Layout
+  title="Контакты welton — строительство частных домов в Казахстане"
+  description="Связаться с welton: телефон, Instagram и адрес офиса в Алматы. Строим частные дома под ключ по всему Казахстану."
+>
+  <Motion />
+
+  <main
+    class="contact-page relative flex min-h-svh flex-col overflow-hidden bg-charcoal text-paper"
+  >
+    <GridLines />
+
+    <Container class="relative z-10 flex w-full flex-1 flex-col">
+      <div class="card flex w-full flex-1 flex-col">
+      <!-- Верх: знак-логотип, ведёт на главную -->
+      <a
+        href={asset("/")}
+        aria-label="welton — на главную"
+        class="brand-logo"
+        data-reveal
+      >
+        <Logo class="h-[26px] w-auto" />
+      </a>
+
+      <!-- Центрируемое тело визитки -->
+      <div class="content">
+      <!-- Шапка-визитка: заголовок + одна строка о деле -->
+      <div class="intro">
+        <p class="kicker text-grey-500" data-reveal>Контакты</p>
+        <Heading as="h1" size="lg" class="title" data-split>
+          Свяжитесь с нами
+        </Heading>
+        <p class="lead text-grey-300" data-reveal>
+          Строим частные дома под ключ по всему Казахстану. Напишите или
+          позвоните — ответим и поможем с расчётом.
+        </p>
+      </div>
+
+      <!-- Тап-цели: телефон / Instagram / адрес -->
+      <nav class="links" aria-label="Способы связи">
+        <a href={contact.phoneHref} class="tap group" data-reveal>
+          <span class="tap-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M5 3h3.2l1.6 4-2.1 1.4a13 13 0 0 0 6.3 6.3l1.4-2.1 4 1.6V20a1 1 0 0 1-1.1 1A17 17 0 0 1 4 5.1 1 1 0 0 1 5 4z"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linejoin="round"></path>
+            </svg>
+          </span>
+          <span class="tap-value">{contact.phone}</span>
+          <span class="tap-arrow" aria-hidden="true"><Icon name="arrow-right" /></span>
+        </a>
+
+        <a
+          href={contact.instagram}
+          target="_blank"
+          rel="noopener"
+          class="tap group"
+          data-reveal
+        >
+          <span class="tap-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect
+                x="3.5"
+                y="3.5"
+                width="17"
+                height="17"
+                rx="5"
+                stroke="currentColor"
+                stroke-width="1.5"></rect>
+              <circle
+                cx="12"
+                cy="12"
+                r="4"
+                stroke="currentColor"
+                stroke-width="1.5"></circle>
+              <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"></circle>
+            </svg>
+          </span>
+          <span class="tap-value">{igHandle}</span>
+          <span class="tap-arrow" aria-hidden="true"><Icon name="arrow-right" /></span>
+        </a>
+
+        <a
+          href={mapHref}
+          target="_blank"
+          rel="noopener"
+          class="tap group"
+          data-reveal
+        >
+          <span class="tap-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 21c4.5-4.2 7-7.6 7-11a7 7 0 1 0-14 0c0 3.4 2.5 6.8 7 11z"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linejoin="round"></path>
+              <circle
+                cx="12"
+                cy="10"
+                r="2.4"
+                stroke="currentColor"
+                stroke-width="1.5"></circle>
+            </svg>
+          </span>
+          <span class="tap-value">{contact.address}</span>
+          <span class="tap-arrow" aria-hidden="true"><Icon name="arrow-right" /></span>
+        </a>
+      </nav>
+
+      <!-- Вторичные действия: каталог проектов и переход на основной сайт -->
+      <div class="secondary" data-reveal>
+        <a href={asset("/projects/")} class="slink group">
+          <span>Смотреть проекты</span>
+          <span class="slink-arrow" aria-hidden="true"><Icon name="arrow-right" /></span>
+        </a>
+        <a href={asset("/")} class="slink group">
+          <span>Наш сайт</span>
+          <span class="slink-arrow" aria-hidden="true"><Icon name="arrow-right" /></span>
+        </a>
+      </div>
+      </div>
+      </div>
+    </Container>
+  </main>
+</Layout>
+
+<style>
+  /* Узкая колонка-визитка, выровнена по центру экрана. Контент держим в
+     комфортной для тапа ширине независимо от --content-max. */
+  .card {
+    max-width: 520px;
+    margin-inline: auto;
+    padding-top: clamp(28px, 8vh, 56px);
+    padding-bottom: clamp(28px, 6vh, 48px);
+    gap: clamp(24px, 4vh, 40px);
+  }
+
+  /* Тело визитки центрируем по вертикали в свободном пространстве. */
+  .content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(28px, 4.5vh, 44px);
+  }
+
+  .brand-logo {
+    display: inline-flex;
+    align-self: flex-start;
+  }
+
+  .kicker {
+    margin-bottom: calc(var(--s) * 16);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .title {
+    text-transform: uppercase;
+  }
+
+  .lead {
+    margin-top: clamp(16px, 2.4vh, 22px);
+    max-width: 42ch;
+    font-size: clamp(15px, 2.6vw, 17px);
+    line-height: 1.5;
+  }
+
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tap {
+    display: flex;
+    align-items: center;
+    gap: clamp(14px, 3.5vw, 18px);
+    padding: clamp(16px, 3.4vw, 20px) clamp(16px, 3.4vw, 20px);
+    border: 1px solid rgb(238 238 238 / 0.16);
+    border-radius: var(--radius-sm);
+    transition:
+      border-color 220ms ease,
+      background-color 220ms ease,
+      color 220ms ease;
+  }
+
+  .tap:hover,
+  .tap:focus-visible {
+    border-color: var(--color-accent);
+    background-color: rgb(236 52 52 / 0.08);
+    outline: none;
+  }
+
+  .tap-ico {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: clamp(24px, 6vw, 28px);
+    height: clamp(24px, 6vw, 28px);
+    color: var(--color-paper);
+    transition: color 220ms ease;
+  }
+
+  .tap-ico svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tap:hover .tap-ico,
+  .tap:focus-visible .tap-ico {
+    color: var(--color-accent);
+  }
+
+  .tap-value {
+    min-width: 0;
+    font-size: clamp(17px, 4.4vw, 20px);
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+    overflow-wrap: anywhere;
+  }
+
+  .tap-arrow {
+    display: inline-flex;
+    flex-shrink: 0;
+    margin-left: auto;
+    opacity: 0.4;
+    transition:
+      transform 260ms ease,
+      opacity 220ms ease,
+      color 220ms ease;
+  }
+
+  .tap:hover .tap-arrow,
+  .tap:focus-visible .tap-arrow {
+    opacity: 1;
+    color: var(--color-accent);
+    transform: translateX(4px);
+  }
+
+  /* Вторичные действия — текстовые ссылки под общей чертой, тише визиток. */
+  .secondary {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(14px, 2.4vh, 20px);
+    padding-top: clamp(18px, 3vh, 24px);
+    border-top: 1px solid rgb(238 238 238 / 0.12);
+  }
+
+  .slink {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 200ms ease;
+  }
+
+  .slink:hover,
+  .slink:focus-visible {
+    color: var(--color-accent);
+    outline: none;
+  }
+
+  .slink-arrow {
+    display: inline-flex;
+    opacity: 0.5;
+    transition: transform 260ms ease;
+  }
+
+  .slink:hover .slink-arrow,
+  .slink:focus-visible .slink-arrow {
+    transform: translateX(4px);
+  }
+</style>
