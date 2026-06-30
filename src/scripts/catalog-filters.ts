@@ -21,7 +21,7 @@ export interface FilterState {
   q: string;
   category: string; // "all" | slug категории
   tech: string; // "all" | ключ технологии (матч по вхождению в список проекта)
-  feature: string; // "all" | ключ особенности (матч по вхождению в список проекта)
+  features: string[]; // выбранные особенности (логика «И»); пусто = все
   floors: FloorsValue;
   beds: BedsValue;
   area: AreaValue;
@@ -151,7 +151,7 @@ export function initCatalogFilters(root: HTMLElement) {
     q: "",
     category: "all",
     tech: "all",
-    feature: "all",
+    features: [],
     floors: "all",
     beds: "all",
     area: "all",
@@ -168,7 +168,7 @@ export function initCatalogFilters(root: HTMLElement) {
     const tech = p.get("tech");
     if (tech) state.tech = tech;
     const feat = p.get("feature");
-    if (feat) state.feature = feat;
+    if (feat) state.features = feat.split(",").filter(Boolean);
     const f = p.get("floors");
     if (f === "1" || f === "2") state.floors = f;
     const b = p.get("beds");
@@ -186,7 +186,7 @@ export function initCatalogFilters(root: HTMLElement) {
     if (state.q) p.set("q", state.q);
     if (state.category !== "all") p.set("category", state.category);
     if (state.tech !== "all") p.set("tech", state.tech);
-    if (state.feature !== "all") p.set("feature", state.feature);
+    if (state.features.length) p.set("feature", state.features.join(","));
     if (state.floors !== "all") p.set("floors", state.floors);
     if (state.beds !== "all") p.set("beds", state.beds);
     if (state.area !== "all") p.set("area", state.area);
@@ -207,7 +207,11 @@ export function initCatalogFilters(root: HTMLElement) {
     if (s.q && !card.searchHaystack.includes(s.q.toLowerCase())) return false;
     if (s.category !== "all" && card.category !== s.category) return false;
     if (s.tech !== "all" && !card.tech.includes(s.tech)) return false;
-    if (s.feature !== "all" && !card.features.includes(s.feature)) return false;
+    if (
+      s.features.length &&
+      !s.features.every((f) => card.features.includes(f))
+    )
+      return false;
     if (s.floors !== "all" && card.floors !== s.floors) return false;
     if (!inAreaRange(card.area, s.area)) return false;
     if (s.beds !== "all") {
@@ -223,7 +227,7 @@ export function initCatalogFilters(root: HTMLElement) {
       state.q === "" &&
       state.category === "all" &&
       state.tech === "all" &&
-      state.feature === "all" &&
+      state.features.length === 0 &&
       state.floors === "all" &&
       state.beds === "all" &&
       state.area === "all" &&
@@ -254,6 +258,34 @@ export function initCatalogFilters(root: HTMLElement) {
     }
   }
 
+  // Особенности — мультивыбор (логика «И»): чип переключается, «Все» сбрасывает.
+  // Счётчик чипа = сколько проектов будет, если включить/оставить этот чип
+  // поверх уже выбранных особенностей и прочих фильтров.
+  function syncFeatureChips() {
+    for (const c of featChips) {
+      const v = c.dataset.featValue as string;
+      const isAll = v === "all";
+      const on = isAll
+        ? state.features.length === 0
+        : state.features.includes(v);
+      c.classList.toggle("is-active", on);
+      c.setAttribute("aria-pressed", on ? "true" : "false");
+
+      const countNode = c.querySelector<HTMLElement>("[data-chip-count]");
+      if (countNode) {
+        const probe = isAll
+          ? []
+          : state.features.includes(v)
+            ? state.features
+            : [...state.features, v];
+        const n = cards.filter((card) =>
+          matchesWith(card, { features: probe }),
+        ).length;
+        countNode.textContent = String(n);
+      }
+    }
+  }
+
   function syncChips() {
     syncChipsGroup(catChips, "catValue", state.category, (v) => ({
       category: v,
@@ -261,9 +293,7 @@ export function initCatalogFilters(root: HTMLElement) {
     syncChipsGroup(techChips, "techValue", state.tech, (v) => ({
       tech: v,
     }));
-    syncChipsGroup(featChips, "featValue", state.feature, (v) => ({
-      feature: v,
-    }));
+    syncFeatureChips();
     syncChipsGroup(floorsChips, "floorsValue", state.floors, (v) => ({
       floors: v as FloorsValue,
     }));
@@ -311,7 +341,7 @@ export function initCatalogFilters(root: HTMLElement) {
     if (state.q) n++;
     if (state.category !== "all") n++;
     if (state.tech !== "all") n++;
-    if (state.feature !== "all") n++;
+    if (state.features.length) n++;
     if (state.floors !== "all") n++;
     if (state.beds !== "all") n++;
     if (state.area !== "all") n++;
@@ -434,7 +464,14 @@ export function initCatalogFilters(root: HTMLElement) {
   }
   for (const c of featChips) {
     c.addEventListener("click", () => {
-      state.feature = c.dataset.featValue ?? "all";
+      const v = c.dataset.featValue ?? "all";
+      if (v === "all") {
+        state.features = [];
+      } else {
+        const i = state.features.indexOf(v);
+        if (i >= 0) state.features.splice(i, 1);
+        else state.features.push(v);
+      }
       applyInteractive();
     });
   }
@@ -461,7 +498,7 @@ export function initCatalogFilters(root: HTMLElement) {
       state.q = "";
       state.category = "all";
       state.tech = "all";
-      state.feature = "all";
+      state.features = [];
       state.floors = "all";
       state.beds = "all";
       state.area = "all";
