@@ -124,6 +124,8 @@ export function initMotion() {
     wheelMultiplier: 0.95,
     touchMultiplier: 1.1,
   });
+  // Отдаём инстанс наружу — каталог использует его для скролла к началу при фильтрации.
+  (window as unknown as { __weltonLenis?: Lenis }).__weltonLenis = lenis;
 
   // Мост Lenis ↔ ScrollTrigger (канонический паттерн)
   lenis.on("scroll", ScrollTrigger.update);

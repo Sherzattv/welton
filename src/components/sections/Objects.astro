@@ -10,6 +10,7 @@ import imgGlamping from "@assets/home-objects/glampings.jpg";
 import imgBarn from "@assets/home-objects/barnhouses.jpg";
 import imgBases from "@assets/home-objects/recreation-bases.jpg";
 import imgRestaurants from "@assets/home-objects/restaurants.jpg";
+import { asset } from "@lib/asset";
 
 // Порядок 1:1 с objects в @data/home (01..06).
 const objectImages = [
@@ -42,7 +43,11 @@ const objectImages = [
     <div data-obj-track class="objects-track">
       {
         objects.map((o, i) => (
-          <article class="object-card group">
+          <a
+            href={asset(`/projects/?category=${o.category}`)}
+            class="object-card group"
+            aria-label={`Смотреть проекты: ${o.title}`}
+          >
             <div class="object-image-wrap">
               <Image
                 src={objectImages[i]}
@@ -61,7 +66,7 @@ const objectImages = [
               {o.title}
             </Heading>
             <p class="object-desc text-charcoal">{o.desc}</p>
-          </article>
+          </a>
         ))
       }
     </div>
@@ -105,6 +110,7 @@ const objectImages = [
 
   .object-card {
     position: relative;
+    display: block;
     width: calc(var(--s) * 310);
     min-height: calc(var(--s) * 442);
     flex: 0 0 auto;
@@ -112,6 +118,8 @@ const objectImages = [
     overflow: hidden;
     border-radius: var(--radius-sm);
     background: var(--color-white);
+    color: inherit;
+    text-decoration: none;
   }
 
   .object-image-wrap {

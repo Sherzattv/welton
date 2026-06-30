@@ -16,7 +16,17 @@ export interface ProjectOverride {
     | "barnhouse"
     | "resort-base"
     | "restaurant";
-  technology?: "monolith" | "stone" | "sip" | "metal" | "sandwich";
+  technology?: ("sip" | "gasblock" | "monolith" | "brick" | "frame")[];
+  features?: Array<
+    | "panoramic"
+    | "double-height"
+    | "terrace"
+    | "garage"
+    | "balcony"
+    | "sauna"
+    | "attic"
+    | "flat-roof"
+  >;
   bedrooms?: number;
   bathrooms?: number;
   wallMaterial?: string;

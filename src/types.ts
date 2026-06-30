@@ -39,6 +39,14 @@ export interface ProjectObject {
   num: string;
   title: string;
   desc: string;
+  /** slug категории каталога — для перехода в /projects/?category= */
+  category:
+    | "country-house"
+    | "cottage-village"
+    | "glamping"
+    | "barnhouse"
+    | "resort-base"
+    | "restaurant";
 }
 
 export interface Partner {

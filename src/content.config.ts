@@ -11,6 +11,7 @@ import { readdir, readFile } from "node:fs/promises";
 import type { Dirent } from "node:fs";
 import { join, resolve } from "node:path";
 import { projectOverrides } from "@data/projectOverrides";
+import { projectTags } from "@data/projectTags";
 
 const projectsDir = resolve(process.cwd(), "public/projects");
 
@@ -23,7 +24,20 @@ const category = z.enum([
   "restaurant",
 ]);
 
-const technology = z.enum(["monolith", "stone", "sip", "metal", "sandwich"]);
+const technology = z.enum(["sip", "gasblock", "monolith", "brick", "frame"]);
+
+// Особенности — гибкий слой тегов (большие окна, терраса и т.п.).
+// Расширяется добавлением значения сюда + чипа в фильтрах.
+const feature = z.enum([
+  "panoramic", // большие окна / панорамное остекление
+  "double-height", // второй свет
+  "terrace", // терраса
+  "garage", // встроенный гараж
+  "balcony", // балкон / лоджия
+  "sauna", // сауна / баня
+  "attic", // мансарда
+  "flat-roof", // плоская кровля
+]);
 
 const projects = defineCollection({
   loader: async () => {
@@ -48,6 +62,7 @@ const projects = defineCollection({
         );
 
         const id = `wlt-${folder}`;
+        const tags = projectTags[id] ?? {};
         const override = projectOverrides[id] ?? {};
 
         return {
@@ -62,6 +77,7 @@ const projects = defineCollection({
           facade: "facade.png",
           renders,
           floorplans,
+          ...tags,
           ...override,
         };
       }),
@@ -84,7 +100,8 @@ const projects = defineCollection({
     tagline: z.string().optional(),
     description: z.string().optional(),
     category: category.optional(),
-    technology: technology.optional(),
+    technology: z.array(technology).optional(),
+    features: z.array(feature).optional(),
     bedrooms: z.number().optional(),
     bathrooms: z.number().optional(),
     wallMaterial: z.string().optional(),

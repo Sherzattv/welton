@@ -19,6 +19,9 @@ export type SortValue = "default" | "area-asc" | "area-desc" | "beds-desc";
 
 export interface FilterState {
   q: string;
+  category: string; // "all" | slug категории
+  tech: string; // "all" | ключ технологии (матч по вхождению в список проекта)
+  feature: string; // "all" | ключ особенности (матч по вхождению в список проекта)
   floors: FloorsValue;
   beds: BedsValue;
   area: AreaValue;
@@ -38,6 +41,9 @@ interface CardInfo {
   floors: string;
   area: number;
   bedrooms: number;
+  category: string;
+  tech: string[];
+  features: string[];
   searchHaystack: string;
   defaultIndex: number;
 }
@@ -54,6 +60,29 @@ function inAreaRange(area: number, range: AreaValue): boolean {
       return area >= 120 && area < 180;
     case "180+":
       return area >= 180;
+  }
+}
+
+// Скролл к началу каталога (после hero). Через Lenis, если он активен,
+// иначе нативно. Шапка не фиксирована — оффсет не нужен.
+function scrollCatalogIntoView() {
+  const target = document.querySelector<HTMLElement>(".catalog-shell");
+  if (!target) return;
+  const lenis = (
+    window as unknown as {
+      __weltonLenis?: {
+        scrollTo: (
+          t: HTMLElement,
+          o?: { offset?: number; duration?: number },
+        ) => void;
+      };
+    }
+  ).__weltonLenis;
+  if (lenis?.scrollTo) {
+    lenis.scrollTo(target, { offset: 0, duration: 0.6 });
+  } else {
+    const top = target.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top, behavior: "smooth" });
   }
 }
 
@@ -87,6 +116,15 @@ export function initCatalogFilters(root: HTMLElement) {
   const areaChips = Array.from(
     root.querySelectorAll<HTMLButtonElement>("[data-area-chip]"),
   );
+  const catChips = Array.from(
+    root.querySelectorAll<HTMLButtonElement>("[data-cat-chip]"),
+  );
+  const techChips = Array.from(
+    root.querySelectorAll<HTMLButtonElement>("[data-tech-chip]"),
+  );
+  const featChips = Array.from(
+    root.querySelectorAll<HTMLButtonElement>("[data-feat-chip]"),
+  );
 
   if (!grid) return;
 
@@ -99,6 +137,9 @@ export function initCatalogFilters(root: HTMLElement) {
       floors: el.dataset.floors ?? "",
       area: Number(el.dataset.area ?? 0),
       bedrooms: Number(el.dataset.bedrooms ?? 0),
+      category: el.dataset.category ?? "",
+      tech: (el.dataset.tech ?? "").split(",").filter(Boolean),
+      features: (el.dataset.features ?? "").split(",").filter(Boolean),
       searchHaystack: `${title} ${tagline} ${code}`.toLowerCase(),
       defaultIndex: i,
     };
@@ -108,6 +149,9 @@ export function initCatalogFilters(root: HTMLElement) {
 
   const state: FilterState = {
     q: "",
+    category: "all",
+    tech: "all",
+    feature: "all",
     floors: "all",
     beds: "all",
     area: "all",
@@ -119,6 +163,12 @@ export function initCatalogFilters(root: HTMLElement) {
     const p = new URLSearchParams(window.location.search);
     const q = p.get("q");
     if (q) state.q = q;
+    const cat = p.get("category");
+    if (cat) state.category = cat;
+    const tech = p.get("tech");
+    if (tech) state.tech = tech;
+    const feat = p.get("feature");
+    if (feat) state.feature = feat;
     const f = p.get("floors");
     if (f === "1" || f === "2") state.floors = f;
     const b = p.get("beds");
@@ -134,6 +184,9 @@ export function initCatalogFilters(root: HTMLElement) {
   function writeUrl() {
     const p = new URLSearchParams();
     if (state.q) p.set("q", state.q);
+    if (state.category !== "all") p.set("category", state.category);
+    if (state.tech !== "all") p.set("tech", state.tech);
+    if (state.feature !== "all") p.set("feature", state.feature);
     if (state.floors !== "all") p.set("floors", state.floors);
     if (state.beds !== "all") p.set("beds", state.beds);
     if (state.area !== "all") p.set("area", state.area);
@@ -152,6 +205,9 @@ export function initCatalogFilters(root: HTMLElement) {
   ): boolean {
     const s: FilterState = { ...state, ...override };
     if (s.q && !card.searchHaystack.includes(s.q.toLowerCase())) return false;
+    if (s.category !== "all" && card.category !== s.category) return false;
+    if (s.tech !== "all" && !card.tech.includes(s.tech)) return false;
+    if (s.feature !== "all" && !card.features.includes(s.feature)) return false;
     if (s.floors !== "all" && card.floors !== s.floors) return false;
     if (!inAreaRange(card.area, s.area)) return false;
     if (s.beds !== "all") {
@@ -165,6 +221,9 @@ export function initCatalogFilters(root: HTMLElement) {
   function isDefault(): boolean {
     return (
       state.q === "" &&
+      state.category === "all" &&
+      state.tech === "all" &&
+      state.feature === "all" &&
       state.floors === "all" &&
       state.beds === "all" &&
       state.area === "all" &&
@@ -196,6 +255,15 @@ export function initCatalogFilters(root: HTMLElement) {
   }
 
   function syncChips() {
+    syncChipsGroup(catChips, "catValue", state.category, (v) => ({
+      category: v,
+    }));
+    syncChipsGroup(techChips, "techValue", state.tech, (v) => ({
+      tech: v,
+    }));
+    syncChipsGroup(featChips, "featValue", state.feature, (v) => ({
+      feature: v,
+    }));
     syncChipsGroup(floorsChips, "floorsValue", state.floors, (v) => ({
       floors: v as FloorsValue,
     }));
@@ -241,6 +309,9 @@ export function initCatalogFilters(root: HTMLElement) {
   function activeFilterCount(): number {
     let n = 0;
     if (state.q) n++;
+    if (state.category !== "all") n++;
+    if (state.tech !== "all") n++;
+    if (state.feature !== "all") n++;
     if (state.floors !== "all") n++;
     if (state.beds !== "all") n++;
     if (state.area !== "all") n++;
@@ -272,12 +343,8 @@ export function initCatalogFilters(root: HTMLElement) {
     document.body.style.top = "";
 
     if (opts?.scrollToCatalog) {
-      // Прокручиваем к началу каталога (после hero) — плавно.
-      const catalog = document.querySelector<HTMLElement>(".catalog-shell");
-      const top = catalog
-        ? catalog.getBoundingClientRect().top + window.scrollY
-        : 0;
-      window.scrollTo({ top, behavior: "smooth" });
+      // Прокручиваем к началу каталога (после hero) — плавно, через Lenis.
+      scrollCatalogIntoView();
     } else {
       window.scrollTo(0, savedScroll);
     }
@@ -327,23 +394,48 @@ export function initCatalogFilters(root: HTMLElement) {
     writeUrl();
   }
 
+  // Применение фильтра по клику: syncAll + скролл к началу каталога.
+  // На мобиле (открытый bottom-sheet) не скроллим — это делает кнопка «Показать».
+  function applyInteractive() {
+    syncAll();
+    if (!root.classList.contains("is-open")) scrollCatalogIntoView();
+  }
+
   // ─── Bindings ─────────────────────────────────────────────────────
   for (const c of floorsChips) {
     c.addEventListener("click", () => {
       state.floors = c.dataset.floorsValue as FloorsValue;
-      syncAll();
+      applyInteractive();
     });
   }
   for (const c of bedsChips) {
     c.addEventListener("click", () => {
       state.beds = c.dataset.bedsValue as BedsValue;
-      syncAll();
+      applyInteractive();
     });
   }
   for (const c of areaChips) {
     c.addEventListener("click", () => {
       state.area = c.dataset.areaValue as AreaValue;
-      syncAll();
+      applyInteractive();
+    });
+  }
+  for (const c of catChips) {
+    c.addEventListener("click", () => {
+      state.category = c.dataset.catValue ?? "all";
+      applyInteractive();
+    });
+  }
+  for (const c of techChips) {
+    c.addEventListener("click", () => {
+      state.tech = c.dataset.techValue ?? "all";
+      applyInteractive();
+    });
+  }
+  for (const c of featChips) {
+    c.addEventListener("click", () => {
+      state.feature = c.dataset.featValue ?? "all";
+      applyInteractive();
     });
   }
 
@@ -360,18 +452,21 @@ export function initCatalogFilters(root: HTMLElement) {
   if (sortSelect) {
     sortSelect.addEventListener("change", () => {
       state.sort = sortSelect.value as SortValue;
-      syncAll();
+      applyInteractive();
     });
   }
 
   for (const b of resetBtns) {
     b.addEventListener("click", () => {
       state.q = "";
+      state.category = "all";
+      state.tech = "all";
+      state.feature = "all";
       state.floors = "all";
       state.beds = "all";
       state.area = "all";
       state.sort = "default";
-      syncAll();
+      applyInteractive();
     });
   }
 

@@ -6,10 +6,22 @@
 //
 // Логика — в @scripts/catalog-filters (debounce, URL state, счётчики).
 
+interface Facet {
+  value: string;
+  label: string;
+}
 interface Props {
   total: number;
+  categories?: Facet[];
+  technologies?: Facet[];
+  features?: Facet[];
 }
-const { total } = Astro.props;
+const {
+  total,
+  categories = [],
+  technologies = [],
+  features = [],
+} = Astro.props;
 ---
 
 <!-- FAB только на мобиле -->
@@ -140,6 +152,114 @@ const { total } = Astro.props;
 
     <!-- Группы фильтров -->
     <div class="cf-groups">
+      {
+        categories.length > 0 && (
+          <fieldset class="cf-field">
+            <legend class="cf-label">Тип объекта</legend>
+            <div class="cf-chips" role="group">
+              <button
+                type="button"
+                class="cf-chip is-active"
+                data-cat-chip
+                data-cat-value="all"
+                aria-pressed="true"
+              >
+                Все{" "}
+                <span class="cf-chip-count" data-chip-count>
+                  {total}
+                </span>
+              </button>
+              {categories.map((c: Facet) => (
+                <button
+                  type="button"
+                  class="cf-chip"
+                  data-cat-chip
+                  data-cat-value={c.value}
+                  aria-pressed="false"
+                >
+                  {c.label}{" "}
+                  <span class="cf-chip-count" data-chip-count>
+                    0
+                  </span>
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        )
+      }
+
+      {
+        technologies.length > 0 && (
+          <fieldset class="cf-field">
+            <legend class="cf-label">Технология</legend>
+            <div class="cf-chips" role="group">
+              <button
+                type="button"
+                class="cf-chip is-active"
+                data-tech-chip
+                data-tech-value="all"
+                aria-pressed="true"
+              >
+                Все{" "}
+                <span class="cf-chip-count" data-chip-count>
+                  {total}
+                </span>
+              </button>
+              {technologies.map((t: Facet) => (
+                <button
+                  type="button"
+                  class="cf-chip"
+                  data-tech-chip
+                  data-tech-value={t.value}
+                  aria-pressed="false"
+                >
+                  {t.label}{" "}
+                  <span class="cf-chip-count" data-chip-count>
+                    0
+                  </span>
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        )
+      }
+
+      {
+        features.length > 0 && (
+          <fieldset class="cf-field">
+            <legend class="cf-label">Особенности</legend>
+            <div class="cf-chips" role="group">
+              <button
+                type="button"
+                class="cf-chip is-active"
+                data-feat-chip
+                data-feat-value="all"
+                aria-pressed="true"
+              >
+                Все{" "}
+                <span class="cf-chip-count" data-chip-count>
+                  {total}
+                </span>
+              </button>
+              {features.map((f: Facet) => (
+                <button
+                  type="button"
+                  class="cf-chip"
+                  data-feat-chip
+                  data-feat-value={f.value}
+                  aria-pressed="false"
+                >
+                  {f.label}{" "}
+                  <span class="cf-chip-count" data-chip-count>
+                    0
+                  </span>
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        )
+      }
+
       <fieldset class="cf-field">
         <legend class="cf-label">Этажность</legend>
         <div class="cf-chips" role="group">
@@ -304,7 +424,7 @@ const { total } = Astro.props;
   }
 
   .cf-sticky {
-    padding: clamp(20px, 1.8vw, 28px) clamp(18px, 1.5vw, 24px);
+    padding: 18px clamp(16px, 1.4vw, 22px);
   }
 
   /* ─── Шапка/футер sheet — скрыты на десктопе ──────────────── */
@@ -450,7 +570,7 @@ const { total } = Astro.props;
 
     /* Группы — разделены spacing'ом, БЕЗ линий, как iOS Settings */
     .cf-groups {
-      gap: 22px;
+      gap: 16px;
     }
     .cf-groups .cf-field {
       padding: 0;
@@ -635,13 +755,13 @@ const { total } = Astro.props;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: clamp(20px, 1.8vw, 26px);
+    margin-bottom: 16px;
   }
 
   .cf-header-title {
     margin: 0;
     font-family: var(--font-display);
-    font-size: clamp(26px, 2.2vw, 32px);
+    font-size: clamp(20px, 1.6vw, 24px);
     line-height: 1;
     letter-spacing: -0.02em;
     text-transform: uppercase;
@@ -650,7 +770,7 @@ const { total } = Astro.props;
 
   .cf-count {
     font-family: var(--font-display);
-    font-size: clamp(26px, 2.2vw, 32px);
+    font-size: clamp(20px, 1.6vw, 24px);
     line-height: 1;
     letter-spacing: -0.02em;
     margin: 0;
@@ -669,7 +789,7 @@ const { total } = Astro.props;
     display: flex;
     align-items: stretch;
     gap: 8px;
-    margin-bottom: clamp(22px, 2vw, 30px);
+    margin-bottom: 18px;
   }
 
   .cf-utils .cf-search {
@@ -681,7 +801,7 @@ const { total } = Astro.props;
   .cf-groups {
     display: flex;
     flex-direction: column;
-    gap: clamp(20px, 1.8vw, 28px);
+    gap: 12px;
   }
 
   /* ─── Группа фильтров ───────────────────────────────────────── */
@@ -695,7 +815,7 @@ const { total } = Astro.props;
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 0 0 12px;
+    padding: 0 0 8px;
     font-size: 12px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -812,8 +932,8 @@ const { total } = Astro.props;
     border: 1px solid var(--color-charcoal);
     background: transparent;
     color: var(--color-charcoal);
-    padding: 12px 18px;
-    font-size: var(--text-body);
+    padding: 8px 12px;
+    font-size: 13px;
     line-height: 1;
     letter-spacing: var(--text-body--letter-spacing);
     border-radius: var(--radius-sm);
@@ -823,7 +943,7 @@ const { total } = Astro.props;
       color 160ms ease;
     display: inline-flex;
     align-items: baseline;
-    gap: 8px;
+    gap: 6px;
     font-weight: 500;
   }
 
@@ -868,7 +988,7 @@ const { total } = Astro.props;
   /* ─── Reset — фирменная outline-кнопка под фильтрами ────── */
   .cf-reset {
     width: 100%;
-    margin-top: clamp(24px, 2.4vw, 32px);
+    margin-top: 18px;
     appearance: none;
     border: 1px solid var(--color-charcoal);
     background: transparent;

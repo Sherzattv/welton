@@ -17,6 +17,52 @@ import heroBg from "@assets/dom-hero.jpg";
 const projects = (await getCollection("projects")).sort((a, b) =>
   a.data.folder.localeCompare(b.data.folder),
 );
+
+// Подписи фасетов (машинный ключ → рус. лейбл). Порядок здесь = порядок чипов.
+const CATEGORY_LABELS: Record<string, string> = {
+  "country-house": "Загородные дома",
+  "cottage-village": "Коттеджные городки",
+  glamping: "Глемпинги",
+  barnhouse: "Барнхаусы",
+  "resort-base": "Базы отдыха",
+  restaurant: "Рестораны",
+};
+const TECH_LABELS: Record<string, string> = {
+  sip: "СИП-панели",
+  gasblock: "Газоблок",
+  monolith: "Монолит",
+  brick: "Кирпич",
+  frame: "Каркас",
+};
+const FEATURE_LABELS: Record<string, string> = {
+  panoramic: "Большие окна",
+  "double-height": "Второй свет",
+  terrace: "Терраса",
+  garage: "Гараж",
+  balcony: "Балкон",
+  sauna: "Сауна/баня",
+  attic: "Мансарда",
+  "flat-roof": "Плоская кровля",
+};
+
+// Чипы рисуем только для фасетов, реально присутствующих в каталоге.
+const facets = (
+  labels: Record<string, string>,
+  has: (slug: string) => boolean,
+) =>
+  Object.entries(labels)
+    .filter(([slug]) => has(slug))
+    .map(([value, label]) => ({ value, label }));
+
+const categoryFacets = facets(CATEGORY_LABELS, (slug) =>
+  projects.some((p) => p.data.category === slug),
+);
+const techFacets = facets(TECH_LABELS, (slug) =>
+  projects.some((p) => ((p.data.technology ?? []) as string[]).includes(slug)),
+);
+const featureFacets = facets(FEATURE_LABELS, (slug) =>
+  projects.some((p) => ((p.data.features ?? []) as string[]).includes(slug)),
+);
 ---
 
 <Layout
@@ -64,7 +110,12 @@ const projects = (await getCollection("projects")).sort((a, b) =>
       style="overflow-x: clip"
     >
       <GridLines />
-      <CatalogFilters total={projects.length} />
+      <CatalogFilters
+        total={projects.length}
+        categories={categoryFacets}
+        technologies={techFacets}
+        features={featureFacets}
+      />
 
       <div class="catalog-main">
         <ul class="catalog-grid">
@@ -77,6 +128,9 @@ const projects = (await getCollection("projects")).sort((a, b) =>
                   data-floors={p.data.floors}
                   data-area={p.data.area}
                   data-bedrooms={p.data.bedrooms ?? 0}
+                  data-category={p.data.category ?? ""}
+                  data-tech={(p.data.technology ?? []).join(",")}
+                  data-features={(p.data.features ?? []).join(",")}
                   data-code={projectCode(p.data)}
                 >
                   <ProjectCard
